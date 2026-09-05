@@ -1,0 +1,30 @@
+{
+  "name": "JEE Battle Royale Tracker",
+  "short_name": "JEE Tracker",
+  "description": "Gamified JEE prep tracker — PDF sync, Danger Zone, Weak Spot Radar, streaks, and full battle analytics.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0710",
+  "theme_color": "#7c3aed",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='80' fill='%230a0710'/%3E%3Ctext x='256' y='340' text-anchor='middle' font-size='300' font-family='Apple Color Emoji,Segoe UI Emoji,sans-serif'%3E%F0%9F%94%A5%3C/text%3E%3C/svg%3E",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Test Analysis Lab",
+      "short_name": "Analysis",
+      "description": "Open the standalone PDF test analysis tool",
+      "url": "./test-analysis.html",
+      "icons": [{ "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='80' fill='%230a0710'/%3E%3Ctext x='256' y='340' text-anchor='middle' font-size='300'%3E%F0%9F%93%84%3C/text%3E%3C/svg%3E", "sizes": "any" }]
+    }
+  ],
+  "prefer_related_applications": false
+}
