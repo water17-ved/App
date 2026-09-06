@@ -3669,6 +3669,22 @@ body{background:#0a0710;color:#f3ecff;margin:0;font-family:Inter,system-ui,sans-
 .jee-file-status{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0;padding:8px 10px;border:1px solid rgba(255,255,255,.08);border-radius:9px;background:rgba(255,255,255,.025);font-size:.72rem}
 .jee-file-status .state{font-weight:800;white-space:nowrap}.jee-file-status.ready .state{color:#a78bfa}.jee-file-status.done .state{color:#34d399}.jee-file-status.fail .state{color:#f87171}
 </style>
+<script>
+// Shared client-side sync bus. localStorage remains the canonical source of truth.
+(function(){
+  const C='jee-tracker-sync-v1';
+  const bc=('BroadcastChannel' in window)?new BroadcastChannel(C):null;
+  const ns=Storage.prototype.setItem,nr=Storage.prototype.removeItem;
+  Storage.prototype.setItem=function(k,v){ns.call(this,k,v);if(String(k).startsWith('jee-')){try{bc?.postMessage({key:String(k),at:Date.now()})}catch(e){}}};
+  Storage.prototype.removeItem=function(k){nr.call(this,k);if(String(k).startsWith('jee-')){try{bc?.postMessage({key:String(k),at:Date.now()})}catch(e){}}};
+  const refresh=()=>{
+    try{ if(typeof renderHistory==='function') renderHistory(); }catch(e){}
+    try{ if(typeof renderAnalysisIndex==='function') renderAnalysisIndex(); }catch(e){}
+  };
+  window.addEventListener('storage',e=>{if(e.key?.startsWith('jee-')) refresh()});
+  bc?.addEventListener('message',e=>{if(e.data?.key?.startsWith('jee-')) refresh()});
+})();
+</script>
 </head>
 <body>
 <div id="pdf-meta-modal" aria-hidden="true">
@@ -3814,7 +3830,8 @@ async function initSharedState() {
 window.addEventListener('DOMContentLoaded', initSharedState);
 
 function saveChapterTests() {
-  try { localStorage.setItem('jee-chapter-tests', JSON.stringify(chapterTests)); } catch(e) {}
+  // Full-test PDF analysis is intentionally NOT written to chapter-wise test logs.
+// Chapter evidence remains embedded in the full-test Battle Log record for analytics.
 }
 // These tracker UI functions are no-ops here — they run in index.html automatically
 // when it next reads the shared localStorage keys we've already written.
@@ -4435,7 +4452,6 @@ async function applyPDFAnalysis(data){
   ['08:00','11:00','15:00','18:00','20:30','22:00'].forEach((time,i)=>{const x=items[i];if(!x)return;const subject=['Physics','Chemistry','Maths'].includes(x.subject)?x.subject:'Other';schedule.push({id:'sc'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),time,label:`Battle Revision: ${x.chapter}`,subject,duration:x.priority==='HIGH'?60:45,note:`From ${testName} — ${x.reason||'Priority weakness'}`,generatedBy:'battle-plan',sourceTest:testName})});
   writeJSON('jee-daily-targets',targets);writeJSON('jee-daily-schedule',schedule);
   stats.chaptersAdded=0;stats.battleLogUpdated=true;stats.scheduleBlocksPlanned=items.slice(0,6).length;stats.targetsPlanned=items.length;stats.stored=true;
-  try{stats.recordId=await persistPDFAnalysisRecord(data,stats)}catch(e){console.error('PDF history save error:',e)}
   return stats;
 }
 async function runPDFAnalysisPipeline(parsed,source){
@@ -4479,7 +4495,7 @@ function renderMetric(label,val){return '<div class="metric"><b>'+escapePDFBattl
 function renderAnalysis(data,added=false){latestAnalysis=data;const ov=data.overall||{},score=data.totalScore||{};const subs=(data.subjects||[]).map(s=>'<div class="subject-card"><b>'+escapePDFBattleText(s.subject)+'</b><div class="metric-row" style="margin-top:8px">'+renderMetric('Score',s.myScore!=null?s.myScore+'/'+(s.maxScore??'?'):null)+renderMetric('Accuracy',s.accuracy!=null?s.accuracy+'%':null)+renderMetric('Attempted',s.attempted)+renderMetric('Wrong',s.wrong)+'</div></div>').join('');const ch=(data.chapters||[]).map(c=>'<div class="chapter-card-lite"><div class="top"><b>'+escapePDFBattleText(c.subject)+' — '+escapePDFBattleText(c.name)+'</b><span class="tag">'+escapePDFBattleText(c.status||'UNKNOWN')+'</span></div><div class="muted" style="font-size:.73rem;margin-top:5px">'+escapePDFBattleText([c.score!=null?'Score '+c.score:null,c.accuracy!=null?c.accuracy+'%':null,c.attempted!=null?'Attempted '+c.attempted:null,c.correct!=null?'✓ '+c.correct:null,c.wrong!=null?'✕ '+c.wrong:null,c.skipped!=null?'Skipped '+c.skipped:null,c.mistakeType,c.priority].filter(Boolean).join(' · ')||'No metrics reported')+'</div>'+(c.topics?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Topics:</b> '+escapePDFBattleText(c.topics.join(', '))+'</div>':'')+(c.questions?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Questions:</b> '+escapePDFBattleText(c.questions.join(', '))+'</div>':'')+(c.evidence?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Evidence:</b> '+escapePDFBattleText(c.evidence.join(' | '))+'</div>':'')+'</div>').join('');const rev=(data.revisionTargets||[]).map(x=>'<div>• <b>'+escapePDFBattleText(x.subject)+' — '+escapePDFBattleText(x.chapter)+'</b>: '+escapePDFBattleText(x.reason||'Revision target')+'</div>').join('');document.getElementById('result').innerHTML='<div class="analysis-grid"><div class="analysis-card"><h3>Overall</h3><div class="metric-row">'+renderMetric('Score',score.my!=null?score.my+'/'+(score.max??'?'):null)+renderMetric('Accuracy',ov.accuracy!=null?ov.accuracy+'%':null)+renderMetric('Attempted',ov.attempted)+renderMetric('Wrong',ov.wrong)+'</div></div><div class="analysis-card"><h3>Test</h3><div style="font-size:.8rem"><b>'+escapePDFBattleText(data.testName||data.fileName||'Unnamed Test')+'</b><div class="muted" style="margin-top:4px">'+escapePDFBattleText([data.date,data.exam,data.fileName].filter(Boolean).join(' · '))+'</div></div></div></div><div class="analysis-card" style="margin-top:12px"><h3>Subject Performance</h3>'+(subs||'<div class="empty">No subject-level metrics were found.</div>')+'</div><div class="analysis-card" style="margin-top:12px"><h3>Chapter / Topic Analysis</h3>'+(ch||'<div class="empty">No chapter-level evidence was found.</div>')+'</div>'+(rev?'<div class="analysis-card" style="margin-top:12px"><h3>Revision Targets</h3>'+rev+'</div>':'')+'<div style="margin-top:10px; font-size:0.74rem; color:var(--chem); opacity:0.8;">✓ Synced to tracker automatically</div><div class="toolbar" style="margin-top:12px"><button class="add-btn compact" onclick="generateStandWeaknessPDF()">📄 Download Stand & Weakness PDF</button></div>'}
 async function renderHistory(){let h=[];try{h=JSON.parse(localStorage.getItem('jee-test-analysis-history')||'[]')}catch(e){}const el=document.getElementById('history-list');if(!h.length){el.innerHTML='<div class="empty">No analysed tests yet.</div>';return}el.innerHTML=h.map(r=>'<div class="log-card"><div class="top"><b>'+escapePDFBattleText(r.testName||r.fileName||'Test')+'</b><span class="tag">'+escapePDFBattleText(r.date||'-')+'</span></div><div class="muted" style="font-size:.72rem;margin-top:5px">'+escapePDFBattleText([r.exam,r.fileName,r.totalScore?.my!=null?'Score '+r.totalScore.my+'/'+(r.totalScore.max??'?'):null].filter(Boolean).join(' · '))+'</div><div class="toolbar"><button class="add-btn" onclick="viewHistory(\''+escapePDFBattleText(r.id)+'\')">View Analysis</button></div></div>').join('')}
 function viewHistory(id){const h=JSON.parse(localStorage.getItem('jee-test-analysis-history')||'[]');const r=h.find(x=>x.id===id);if(r){renderAnalysis(r,false);window.scrollTo({top:0,behavior:'smooth'})}}
-async function uploadAndAnalysePDF(){if(!pdfSyncFile){showPDFResult({error:'Please select a file first.'});return}const btn=document.getElementById('analyse');btn.disabled=true;try{const name=pdfSyncFile.name.toLowerCase();let parsed;pdfLocalProgress(5,'Reading file…');if(pdfSyncFile.type==='application/pdf'||name.endsWith('.pdf')){const lib=await loadPDFJS(),bytes=new Uint8Array(await pdfSyncFile.arrayBuffer()),pdf=await lib.getDocument({data:bytes}).promise;let native=false;for(let n=1;n<=Math.min(3,pdf.numPages);n++){const p=await pdf.getPage(n),c=await p.getTextContent({includeMarkedContent:true});if(c.items.some(x=>String(x.str||'').trim().length>2))native=true;p.cleanup();if(native)break}parsed=native?await extractPDFIntelligently(pdfSyncFile):await extractScannedPDFIntelligently(pdfSyncFile)}else if(/^image\//.test(pdfSyncFile.type)||/\.(png|jpe?g|webp)$/i.test(name))parsed=await extractImageIntelligently(pdfSyncFile);else if(/\.(txt|json)$/i.test(name)||/^(text\/plain|application\/json)$/.test(pdfSyncFile.type))parsed=await extractTextFileIntelligently(pdfSyncFile);else throw Error('Unsupported file type.');const normalized=normalizePDFAnalysis(parsed);let syncStats={chaptersAdded:0,skipped:0,weakSubjectsAdded:[]};try{syncStats=await applyPDFAnalysis(normalized)}catch(e){console.warn('Chapter sync error:',e)}const record=await persistStandaloneAnalysis({...normalized,_syncStats:syncStats});record._recordId=record.id;let h=JSON.parse(localStorage.getItem('jee-test-analysis-history')||'[]');h=h.map(x=>x.id===record.id?record:x);localStorage.setItem('jee-test-analysis-history',JSON.stringify(h));latestAnalysis=record;pdfLocalProgress(100,'Analysis complete ✓ — '+syncStats.chaptersAdded+' chapters synced to tracker');renderAnalysis(record,false);await renderHistory()}catch(err){console.error(err);showPDFResult({error:'Analysis failed: '+err.message})}finally{btn.disabled=false;document.getElementById('progress').classList.remove('active')}}
+async function uploadAndAnalysePDF(){if(!pdfSyncFile){showPDFResult({error:'Please select a file first.'});return}const btn=document.getElementById('analyse');btn.disabled=true;try{const name=pdfSyncFile.name.toLowerCase();let parsed;pdfLocalProgress(5,'Reading file…');if(pdfSyncFile.type==='application/pdf'||name.endsWith('.pdf')){const lib=await loadPDFJS(),bytes=new Uint8Array(await pdfSyncFile.arrayBuffer()),pdf=await lib.getDocument({data:bytes}).promise;let native=false;for(let n=1;n<=Math.min(3,pdf.numPages);n++){const p=await pdf.getPage(n),c=await p.getTextContent({includeMarkedContent:true});if(c.items.some(x=>String(x.str||'').trim().length>2))native=true;p.cleanup();if(native)break}parsed=native?await extractPDFIntelligently(pdfSyncFile):await extractScannedPDFIntelligently(pdfSyncFile)}else if(/^image\//.test(pdfSyncFile.type)||/\.(png|jpe?g|webp)$/i.test(name))parsed=await extractImageIntelligently(pdfSyncFile);else if(/\.(txt|json)$/i.test(name)||/^(text\/plain|application\/json)$/.test(pdfSyncFile.type))parsed=await extractTextFileIntelligently(pdfSyncFile);else throw Error('Unsupported file type.');const normalized=normalizePDFAnalysis(parsed);let syncStats={chaptersAdded:0,skipped:0,weakSubjectsAdded:[],battleLogUpdated:false,scheduleBlocksPlanned:0,targetsPlanned:0};try{syncStats=await applyPDFAnalysis(normalized)}catch(e){console.warn('Chapter sync error:',e)}const record=await persistStandaloneAnalysis({...normalized,_syncStats:syncStats});record._recordId=record.id;let h=JSON.parse(localStorage.getItem('jee-test-analysis-history')||'[]');h=h.map(x=>x.id===record.id?record:x);localStorage.setItem('jee-test-analysis-history',JSON.stringify(h));latestAnalysis=record;pdfLocalProgress(100,'Analysis complete ✓ — Battle Log + Schedule updated');renderAnalysis(record,false);await renderHistory()}catch(err){console.error(err);showPDFResult({error:'Analysis failed: '+err.message})}finally{btn.disabled=false;document.getElementById('progress').classList.remove('active')}}
 function resetPDFSync(){pdfSyncFile=null;document.getElementById('selected').textContent='';document.getElementById('analyse').disabled=true;document.getElementById('file').value='';document.getElementById('result').innerHTML=''}
 const drop=document.getElementById('drop');drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('drag')});drop.addEventListener('dragleave',()=>drop.classList.remove('drag'));drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)setPDFFile(f)});const _setPDFFile=setPDFFile;setPDFFile=function(file){_setPDFFile(file);pdfSyncFile=file;document.getElementById('selected').textContent='Selected: '+file.name;const b=document.getElementById('analyse');if(b)b.disabled=false};const _pdfLocalProgress=pdfLocalProgress;pdfLocalProgress=function(p,m){_pdfLocalProgress(p,m);document.getElementById('progress').classList.add('active');document.getElementById('progress-fill').style.width=Math.max(0,Math.min(100,p||0))+'%';document.getElementById('progress-label').textContent=m||'Working…'};/* initial render handled by final UI override */
 
@@ -4960,46 +4976,56 @@ async function uploadAndAnalysePDF(){
   const btn=document.getElementById('analyse'),proc=document.getElementById('progress');
   if(btn)btn.disabled=true;if(proc)proc.classList.add('active');
   try{
-    let processed=0,records=[];
-    for(const file of files){
-      pdfSyncFile=file;
-      pdfLocalProgress(Math.max(3,Math.round(processed/files.length*90)),`Reading ${file.name} (${processed+1}/${files.length})…`);
+    const parsedRecords=[];
+    for(let i=0;i<files.length;i++){
+      const file=files[i]; pdfSyncFile=file;
+      pdfLocalProgress(Math.max(3,Math.round(i/files.length*82)),`Reading ${file.name} (${i+1}/${files.length})…`);
       const raw=await taExtractFile(file);
-      pdfLocalProgress(Math.min(92,Math.round((processed+.75)/files.length*90)),`Reconstructing ${file.name}…`);
       const data=taBuildStructured(raw,file);
       if(pdfPendingMeta){
-        if(!data.testName&&pdfPendingMeta.testName)data.testName=pdfPendingMeta.testName;
-        if(!data.date&&pdfPendingMeta.date)data.date=pdfPendingMeta.date;
-        if(!data.exam&&pdfPendingMeta.exam)data.exam=pdfPendingMeta.exam;
+        if(pdfPendingMeta.testName)data.testName=pdfPendingMeta.testName;
+        if(pdfPendingMeta.date)data.date=pdfPendingMeta.date;
+        if(pdfPendingMeta.exam)data.exam=pdfPendingMeta.exam;
         if(pdfPendingMeta.correct!==''&&pdfPendingMeta.wrong!=='') data.markingScheme={type:'custom',correct:Number(pdfPendingMeta.correct),wrong:Number(pdfPendingMeta.wrong),max:pdfPendingMeta.max!==''?Number(pdfPendingMeta.max):null};
       }
       const lines=taLinesFromPages(raw._rawPages||[]);
       data._questionRows=taParseQuestionPaper(lines);
       data.questionPaper={questions:data._questionRows,questionCount:data._questionRows.length};
-      if(data.totalScore.my==null&&!data.subjects.length&&!data.chapters.length&&!data.questionPaper.questions.length){
-        throw new Error(`No structured test data could be detected in ${file.name}.`);
-      }
-      const record=await persistStandaloneAnalysis(data);
-      record._recordId=record.id;
-      const h=labHistory();saveLabHistory(h.map(x=>x.id===record.id?record:x));
-      const uploads=labUploads();
-      const existingUpload=uploads.findIndex(x=>x.name===file.name&&x.size===file.size);
-      const uploadEntry={id:existingUpload>=0?uploads[existingUpload].id:'upload_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),name:file.name,size:file.size,type:file.type,uploadedAt:existingUpload>=0?uploads[existingUpload].uploadedAt:new Date().toISOString(),status:'Analysed',analysisId:record.id};
-      if(existingUpload>=0)uploads[existingUpload]=uploadEntry;else uploads.unshift(uploadEntry);
-      saveLabUploads(uploads);
-      records.push(record);processed++;
+      if(data.totalScore.my==null&&!data.subjects.length&&!data.chapters.length&&!data.questionPaper.questions.length){throw new Error(`No structured test data could be detected in ${file.name}.`)}
+      parsedRecords.push(data);
     }
-    // Re-read the merged records so the UI always shows the final combined test.
-    const ids=[...new Set(records.map(r=>r.id))];
-    const finalRecords=labHistory().filter(r=>ids.includes(r.id));
-    latestAnalysis=finalRecords[0]||records[0];
-    pdfLocalProgress(100,files.length>1?'All selected files analysed and merged ✓':'Analysis complete ✓');
+
+    // Combine files that describe the same test. This is intentionally done BEFORE
+    // writing Battle Log/Schedule so one upload batch becomes one Boss Battle record.
+    const grouped=new Map();
+    for(const data of parsedRecords){
+      const key=data.testId||`${data.testName||'Test'}|${data.date||''}`;
+      grouped.set(key,grouped.has(key)?mergeTestRecord(grouped.get(key),data):data);
+    }
+
+    const finalRecords=[];
+    let totalTargets=0,totalBlocks=0;
+    for(const data of grouped.values()){
+      pdfSyncFile=files.find(f=>f.name.replace(/\.[^.]+$/,'')===(data.testName||'').replace(/\.[^.]+$/,''))||files[0];
+      const stats=await applyPDFAnalysis(data);
+      const record=await persistStandaloneAnalysis({...data,_syncStats:stats});
+      const history=labHistory();
+      saveLabHistory(history.map(x=>x.id===record.id?record:x));
+      finalRecords.push(record);
+      totalTargets+=Number(stats.targetsPlanned)||0; totalBlocks+=Number(stats.scheduleBlocksPlanned)||0;
+      for(const file of files.filter(f=>f.name===record.fileName)){
+        const uploads=labUploads(),idx=uploads.findIndex(x=>x.name===file.name&&x.size===file.size);
+        const entry={id:idx>=0?uploads[idx].id:'upload_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),name:file.name,size:file.size,type:file.type,uploadedAt:idx>=0?uploads[idx].uploadedAt:new Date().toISOString(),status:'Analysed',analysisId:record.id};
+        if(idx>=0)uploads[idx]=entry;else uploads.unshift(entry);saveLabUploads(uploads);
+      }
+    }
+
+    latestAnalysis=finalRecords[0]||null;
     pdfPendingMeta=null;
+    pdfLocalProgress(100,files.length>1?'All selected files analysed, merged and synced ✓':'Analysis complete — Battle Log + Schedule synced ✓');
     renderUploads();renderAnalysisIndex();
     const el=document.getElementById('upload-result');
-    if(el){
-      el.innerHTML='<div class="analysis-card"><h3>✓ Upload batch complete</h3><div class="test-meta">'+files.length+' file'+(files.length===1?'':'s')+' processed. Files with the same Test ID are merged into one test automatically.</div><div class="toolbar"><button class="add-btn compact" onclick="switchLabTab(\'analysis\')">Open Analysis</button></div></div>';
-    }
+    if(el)el.innerHTML=`<div class="analysis-card"><h3>✓ Upload batch complete</h3><div class="test-meta">${files.length} file${files.length===1?'':'s'} processed · ${finalRecords.length} Boss Battle record${finalRecords.length===1?'':'s'} · ${totalTargets} targets · ${totalBlocks} schedule blocks.</div><div class="sync-note">All changes are stored in shared localStorage and are immediately available from the main tracker and Schedule page.</div><div class="toolbar"><button class="add-btn compact" onclick="switchLabTab('analysis')">Open Analysis</button></div></div>`;
   }catch(err){
     console.error('Ultimate Test Analysis batch error:',err);
     const el=document.getElementById('upload-result');if(el)el.innerHTML='<div class="empty">❌ Analysis failed: '+labEsc(err.message)+'</div>';
@@ -5196,7 +5222,7 @@ async function uploadPreparedPDFBatch(){
     for(let i=0;i<batch.length;i++){
       const item=batch[i]; pdfSyncFile=item.file;
       const data=pdfApplyPendingMeta(item.data);
-      let syncStats={chaptersAdded:0,skipped:0,weakSubjectsAdded:[]};
+      let syncStats={chaptersAdded:0,skipped:0,weakSubjectsAdded:[],battleLogUpdated:false,scheduleBlocksPlanned:0,targetsPlanned:0};
       try{syncStats=await applyPDFAnalysis(data)}catch(e){console.warn('Chapter sync error:',e)}
       data._syncStats=syncStats;
       if(!combined){

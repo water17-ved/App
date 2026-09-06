@@ -188,3 +188,12 @@ The PDF parser uses this scheme to convert chapter accuracy % into actual marks 
 
 ## Standardized AI Test Analysis Protocol
 The Track → Prompts → Test Analysis prompt now requires every AI-generated report to contain the same machine-readable `=== BEGIN JEE TRACKER DATA ===` appendix. It includes metadata, one record for every question, subject/chapter/topic summaries, mistake counts, priorities, trends and consistency checks. The PDF importer reads this appendix first and falls back to normal PDF table parsing when it is absent. This makes repeated uploads much more consistent and preserves substantially more information for the tracker.
+
+## Shared multi-page storage
+
+- `index.html`, `test-analysis.html`, and `schedule.html` use the same canonical browser `localStorage` database.
+- Cross-page changes are announced with `BroadcastChannel` plus the browser `storage` event, so open pages refresh without manual reload.
+- PDF Test Analysis writes full-test results to the main Battle Log/Boss Battle store (`jee-major-tests`) and generates schedule/target entries using the shared `jee-daily-schedule`, `jee-daily-targets`, and `jee-target-progress` stores.
+- Full-test PDF analysis never creates chapter-wise test-log entries; chapter/topic evidence remains attached to the full-test record for analytics.
+- No sample/demo test data is seeded. User log collections start empty; the syllabus itself remains preloaded.
+- The splash screen is session-scoped through `sessionStorage` and therefore does not replay on refresh or navigation within the same browser session.

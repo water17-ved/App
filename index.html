@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>(function(){try{if(sessionStorage.getItem('jee-splash-seen')==='1'){document.documentElement.classList.add('jee-session-splash-seen');}else{sessionStorage.setItem('jee-splash-seen','1');}}catch(e){}})();</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#170d20">
@@ -729,6 +730,8 @@
   body.theme-minimal .radar-vertex { fill: #ffffff !important; }
   body.theme-minimal .radar-grid-ring, body.theme-minimal .radar-axis-line { stroke: #333333 !important; }
   body.theme-minimal .radar-axis-label { fill: #ffffff !important; }
+
+  .jee-session-splash-seen #splash-screen { display:none !important; }
 
   .splash-screen {
     position: fixed; inset: 0; z-index: 500; overflow: hidden;
@@ -5603,7 +5606,7 @@ window.__splashAriseHold = 700;   // extra time "ARISE." stays on screen after t
 })();
 
 // Failsafe — never traps the user if init() stalls.
-setTimeout(() => {
+if (!document.documentElement.classList.contains('jee-session-splash-seen')) setTimeout(() => {
   const splash = document.getElementById('splash-screen');
   if (splash && !splash.classList.contains('hide')) {
     splash.classList.add('hide');
@@ -5611,23 +5614,34 @@ setTimeout(() => {
   }
 }, 6000);
 
-// ---------- Storage layer ----------
-// Uses Claude's window.storage when running inside claude.ai (artifact preview).
-// Falls back to the browser's own localStorage everywhere else — including this app
-// installed offline as a PWA/APK, where window.storage does not exist. Falling back
-// means data is saved automatically to the device, with zero setup and nothing that
-// can go "out of sync" — there is simply nothing else to configure.
-const hasClaudeStorage = (typeof window.storage !== 'undefined');
+// ---------- Canonical storage + cross-page sync ----------
+// localStorage is the single source of truth for every HTML page in this app.
+// No page keeps a second database, so index.html, test-analysis.html and
+// schedule.html always read/write the same JSON keys on the same origin.
+const JEE_SYNC_CHANNEL_NAME = 'jee-tracker-sync-v1';
+const jeeSyncChannel = ('BroadcastChannel' in window) ? new BroadcastChannel(JEE_SYNC_CHANNEL_NAME) : null;
+const _jeeNativeSetItem = Storage.prototype.setItem;
+const _jeeNativeRemoveItem = Storage.prototype.removeItem;
+Storage.prototype.setItem = function(key, value) {
+  _jeeNativeSetItem.call(this, key, value);
+  if (String(key).startsWith('jee-')) {
+    try { jeeSyncChannel?.postMessage({type:'set', key:String(key), at:Date.now()}); } catch(e) {}
+  }
+};
+Storage.prototype.removeItem = function(key) {
+  _jeeNativeRemoveItem.call(this, key);
+  if (String(key).startsWith('jee-')) {
+    try { jeeSyncChannel?.postMessage({type:'remove', key:String(key), at:Date.now()}); } catch(e) {}
+  }
+};
 
 const localDB = {
   async get(key, shared) {
-    if (hasClaudeStorage) return window.storage.get(key, shared);
     const raw = localStorage.getItem(key);
     if (raw === null) throw new Error('Key not found: ' + key);
     return { key, value: raw, shared: !!shared };
   },
   async set(key, value, shared) {
-    if (hasClaudeStorage) return window.storage.set(key, value, shared);
     try {
       localStorage.setItem(key, value);
       return { key, value, shared: !!shared };
@@ -5637,16 +5651,43 @@ const localDB = {
     }
   },
   async delete(key, shared) {
-    if (hasClaudeStorage) return window.storage.delete(key, shared);
     localStorage.removeItem(key);
     return { key, deleted: true, shared: !!shared };
   },
   async list(prefix, shared) {
-    if (hasClaudeStorage) return window.storage.list(prefix, shared);
     const keys = Object.keys(localStorage).filter(k => !prefix || k.startsWith(prefix));
     return { keys, prefix, shared: !!shared };
   }
 };
+
+// Refresh only the shared domains affected by another page. This keeps the main
+// dashboard live without re-running the splash/onboarding sequence.
+let jeeSyncRefreshTimer = null;
+async function refreshMainFromSharedStorage(keys) {
+  const set = new Set(keys || []);
+  try {
+    if (set.has('jee-progress')) { progressData = (await loadKey('jee-progress')) || {}; applyProgressToDOM(); }
+    if (set.has('jee-adv-progress')) { advProgressData = (await loadKey('jee-adv-progress')) || {}; applyAdvProgressToDOM(); }
+    if (set.has('jee-major-tests')) { majorTests = (await loadKey('jee-major-tests')) || []; renderMajorTests(); renderMockTrendChart(); renderMockAnalysis(); }
+    if (set.has('jee-chapter-tests')) { chapterTests = (await loadKey('jee-chapter-tests')) || []; renderChapterTests(); }
+    if (set.has('jee-daily-schedule')) { dailySchedule = (await loadKey('jee-daily-schedule')) || []; renderSchedule(); }
+    if (set.has('jee-daily-targets')) { dailyTargets = (await loadKey('jee-daily-targets')) || []; renderTargets(); }
+    if (set.has('jee-target-progress')) { targetProgress = (await loadKey('jee-target-progress')) || {}; renderTargets(); }
+    if (set.has('jee-study-hours')) { studyHours = (await loadKey('jee-study-hours')) || []; renderStudyHoursToday(); }
+    if (set.has('jee-self-weak-subjects')) { selfWeakSubjects = (await loadKey('jee-self-weak-subjects')) || []; renderWeakSpotRadar(); renderDangerZone(); renderSubjectAnalysisDetail(); }
+    if (set.has('jee-pdf-analysis-history')) { renderBattlePlanPanel?.(); renderCommandCenter(); }
+    if (set.has('jee-test-analysis-history')) { renderCommandCenter(); }
+    if (set.has('jee-streak')) { streakData = (await loadKey('jee-streak')) || streakData; renderStreak(); }
+    if (set.has('jee-present-days')) { presentData = (await loadKey('jee-present-days')) || presentData; renderPresentButton(); }
+    renderWeeklyProgress(); renderChipRow();
+  } catch(e) { console.warn('Shared sync refresh failed:', e); }
+}
+function queueMainSharedRefresh(key) {
+  clearTimeout(jeeSyncRefreshTimer);
+  jeeSyncRefreshTimer = setTimeout(() => refreshMainFromSharedStorage([key]), 80);
+}
+window.addEventListener('storage', e => { if (e.key?.startsWith('jee-')) queueMainSharedRefresh(e.key); });
+jeeSyncChannel?.addEventListener('message', e => { if (e.data?.key?.startsWith('jee-')) queueMainSharedRefresh(e.data.key); });
 
 // ---------- Firebase (login + live shared leaderboard, incl. mock test log & question log) ----------
 // Checklists and the coaching log stay 100% local via localDB above and never touch this.
@@ -15036,6 +15077,13 @@ async function init() {
 
   handleShortcutParams();
 
+  // The splash is session-scoped: tab switches and refreshes in the same session never replay it.
+  if (document.documentElement.classList.contains('jee-session-splash-seen')) {
+    const splash = document.getElementById('splash-screen');
+    if (splash) splash.style.display = 'none';
+    maybeShowOnboarding();
+    return;
+  }
   const splashStart = window.__splashStart || Date.now();
   const minDisplay = window.__splashMinDisplay || 2200;
   const ariseHold = window.__splashAriseHold || 700;
