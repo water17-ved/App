@@ -15586,6 +15586,107 @@ function parsePDFDeterministically(pages,fileName){
   if(result.overall.accuracy===null&&result.overall.correct!==null&&result.overall.attempted>0)result.overall.accuracy=Math.round(result.overall.correct/result.overall.attempted*1000)/10;
   const map=new Map(); let currentSubject=null, currentChapter=null;
 
+  // ── Standardized JEE Tracker Data appendix pass ──
+  // The AI prompt asks for this exact appendix in every generated PDF. Parsing it
+  // first gives the tracker a deterministic, high-information source instead of
+  // depending on the visual layout of the report tables.
+  (function parseStandardizedTrackerAppendix(){
+    const begin=/===\s*BEGIN\s+JEE\s+TRACKER\s+DATA\s*===/i;
+    const end=/===\s*END\s+JEE\s+TRACKER\s+DATA\s*===/i;
+    const rawLines=all.split(/\r?\n/).map(pdfTokenize).filter(Boolean);
+    const start=rawLines.findIndex(x=>begin.test(x));
+    if(start<0) return;
+    let stop=rawLines.length;
+    for(let i=start+1;i<rawLines.length;i++){ if(end.test(rawLines[i])){stop=i;break;} }
+    const block=rawLines.slice(start+1,stop);
+    let qCount=0, appendixRecords=0;
+    const split=v=>String(v??'').split('|').map(x=>pdfTokenize(x));
+    const num=v=>{ const n=Number(String(v??'').replace(/%$/,'')); return Number.isFinite(n)?n:null; };
+    const clean=v=>{const x=pdfTokenize(v);return !x||/^NA$|^UNKNOWN$/i.test(x)?null:x;};
+    const yes=v=>/^yes|true|pass|ok|reconciled$/i.test(String(v||''));
+
+    for(const line of block){
+      const c=split(line); if(!c[0]) continue;
+      const type=c[0].toUpperCase(); appendixRecords++;
+      try{
+        if(type==='META' && c.length>=12){
+          result.testName=clean(c[1])||result.testName;
+          result.date=clean(c[2])||result.date;
+          result.exam=clean(c[3])||result.exam;
+          if(clean(c[6])) result.totalScore.max=num(c[6])||result.totalScore.max;
+          const mc=num(c[7]), mw=num(c[8]);
+          if(mc!==null) result.parser.markingCorrect=mc;
+          if(mw!==null) result.parser.markingWrong=mw;
+          continue;
+        }
+        if(type==='SUBJECT' && c.length>=12){
+          const subject=pdfNormalizeSubject(c[1]); if(!subject) continue;
+          const rec={subject,myScore:num(c[2]),maxScore:num(c[3]),correct:num(c[4]),wrong:num(c[5]),skipped:num(c[6]),unknown:num(c[7]),attempted:num(c[8]),accuracy:num(c[9])};
+          const existing=result.subjects.find(x=>x.subject===subject);
+          if(existing){Object.keys(rec).forEach(k=>{if(k!=='subject'&&existing[k]==null)existing[k]=rec[k];});}
+          else result.subjects.push(rec);
+          continue;
+        }
+        if(type==='CHAPTER' && c.length>=16){
+          const subject=pdfNormalizeSubject(c[1]), name=clean(c[2]); if(!subject||!name) continue;
+          const ch=pdfEnsureChapter(map,subject,name); if(!ch) continue;
+          pdfMergeMetric(ch,'attempted',num(c[4])); pdfMergeMetric(ch,'correct',num(c[5]));
+          pdfMergeMetric(ch,'wrong',num(c[6])); pdfMergeMetric(ch,'skipped',num(c[7]));
+          pdfMergeMetric(ch,'accuracy',num(c[9])); pdfMergeMetric(ch,'score',num(c[10])); pdfMergeMetric(ch,'maxScore',num(c[11]));
+          const qs=num(c[3]); if(qs!==null && ch.attempted===null) ch.attempted=qs;
+          const mt=clean(c[12]); if(mt) ch.mistakeType=mt.includes(';')?'Mixed':pdfMistakeFromText(mt)||mt;
+          const level=clean(c[13]); if(level) ch.status=/weak/i.test(level)?'WEAK':/priority/i.test(level)?'PRIORITY':ch.status;
+          const pr=clean(c[14]); if(pr) ch.priority=String(pr).toUpperCase();
+          const ev=clean(c[15]); if(ev) pdfBuildEvidence(ch,ev,'Standardized CHAPTER record');
+          continue;
+        }
+        if(type==='TOPIC' && c.length>=15){
+          const subject=pdfNormalizeSubject(c[1]), chapter=clean(c[2]), topic=clean(c[3]);
+          if(subject&&chapter){const ch=pdfEnsureChapter(map,subject,chapter); if(ch){if(topic&&!ch.topics.includes(topic))ch.topics.push(topic); if(clean(c[14]))pdfBuildEvidence(ch,clean(c[14]),'Standardized TOPIC record');}}
+          continue;
+        }
+        if(type==='Q' && c.length>=21){
+          qCount++;
+          const subject=pdfNormalizeSubject(c[2]), chapter=clean(c[4]), topic=clean(c[5]), qid=clean(c[1]);
+          if(subject&&chapter){
+            const ch=pdfEnsureChapter(map,subject,chapter);
+            if(ch){
+              if(qid&&!ch.questions.includes(qid)) ch.questions.push(qid);
+              if(topic&&!ch.topics.includes(topic)) ch.topics.push(topic);
+              const status=clean(c[10]);
+              if(status==='Wrong' && !ch.mistakeType) ch.mistakeType=clean(c[13])||'Mixed';
+              if(status==='Unattempted' && ch.skipped===null) ch.skipped=(ch.skipped||0)+1;
+              if(status==='Correct' && ch.correct===null) ch.correct=(ch.correct||0)+1;
+              if(status==='Wrong' && ch.wrong===null) ch.wrong=(ch.wrong||0)+1;
+              const ev=clean(c[20]); if(ev)pdfBuildEvidence(ch,ev,'Standardized Q record');
+            }
+          }
+          continue;
+        }
+        if(type==='PRIORITY' && c.length>=9){
+          const subject=pdfNormalizeSubject(c[2]), chapter=clean(c[3]), topic=clean(c[4]);
+          if(subject&&chapter){
+            const pr=String(clean(c[5])||'MEDIUM').toUpperCase();
+            result.revisionTargets.push({subject,chapter,reason:clean(c[6])||'Standardized priority record',priority:pr,topic});
+            const ch=pdfEnsureChapter(map,subject,chapter); if(ch){ch.priority=pr; if(pr==='HIGH'||/critical|urgent/i.test(pr))ch.status='WEAK'; if(topic&&!ch.topics.includes(topic))ch.topics.push(topic);}
+          }
+          continue;
+        }
+        if(type==='CHECK' && c.length>=4){
+          const item=clean(c[1]), value=clean(c[2]), status=clean(c[3]);
+          if(item) result.insights.push('Data check — '+item+': '+(value||'NA')+' ['+(status||'NA')+']');
+          continue;
+        }
+      }catch(e){ /* malformed appendix row: keep normal parser as fallback */ }
+    }
+    if(appendixRecords>0){
+      result.parser.engine='standardized-jee-tracker-data+deterministic-pdf-parser';
+      result.parser.standardizedAppendix=true;
+      result.parser.appendixRecords=appendixRecords;
+      result.parser.questionRecords=qCount;
+    }
+  })();
+
   // ── JEE-format table pass (runs before general line loop) ──
   // Handles two known chapter-table layouts produced by common JEE analysis PDFs:
   //   Format A: "Rank | Subject | Chapter | Score | Accuracy% | BAND | Diagnosis…"
@@ -15932,34 +16033,150 @@ Before answering, internally verify every page was read, duplicates were merged,
 }
 
 function getAIAnalysePrompt() {
-  return `JEE TEST ANALYSIS & PDF GENERATION SYSTEM
+  return `JEE TEST ANALYSIS — STANDARDIZED DATA-FIRST REPORT PROTOCOL
 
-You are an expert JEE examination analyst, question-paper evaluator, and professional educational-report designer.
+ROLE
+You are an expert JEE Main/Advanced test analyst, question-paper evaluator and coaching-report designer. Your output will be read by BOTH a human student and a software algorithm. Therefore, consistency and machine-readable data are mandatory.
 
-I will provide three inputs: (1) Question Paper, (2) Official Answer Key, and (3) My Attempt/Response Sheet. Read all three completely, match every question, and generate TWO separate professional PDF reports.
+INPUTS
+I will provide, where available:
+A) Question Paper
+B) Official Answer Key
+C) My Attempt / Response Sheet
+D) Test metadata if already supplied (test name, date, exam, shift, marking scheme, maximum marks)
 
-ACCURACY RULES
-- Do not guess unclear answers; mark them Unclear / Cannot Determine.
-- Preserve original question numbering.
-- Handle MCQ, multiple-correct, numerical/integer and other formats present.
-- Follow the supplied marking scheme. If unavailable, state the assumption.
-- Recalculate the final score independently from question-level results and verify reconciliation.
-- Do not fabricate chapter/topic names; use actual question content and JEE syllabus.
+READING REQUIREMENT
+Read ALL supplied files completely, page by page. Do not analyse from a preview, first page, summary page, or a partial table. Match the same question number across the question paper, answer key and response sheet before deciding the result.
 
-FOR EVERY QUESTION determine: Question number, Subject, Chapter, Topic, Sub-topic if identifiable, correct answer, my answer, status, marks obtained, maximum marks, difficulty, and concept tested.
-Status: Correct | Wrong | Unattempted | Unclear / Cannot Determine.
-Difficulty: Easy | Moderate | Hard | Very Hard.
+NON-NEGOTIABLE DATA RULES
+1. Never invent or guess a value. If a value cannot be established, write NA / UNKNOWN.
+2. Preserve original question numbers exactly, including section/question labels when present.
+3. Use the official answer key as the answer source of truth.
+4. Use my response sheet as the source of truth for my answer/attempt status.
+5. Follow the supplied marking scheme. If it is not supplied but can be reliably identified from the paper, state the detected scheme. Otherwise use NA and ask for clarification only after completing all analysis that does not depend on it.
+6. Recalculate score independently from question-level rows. Do not copy a reported score without reconciliation.
+7. Never infer a chapter/topic merely from a question number. Identify it from the question content and syllabus; if uncertain, use NA.
+8. For multiple-correct questions, numerical questions, integer-answer questions, matrix/match questions and special sections, preserve the actual question type and apply the stated scheme.
+9. Distinguish Unattempted from UNKNOWN. An unreadable/missing response is UNKNOWN, not Unattempted.
+10. If OCR or PDF extraction is ambiguous, preserve the uncertainty instead of fabricating text.
+11. Keep subject names exactly: Physics, Chemistry, Maths.
+12. Keep difficulty exactly: Easy, Moderate, Hard, Very Hard, Unknown.
+13. Keep status exactly: Correct, Wrong, Unattempted, Unknown.
+14. Keep mistake type exactly: Conceptual, Calculation, Formula, Silly, Misread question, Incorrect approach, Time-pressure, Guessing, Other, Unknown.
+15. For every derived metric, distinguish REPORTED from CALCULATED in the notes/data block.
+
+CORE QUESTION-LEVEL FIELDS — REQUIRED FOR EVERY QUESTION
+For every question create a row containing:
+Question ID | Subject | Section | Chapter | Topic | Sub-topic | Question Type | Official Answer | My Answer | Status | Difficulty | Concept Tested | Mistake Type | Marks Obtained | Maximum Marks | Negative Marks | Time/Time-pressure Evidence | Confidence | Evidence/Reason
+
+If a field is unavailable, write NA. Do not omit a question because some fields are unavailable.
+
+HUMAN-READABLE + MACHINE-READABLE REQUIREMENT — CRITICAL
+The report must be completely understandable to a normal JEE student without needing to inspect the machine-readable appendix. Every important fact used by the tracker (question result, subject, chapter/topic, marks, mistake, difficulty, weakness, priority and evidence) must also appear in the normal human-readable report whenever that fact is available. Never put an important conclusion ONLY in the machine-readable appendix.
+
+After the normal report, include the machine-readable appendix as an additional visible section. It is not hidden metadata, HTML, comments, or an invisible layer. Label it clearly as “JEE TRACKER DATA — MACHINE-READABLE APPENDIX” and explain in one short sentence that it is included so the tracker can import the analysis accurately.
+
+STANDARDIZED MACHINE-READABLE DATA APPENDIX — CRITICAL
+At the END of BOTH PDF reports, include a section titled exactly:
+=== BEGIN JEE TRACKER DATA ===
+
+Use plain text, monospaced font, one record per line, ASCII pipe separators, and NO wrapped lines inside a record. Do not use Markdown tables inside this appendix. Do not put extra commentary inside the appendix.
+
+The appendix MUST use these exact record types and field order:
+META|test_name|date|exam|shift|duration_min|max_marks|marking_correct|marking_wrong|marking_unattempted|source_files
+Q|question_id|subject|section|chapter|topic|subtopic|question_type|official_answer|my_answer|status|difficulty|concept|mistake_type|marks_obtained|max_marks|negative_marks|time_pressure|confidence|evidence
+SUBJECT|subject|score|max_score|correct|wrong|unattempted|unknown|attempted|accuracy|negative_marks|score_loss|weakness_level
+CHAPTER|subject|chapter|questions|attempted|correct|wrong|unattempted|unknown|accuracy|score|max_score|mistake_types|weakness_level|priority|evidence
+TOPIC|subject|chapter|topic|questions|attempted|correct|wrong|unattempted|unknown|accuracy|score|mistake_types|priority|evidence
+MISTAKE|mistake_type|count|marks_lost|percentage|examples
+TREND|metric|value|comparison|evidence
+PRIORITY|rank|subject|chapter|topic|priority|reason|recommended_action
+CHECK|item|value|status|notes
+
+FIELD RULES FOR THE APPENDIX
+- Keep the exact field order above.
+- Escape any literal pipe character inside a value as /.
+- Replace line breaks inside a value with a space.
+- Use NA instead of blank values.
+- Use percentages as numbers without the % sign (example: 72.5).
+- Use numeric marks/counts where known; otherwise NA.
+- Use semicolon-separated lists inside a field (example: Conceptual;Calculation).
+- Do not round question counts.
+- Do not create duplicate Q rows.
+- Every question in the question paper must have exactly one Q row.
+- Chapter and topic rows must aggregate only the Q rows that belong to them.
+- CHECK rows must explicitly show whether totals reconcile.
+- If a question cannot be classified reliably, keep it with NA fields rather than dropping it.
+
+MANDATORY META RECORD
+The META record must contain the best available test metadata. If date/test name is absent, use NA rather than inventing it.
+
+MANDATORY SUBJECT RECORDS
+Create exactly three SUBJECT records, one each for Physics, Chemistry, Maths. Use NA for unavailable metrics.
+
+MANDATORY CHAPTER RECORDS
+Create a CHAPTER record for every chapter appearing in the question-level data, not only weak chapters. This is essential for trend analysis and future comparison.
+
+MANDATORY TOPIC RECORDS
+Create TOPIC records whenever a topic can be identified reliably. If topic identification is not reliable, use NA rather than guessing.
+
+MANDATORY WEAKNESS PRIORITIZATION
+Rank weaknesses using observed evidence such as low accuracy, repeated wrong answers, score loss, conceptual mistakes, formula mistakes, calculation errors, skipped questions, or repeated failure across related topics. Do not label a chapter weak solely because it has few questions.
 
 REPORT 1 — QUESTION PAPER ANALYSIS
-Include a cover/dashboard, legend, then a complete question-by-question analysis with chapter/topic, difficulty, concept, official answer, my answer, result and marks. For wrong questions identify the strongest supported mistake type: Conceptual, Calculation, Silly, Formula, Misread question, Incorrect approach, Time-pressure, Guessing, Other, or Not determinable. Finish with chapter-wise and topic-wise performance tables.
+Create a professional PDF containing:
+1. Cover + test metadata
+2. Executive dashboard
+3. Full question-by-question analysis for ALL questions. The visible table must show, where available: question ID, subject, chapter, topic, your answer, official answer, result, difficulty, marks, mistake type, concept tested and a concise evidence/reason.
+4. Subject-wise question distribution and performance
+4. Subject-wise question distribution and performance
+5. Chapter-wise performance table
+6. Topic-wise performance table where reliable
+7. Difficulty analysis
+8. Mistake analysis for wrong questions
+9. Score reconciliation / data consistency check
+10. The standardized machine-readable appendix described above
 
 REPORT 2 — TEST PERFORMANCE & WEAKNESS ANALYSIS
-Include executive dashboard; subject-wise analysis; chapter-wise strongest-to-weakest ranking; topic-wise weakness analysis; mistake-type counts and top patterns; score-loss analysis; performance insights; ranked revision targets; and a specific Immediate / Short Term / Long Term action plan based only on this test. Include a Data Consistency Check covering counts, marks, negative marking and final score.
+Create a professional PDF containing:
+1. Cover + test metadata
+2. Current standing: score, percentage, accuracy, attempted, correct, wrong, unattempted
+3. Subject-wise standing
+4. Chapter-wise strongest → weakest ranking
+5. Topic-wise weaknesses
+6. Score-loss analysis: where marks were actually lost
+7. Mistake-type distribution
+8. High-priority revision targets
+9. What to fix immediately
+10. Short-term plan
+11. Long-term plan
+12. Positive strengths / what is working
+13. Data consistency check
+14. The same standardized machine-readable appendix described above
+
+IMPORTANT: REPORT CONSISTENCY
+Both PDFs must use the SAME question-level facts, metadata, chapter names, topic names, subject totals and marking scheme. Do not produce conflicting numbers between the two reports. If a fact is unavailable, show NA/UNKNOWN consistently rather than silently omitting it.
+
+DATA COMPLETENESS
+Prefer complete data over attractive brevity. Do not summarize away question-level information that can be extracted. Preserve all questions, all response statuses, all marks, all identifiable chapter/topic classifications, all mistake evidence and all consistency checks. Use concise wording so the report remains readable, but do not drop useful fields merely to make it shorter.
+
+TREND SAFETY
+This is a single-test analysis unless historical tests are explicitly supplied. Do not claim improvement, decline, rank, percentile, AIR, or standing against other students unless the input contains valid comparative data. For a single test, say “current test standing” rather than inventing a rank/percentile.
 
 DESIGN
-Professional JEE coaching-institute style, clean typography, readable tables, charts, subject separation, page numbers, print-friendly A4 and phone readability.
+Professional JEE coaching-institute style, clean typography, A4 printable, readable on phone, subject-separated sections, tables, charts where useful, page numbers, and clear visual hierarchy.
 
-Generate TWO separate PDF files. Analyse the uploaded files first and ask for clarification only when data genuinely cannot be determined.`;
+FINAL VALIDATION BEFORE OUTPUT
+1. Confirm every question has exactly one Q record.
+2. Confirm Q records reconcile with correct/wrong/unattempted/unknown totals.
+3. Confirm subject totals reconcile with the question rows.
+4. Confirm calculated score reconciles with the marking scheme.
+5. Confirm chapter totals reconcile with Q rows.
+6. Confirm both PDFs contain the same standardized appendix data.
+7. Confirm no unsupported values were invented.
+8. Confirm all three subjects have SUBJECT records even if some values are NA.
+
+Generate TWO separate PDF files and include the standardized data appendix in BOTH. Analyse the uploaded files first. Ask for clarification only for genuinely missing information that is required to calculate a specific metric; otherwise continue and mark that field NA/UNKNOWN.`;
 }
 
 function openPromptAI(provider, type) {

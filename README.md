@@ -184,3 +184,7 @@ The PDF parser uses this scheme to convert chapter accuracy % into actual marks 
 - **Marking scheme shows "Not set":** Go to Settings → Study Setup → Marking Scheme and tap Mains or Advanced. It will now persist after reload.
 - **Service worker not activating:** Make sure you're serving via HTTP (not `file://`). Use `python -m http.server` locally.
 - **Clearing data accidentally:** Use the Export button in Settings before clearing browser data.
+
+
+## Standardized AI Test Analysis Protocol
+The Track → Prompts → Test Analysis prompt now requires every AI-generated report to contain the same machine-readable `=== BEGIN JEE TRACKER DATA ===` appendix. It includes metadata, one record for every question, subject/chapter/topic summaries, mistake counts, priorities, trends and consistency checks. The PDF importer reads this appendix first and falls back to normal PDF table parsing when it is absent. This makes repeated uploads much more consistent and preserves substantially more information for the tracker.
