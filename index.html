@@ -2284,6 +2284,9 @@
   .ai-import-chapter-list { margin: 6px 0 0; padding: 0; list-style: none; }
   .ai-import-chapter-list li { padding: 2px 0; font-size: 0.76rem; }
 
+  /* Full tests belong to Battle Log; chapter-wise test entry is legacy-only. */
+  [data-legacy-chapter-test-ui="1"] { display:none !important; }
+
   /* ---- Daily Schedule blocks ---- */
   .schedule-block {
     display: flex; align-items: center; gap: 12px;
@@ -3985,6 +3988,13 @@
       </label>
       <div id="targets-list"></div>
     </div>
+
+    <div class="log-section" id="battle-plan-sync-panel">
+      <h2>⚔️ Battle Plan → Schedule</h2>
+      <p style="font-size:0.78rem;margin:-6px 0 12px;color:var(--text-muted);">The latest Battle Log analysis automatically turns high-priority weaknesses into targets and focused schedule blocks. Your manually created schedule remains untouched.</p>
+      <div id="battle-plan-summary" class="cc-priority"></div>
+      <div id="battle-plan-actions" class="util-bar" style="margin-top:10px;"></div>
+    </div>
   </div>
 
   <div id="physics" class="tab-content">
@@ -4085,7 +4095,7 @@
         <div id="maths-adv-list"></div>
       </div>
 
-      <div id="advanced-tests" class="adv-subject-content">
+      <div id="advanced-tests" class="adv-subject-content" data-legacy-chapter-test-ui="1">
         <div class="log-section">
           <h2>🎯 Advanced Chapter Test Log <button type="button" class="form-help-btn" onclick="showFormHelp('act')" aria-label="Help">?</button></h2>
           <div class="add-form">
@@ -4153,7 +4163,7 @@
       <div id="pdf-battle-log"></div>
     </div>
 
-    <div class="log-section">
+    <div class="log-section" data-legacy-chapter-test-ui="1">
       <h2>🔫 Chapter Skirmish Log <button type="button" class="form-help-btn" onclick="showFormHelp('ct')" aria-label="Help">?</button></h2>
       <details class="paste-results-box">
         <summary>📋 Paste Results (fill Qs / My Score automatically)</summary>
@@ -9824,6 +9834,8 @@ function renderJEEIntelligence() {
 let _tabSwitching = false;
 
 function switchTab(tabId, btnEl) {
+  // Schedule is a dedicated page so the timetable/targets have their own focused workspace.
+  if (tabId === 'schedule') { window.location.href = './schedule.html'; return; }
   const newTab = document.getElementById(tabId);
   if (!newTab) return;
 
@@ -14394,6 +14406,7 @@ async function executeReset() {
   renderDailyQuestions();
   renderSchedule();
   renderTargets();
+  renderBattlePlanPanel();
   renderCustomTests();
   renderStudyHoursToday();
   renderAdvChapterTests();
@@ -15876,44 +15889,50 @@ async function uploadAndAnalysePDF() {
 
 
 async function applyPDFAnalysis(data){
-  const today=data.date||dateStr(0),stats={chaptersAdded:0,skipped:0,weakSubjectsAdded:[],totalScore:data.totalScore,stored:false,recordId:null};
+  const today=data.date||dateStr(0);
+  const stats={chaptersAdded:0,skipped:0,weakSubjectsAdded:[],totalScore:data.totalScore,stored:false,recordId:null,battleTestAdded:false,scheduleUpdated:0,targetsUpdated:0};
   const subjectKeyMap={Physics:'physics',Chemistry:'chemistry',Maths:'maths'};
   const newWeakSubs=new Set(selfWeakSubjects||[]);
-  data.subjects.forEach(s=>{
+  (data.subjects||[]).forEach(s=>{
     const key=subjectKeyMap[s.subject];
-    const supportedWeak=data.chapters.some(c=>c.subject===s.subject&&(c.status==='WEAK'||c.status==='PRIORITY'||c.priority==='HIGH'))||data.revisionTargets.some(r=>r.subject===s.subject&&['HIGH','MEDIUM'].includes(r.priority));
+    const supportedWeak=(data.chapters||[]).some(c=>c.subject===s.subject&&(c.status==='WEAK'||c.status==='PRIORITY'||c.priority==='HIGH'))||
+      (data.revisionTargets||[]).some(r=>r.subject===s.subject&&['HIGH','MEDIUM'].includes(String(r.priority||'').toUpperCase()));
     if(key&&supportedWeak&&!newWeakSubs.has(key)){newWeakSubs.add(key);stats.weakSubjectsAdded.push(key);}
   });
   if(stats.weakSubjectsAdded.length){selfWeakSubjects=[...newWeakSubs];try{await localDB.set('jee-self-weak-subjects',JSON.stringify(selfWeakSubjects),false);}catch(e){}}
-  const ms=markingScheme||{correct:4,wrong:-1},testName=data.testName||'PDF Import';
-  data.chapters.forEach(ch=>{
-    const matched=pdfChapterMatch(ch.name,ch.subject);
-    if(!matched){stats.skipped++;return;}
-    const totalQuestions=[ch.correct,ch.wrong,ch.skipped].every(v=>v!==null)?ch.correct+ch.wrong+ch.skipped
-      :(ch.attempted!==null?ch.attempted
-      :(ch.score!==null&&ch.accuracy!==null&&ch.accuracy>0
-        ?Math.max(1,Math.round(Math.abs(ch.score)/((ch.accuracy/100)*(ms.correct||4))))
-        :5)); // fallback estimate when only score+accuracy known
-    const score=ch.score!==null?ch.score:(ch.correct!==null&&ch.wrong!==null?ch.correct*ms.correct+ch.wrong*ms.wrong:null);
-    if(totalQuestions<=0||score===null)return;
-    const mistakeMap={Conceptual:'Concept Gap',Calculation:'Silly Mistake',Formula:'Formula Gap',Silly:'Silly Mistake',Guessing:'Guessed Wrong','Incorrect approach':'Incorrect Approach',Skipped:'Skipped',Mixed:'Concept Gap'},mistake=ch.mistakeType||'Mixed';
-    const duplicate=chapterTests.some(t=>t.topic===matched.ch.name&&t.subject===matched.subject&&t.date===today&&String(t.note||'').includes(testName));
-    if(duplicate)return;
-    const detailParts=[];
-    if(ch.accuracy!==null)detailParts.push('Accuracy: '+ch.accuracy+'%');
-    if(ch.status&&ch.status!=='UNKNOWN')detailParts.push('Status: '+ch.status);
-    if(ch.priority&&ch.priority!=='UNKNOWN')detailParts.push('Priority: '+ch.priority);
-    if(ch.topics?.length)detailParts.push('Topics: '+ch.topics.join(', '));
-    if(ch.questions?.length)detailParts.push('Questions: '+ch.questions.join(', '));
-    if(ch.evidence?.length)detailParts.push('Evidence: '+ch.evidence.join(' | '));
-    chapterTests.unshift({subject:matched.subject,topic:matched.ch.name,level:'chapter',questions:String(totalQuestions),myscore:String(score),topperscore:'',date:today,mistake:[mistakeMap[mistake]||'Concept Gap'],note:'Auto-synced from PDF: '+testName+(detailParts.length?' — '+detailParts.join(' — '):'')});
-    stats.chaptersAdded++;
-  });
-  if(stats.chaptersAdded>0){await saveChapterTests();renderChapterTests();}
+  const testName=data.testName||'PDF Import';
+  const duplicate=majorTests.some(t=>(data.testId&&String(t.testId||'')===String(data.testId))||(t.source==='pdf-analysis'&&t.name===testName&&t.date===today));
+  if(!duplicate&&(data.totalScore?.my!=null||(data.subjects||[]).length)){
+    const chapterEvidence=(data.chapters||[]).map(ch=>({subject:ch.subject,name:ch.name,score:ch.score,maxScore:ch.maxScore,attempted:ch.attempted,correct:ch.correct,wrong:ch.wrong,skipped:ch.skipped,accuracy:ch.accuracy,status:ch.status,priority:ch.priority,mistakeType:ch.mistakeType,topics:ch.topics||[],questions:ch.questions||[],evidence:ch.evidence||[]}));
+    const topics=[...new Set([...(data.revisionTargets||[]).map(r=>r.chapter||r.topic||r.name).filter(Boolean),...chapterEvidence.filter(c=>c.priority==='HIGH'||c.status==='PRIORITY').map(c=>c.name)])].slice(0,30);
+    majorTests.unshift({name:testName,date:today,testId:data.testId||null,source:'pdf-analysis',exam:data.exam||null,questions:data.overall?.attempted!=null?(Number(data.overall.attempted)||0):0,maxmarks:data.totalScore?.max??300,negmarks:data.overall?.negativeMarks??'',scored:data.totalScore?.my??'',format:'analysis',topics,note:(data.insights||[]).slice(0,3).join(' • ')||'Imported from Test Analysis PDF',overall:data.overall||{},subjects:data.subjects||[],chapterEvidence,revisionTargets:data.revisionTargets||[],insights:data.insights||[],actionItems:data.actionItems||[],importedAt:new Date().toISOString()});
+    await saveMajorTests();renderMajorTests();renderMockTrendChart();renderMockAnalysis();stats.battleTestAdded=true;
+  }
   renderWeakSpotRadar();renderDangerZone();renderSubjectRadarChart();renderZoneShrinking();renderRevisionDue();renderAchievements();
+  try{
+    const high=(data.revisionTargets||[]).filter(r=>['HIGH','MEDIUM'].includes(String(r.priority||'').toUpperCase()));
+    const weak=(data.chapters||[]).filter(c=>c.status==='WEAK'||c.status==='PRIORITY'||c.priority==='HIGH');
+    const priorities=[];[...high,...weak].forEach(x=>{const subject=x.subject||'Other',label=x.chapter||x.topic||x.name||x.description;if(label)priorities.push({subject,label,priority:String(x.priority||'MEDIUM').toUpperCase(),reason:x.reason||x.evidence?.[0]||''});});
+    const uniq=[],seen=new Set();priorities.forEach(x=>{const k=x.subject+'|'+x.label;if(!seen.has(k)){seen.add(k);uniq.push(x);}});
+    dailyTargets=(dailyTargets||[]).filter(t=>t.generatedBy!=='battle-plan');
+    uniq.slice(0,6).forEach(x=>dailyTargets.push({id:nextTargetId(),label:`Battle Priority: ${x.label} — ${x.subject}`,type:'checkbox',targetValue:'',unit:'',generatedBy:'battle-plan',planKey:x.subject+'|'+x.label,sourceTest:testName,priority:x.priority}));
+    stats.targetsUpdated=Math.min(6,uniq.length);await saveTargets();renderTargets();
+    dailySchedule=(dailySchedule||[]).filter(b=>b.generatedBy!=='battle-plan');
+    const times=['08:00','11:00','15:00','18:00','20:30','22:00'];
+    uniq.slice(0,6).forEach((x,i)=>dailySchedule.push({id:nextScheduleId(),time:times[i],duration:x.priority==='HIGH'?'60':'45',label:`Battle Revision: ${x.label}`,subject:['Physics','Chemistry','Maths'].includes(x.subject)?x.subject:'Other',note:`From ${testName}${x.reason?' — '+x.reason:''}`,generatedBy:'battle-plan',planKey:x.subject+'|'+x.label,sourceTest:testName}));
+    stats.scheduleUpdated=Math.min(6,uniq.length);await saveSchedule();renderSchedule();renderBattlePlanPanel();
+  }catch(e){console.error('Battle plan sync error:',e);}
   try{stats.recordId=await persistPDFAnalysisRecord(data,stats);stats.stored=true;}catch(e){console.error('PDF history save error:',e);}
   await renderPDFBattleLog();
+  flashStatus(stats.battleTestAdded?`Battle Log updated ✓ · ${stats.scheduleUpdated} schedule blocks planned`:'Analysis saved ✓');
   return stats;
+}
+function renderBattlePlanPanel(){
+  const el=document.getElementById('battle-plan-summary'),actions=document.getElementById('battle-plan-actions');if(!el)return;
+  const generated=(dailySchedule||[]).filter(x=>x.generatedBy==='battle-plan'),targets=(dailyTargets||[]).filter(x=>x.generatedBy==='battle-plan'),latest=majorTests.find(x=>x.source==='pdf-analysis');
+  if(!latest){el.innerHTML='<div style="font-size:.8rem;color:var(--text-muted);">No Battle Log analysis has generated a plan yet.</div>';if(actions)actions.innerHTML='';return;}
+  el.innerHTML=`<div style="font-weight:800;margin-bottom:5px;">⚔️ ${latest.name}</div><div style="font-size:.76rem;color:var(--text-muted);">${targets.length} priority targets · ${generated.length} focused schedule blocks · chapter evidence remains attached to the Battle Log.</div>`;
+  if(actions)actions.innerHTML=`<button class="util-btn util-btn-cyan" onclick="switchTab('tests');document.getElementById('pdf-battle-log-section')?.scrollIntoView({behavior:'smooth'});">Open Battle Log</button><button class="util-btn" onclick="renderBattlePlanPanel()">Refresh Plan</button>`;
 }
 
 function showPDFResult(payload) {

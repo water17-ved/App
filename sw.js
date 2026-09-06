@@ -3,12 +3,13 @@
 // Caches both app files so the tracker works fully offline after first load.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const CACHE_VERSION = 'jee-tracker-v2026-09-06-hardened-final';
+const CACHE_VERSION = 'jee-tracker-v2026-09-06-schedule-page-final';
 
 // Core app files to pre-cache on install
 const PRECACHE = [
   './index.html',
   './test-analysis.html',
+  './schedule.html',
   './manifest.json'
 ];
 
