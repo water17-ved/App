@@ -4565,41 +4565,27 @@
       <p style="margin:0;color:var(--text-muted);font-size:0.78rem;">Optional AI tools for test analysis and weak-chapter tracking — the core tracker works without AI.</p>
     </div>
 
-    <!-- ── PDF Analysis Sync ── -->
-    <div class="log-section pdf-sync-card">
+    <!-- ── PDF Analysis Sync — opens test-analysis.html ── -->
+    <div class="log-section pdf-sync-card" style="cursor:default;">
       <div class="pdf-sync-header">
         <span class="pdf-sync-icon">📄</span>
         <div>
           <h2 style="margin:0 0 2px 0; font-size:1rem;">PDF Analysis Sync</h2>
-          <p style="margin:0; font-size:0.75rem; color:var(--text-muted);">Upload your test analysis PDF — the app reads it directly and updates weak spots, Danger Zone, and chapter logs automatically. No copy-paste needed.</p>
+          <p style="margin:0; font-size:0.75rem; color:var(--text-muted);">Upload your test PDF in the Analysis Lab — it reads chapter scores, accuracy, and mistake types, then syncs everything back here automatically.</p>
         </div>
       </div>
-
-      <div class="pdf-drop-zone" id="pdf-drop-zone"
-           ondragover="event.preventDefault(); this.classList.add('drag-over')"
-           ondragleave="this.classList.remove('drag-over')"
-           ondrop="handlePDFDrop(event)">
-        <input type="file" accept="application/pdf,image/png,image/jpeg,image/webp"
-               id="pdf-file-input" onchange="onPDFFileSelected(this)">
-        <span class="pdf-drop-icon">📂</span>
-        <div class="pdf-drop-label">
-          <strong>Tap to upload</strong> or drag your PDF here<br>
-          <span style="font-size:0.72rem;">JEE result card, ALLEN / Aakash sheet, or any test platform export</span>
-        </div>
+      <div style="border:1px dashed rgba(139,92,246,0.35); border-radius:10px; padding:20px 16px; text-align:center; margin-bottom:12px;">
+        <div style="font-size:2rem; margin-bottom:6px;">🔬</div>
+        <div style="font-size:0.84rem; font-weight:600; margin-bottom:4px;">JEE Test Analysis Lab</div>
+        <div style="font-size:0.74rem; color:var(--text-muted); margin-bottom:14px;">Upload PDFs, images, or scanned sheets · Question-by-question breakdown · Auto-syncs to Danger Zone &amp; Battle Log</div>
+        <a href="./test-analysis.html" target="_blank"
+           style="display:inline-block; padding:11px 28px; border-radius:8px; font-family:var(--font-display); letter-spacing:2px; font-size:0.8rem; background:linear-gradient(90deg,rgba(139,92,246,0.25),rgba(168,85,247,0.25)); border:1px solid rgba(139,92,246,0.6); color:#a78bfa; text-decoration:none;">
+          📤 Open Analysis Lab
+        </a>
       </div>
-
-
-      <button class="add-btn pdf-analyse-btn" id="pdf-analyse-btn"
-              onclick="uploadAndAnalysePDF()" disabled>
-        🔍 Analyse &amp; Sync to Tracker
-      </button>
-
-      <div class="pdf-processing" id="pdf-processing">
-        <div class="pdf-spinner"></div>
-        <span class="pdf-processing-label" id="pdf-processing-label">Reading your PDF...</span>
+      <div style="font-size:0.72rem; color:var(--text-muted); text-align:center; line-height:1.5;">
+        Results sync automatically — Danger Zone, Weak Spot Radar, and Battle Log update as soon as you analyse a PDF in the lab.
       </div>
-
-      <div class="pdf-result" id="pdf-result"></div>
     </div>
 
     <!-- AI Import Results section -->

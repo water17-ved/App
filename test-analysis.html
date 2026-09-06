@@ -3507,53 +3507,248 @@
 .ji-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.ji-kpi-grid .marks-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:66px}.ji-kpi-grid small{font-size:.68rem;color:var(--text-muted);margin-top:3px}.ji-priority-list{margin-top:4px}.ji-priority-item{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 12px;margin:7px 0;border:1px solid var(--border);border-radius:10px;background:var(--surface-2)}.ji-priority-item>div{display:flex;flex-direction:column}.ji-priority-item span{font-size:.72rem;color:var(--text-muted);margin-top:2px}.ji-priority-item>b{font-size:.85rem}.ji-priority-item p{grid-column:1/-1;margin:5px 0 0;font-size:.73rem;color:var(--text-muted)}.ji-graph-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.ji-graph-card{border:1px solid var(--border);border-radius:10px;padding:12px;background:var(--surface-2)}.ji-graph-card h3{font-size:.82rem;margin:0 0 10px}.ji-graph-card p{font-size:.72rem;color:var(--text-muted)}.ji-bar-row{margin:8px 0}.ji-bar-label{display:flex;justify-content:space-between;font-size:.7rem;margin-bottom:4px}.ji-bar-track{height:8px;border-radius:99px;background:var(--border);overflow:hidden}.ji-bar-fill{height:100%;border-radius:99px;background:var(--phys);transition:width .3s ease}.ji-insight{margin:9px 0 0!important}.ji-list-row{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid var(--border)}.ji-list-row:last-child{border-bottom:0}.ji-list-row .rank{width:24px;text-align:center;font-weight:800}.ji-list-main{flex:1;display:flex;flex-direction:column}.ji-list-main strong{font-size:.82rem}.ji-list-main span,.ji-list-meta{font-size:.68rem;color:var(--text-muted)}.ji-list-meta{text-align:right;min-width:52px}.ji-list-meta b{color:var(--text)}.ji-boss{display:flex;gap:12px;padding:12px;margin:7px 0;border:1px solid var(--border);border-radius:10px;background:var(--surface-2)}.ji-boss-icon{font-size:1.6rem}.ji-boss strong{font-size:.85rem}.ji-boss span{display:block;font-size:.7rem;color:var(--text-muted);margin-top:2px}.ji-boss p{font-size:.73rem;margin:7px 0 0}.ji-autopsy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.ji-autopsy-grid>div{padding:10px;border:1px solid var(--border);border-radius:9px;background:var(--surface-2);display:flex;flex-direction:column;gap:4px}.ji-autopsy-grid span{font-size:.65rem;color:var(--text-muted)}.ji-autopsy-grid strong{font-size:.78rem}.ji-autopsy-verdict{margin-top:10px;padding:11px;border-radius:9px;background:var(--surface-2);font-size:.75rem}.ai-analyse-card{border:1px solid var(--border)}
 @media(max-width:700px){.ji-kpi-grid{grid-template-columns:repeat(2,1fr)}.ji-graph-grid{grid-template-columns:1fr}.ji-autopsy-grid{grid-template-columns:repeat(2,1fr)}}
 
-</style><style>
-body{background:#090b10;color:#f5f7fb;margin:0;font-family:Inter,system-ui,sans-serif}.analysis-shell{max-width:1100px;margin:0 auto;padding:24px 16px 60px}.hero{padding:22px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));margin-bottom:16px}.hero h1{margin:0 0 6px;font-size:1.55rem}.muted{color:var(--text-muted,#9aa3b2)}.drop{border:1.5px dashed rgba(255,255,255,.18);border-radius:16px;padding:30px;text-align:center;cursor:pointer;background:rgba(255,255,255,.025)}.drop.drag{border-color:#6ee7ff;background:rgba(110,231,255,.06)}.drop input{display:none}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.toolbar button{flex:1;min-width:180px}.progress{margin-top:12px;display:none}.progress.active{display:block}.progressbar{height:5px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}.progressbar i{display:block;height:100%;width:0;background:currentColor;transition:width .2s}.analysis-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}.analysis-card{border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:14px;background:rgba(255,255,255,.025)}.analysis-card h3{margin:0 0 9px;font-size:.92rem}.metric-row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.metric{padding:9px;border-radius:10px;background:rgba(255,255,255,.035)}.metric b{display:block;font-size:1rem}.metric span{font-size:.68rem;color:var(--text-muted)}.subject-card,.chapter-card-lite,.log-card{padding:11px;border:1px solid rgba(255,255,255,.08);border-radius:11px;margin-top:8px}.chapter-card-lite .top,.log-card .top{display:flex;justify-content:space-between;gap:10px;align-items:center}.tag{font-size:.66rem;padding:3px 7px;border-radius:99px;background:rgba(255,255,255,.07);color:var(--text-muted)}.empty{padding:18px;border-radius:12px;background:rgba(255,255,255,.025);color:var(--text-muted)}@media(max-width:720px){.analysis-grid{grid-template-columns:1fr}.metric-row{grid-template-columns:repeat(2,1fr)}.analysis-shell{padding:15px 11px 40px}}
+</style>
+<style>
+/* ═══ LAB SHELL ════════════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#0a0710;color:#f3ecff;margin:0;font-family:Inter,system-ui,sans-serif;min-height:100dvh;padding-bottom:calc(72px + env(safe-area-inset-bottom,0px));}
+.lab-shell{max-width:680px;margin:0 auto;padding:0 14px 16px;}
 
-.lab-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}.lab-tab{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.035);color:var(--text-main,#f5f7fb);padding:12px;border-radius:11px;font-weight:800;cursor:pointer}.lab-tab.active{border-color:#ff9d1f;background:rgba(255,157,31,.12)}.lab-panel{animation:labIn .18s ease}@keyframes labIn{from{opacity:.5;transform:translateY(3px)}to{opacity:1;transform:none}}.section-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.section-head h2{margin:0 0 4px}.compact{min-width:0!important;flex:0 0 auto!important;padding:9px 12px}.analysis-test-card{padding:14px;border:1px solid rgba(255,255,255,.09);border-radius:14px;background:rgba(255,255,255,.025);margin:9px 0}.analysis-test-card .test-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.analysis-test-card h3{margin:0;font-size:1rem}.test-meta{font-size:.72rem;color:var(--text-muted);margin-top:4px;line-height:1.45}.test-score{font-size:1.05rem;font-weight:900}.analysis-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.analysis-option{text-align:left;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.025);color:var(--text-main,#f5f7fb);padding:15px;border-radius:13px;cursor:pointer}.analysis-option.active{border-color:#ff9d1f;background:rgba(255,157,31,.09)}.analysis-option span{font-size:1.3rem;display:block;margin-bottom:6px}.analysis-option b{display:block}.analysis-option small{display:block;color:var(--text-muted);margin-top:5px;line-height:1.4}.mistake-book{margin-top:12px;padding:12px;border:1px solid rgba(255,255,255,.1);border-radius:12px;background:rgba(255,255,255,.025);display:flex;align-items:center;gap:10px}.mistake-book input{width:18px;height:18px}.q-table-wrap{overflow:auto;border:1px solid rgba(255,255,255,.08);border-radius:12px}.q-table{width:100%;border-collapse:collapse;min-width:900px;font-size:.72rem}.q-table th,.q-table td{padding:9px 8px;border-bottom:1px solid rgba(255,255,255,.07);text-align:left;vertical-align:top}.q-table th{color:var(--text-muted);font-size:.65rem;text-transform:uppercase;letter-spacing:.04em;position:sticky;top:0;background:#101118}.status-correct{font-weight:800}.status-wrong{font-weight:800}.status-skip{color:var(--text-muted)}.sync-note{font-size:.7rem;color:var(--text-muted);padding:9px 11px;border-radius:9px;background:rgba(255,255,255,.025);margin-top:10px}@media(max-width:720px){.analysis-options{grid-template-columns:1fr}.section-head{align-items:flex-start;flex-direction:column}.section-head .add-btn{width:100%}}
-</style></head><body><div class="analysis-shell">
-<div class="hero">
-  <h1>🧪 JEE Test Analysis</h1>
-  <div class="muted">A dedicated per-test analysis workspace. Analysis stays isolated until you explicitly add a test to the Battle Log.</div>
-</div>
-<div class="lab-tabs">
-  <button class="lab-tab active" id="tab-uploads" onclick="switchLabTab('uploads')">📥 Uploads</button>
-  <button class="lab-tab" id="tab-analysis" onclick="switchLabTab('analysis')">📊 Analysis</button>
-</div>
+/* ── Header ─────────────────────────────────────────────────────────────── */
+.lab-header{display:flex;align-items:center;gap:12px;padding:14px 0 12px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:16px;}
+.lab-back{display:flex;align-items:center;gap:5px;font-size:.76rem;color:#a78bfa;text-decoration:none;padding:6px 10px;border-radius:8px;border:1px solid rgba(139,92,246,.3);background:rgba(139,92,246,.08);white-space:nowrap;}
+.lab-back:hover{background:rgba(139,92,246,.15);}
+.lab-title{flex:1;text-align:center;}
+.lab-title h1{margin:0;font-size:1.05rem;font-weight:800;letter-spacing:.03em;}
+.lab-title small{font-size:.68rem;color:#7c6a9a;}
+.lab-header-spacer{width:72px;} /* balance the back link */
 
-<section id="uploads-panel" class="lab-panel">
-  <div class="log-section">
-    <div class="section-head"><div><h2>📥 Uploads</h2><p class="muted">Upload a test-performance / weakness report or a detailed question-paper analysis.</p></div></div>
-    <div class="drop" id="drop" onclick="document.getElementById('file').click()">
-      <input id="file" type="file" accept="application/pdf,image/png,image/jpeg,image/webp,text/plain,application/json,.txt,.json" multiple onchange="onPDFFileSelected(this)">
-      <div style="font-size:2rem">📄</div><strong>Choose a test-analysis file</strong>
-      <div class="muted" style="font-size:.76rem;margin-top:5px">Select both PDFs together — Performance/Weakness + Question Paper Analysis. Same Test ID = one combined test.</div>
-      <div id="selected" class="muted" style="margin-top:9px"></div><div id="selected-files" style="margin-top:8px"></div>
+/* ── Upload card ─────────────────────────────────────────────────────────── */
+.upload-card{background:#130b1a;border:1px solid #2a1a3e;border-radius:18px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden;}
+.upload-card::before{content:'';position:absolute;top:0;left:16px;right:16px;height:1px;border-radius:999px;background:linear-gradient(90deg,transparent,rgba(139,92,246,.5),transparent);}
+.upload-card-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.upload-card-icon{font-size:1.4rem;line-height:1;}
+.upload-card-title{font-size:.95rem;font-weight:800;margin:0 0 2px;}
+.upload-card-sub{font-size:.73rem;color:#7c6a9a;margin:0;line-height:1.4;}
+
+/* Drop zone */
+.drop{border:2px dashed rgba(139,92,246,.35);border-radius:13px;padding:26px 16px;text-align:center;cursor:pointer;background:rgba(139,92,246,.04);transition:border-color .2s,background .2s;position:relative;}
+.drop:hover,.drop.drag{border-color:rgba(139,92,246,.75);background:rgba(139,92,246,.1);}
+.drop input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;}
+.drop-icon{font-size:2rem;display:block;margin-bottom:8px;}
+.drop-label{font-size:.86rem;font-weight:700;margin-bottom:4px;}
+.drop-sub{font-size:.72rem;color:#7c6a9a;line-height:1.5;}
+
+/* Selected files list */
+#selected-files{margin-top:10px;}
+.sel-file{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.25);margin-top:5px;font-size:.77rem;color:#a78bfa;}
+.sel-file span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+/* Action buttons */
+.lab-actions{display:flex;gap:8px;margin-top:12px;}
+.lab-btn{flex:1;padding:12px;border-radius:10px;font-size:.8rem;font-weight:800;letter-spacing:.08em;cursor:pointer;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:#f3ecff;transition:.18s;}
+.lab-btn:disabled{opacity:.35;cursor:default;}
+.lab-btn.primary{background:linear-gradient(90deg,rgba(139,92,246,.3),rgba(168,85,247,.3));border-color:rgba(139,92,246,.65);color:#c4b5fd;}
+.lab-btn.primary:not(:disabled):hover{background:linear-gradient(90deg,rgba(139,92,246,.45),rgba(168,85,247,.45));}
+.lab-btn.clear{min-width:60px;flex:0 0 auto;}
+
+/* Progress */
+.progress{margin-top:12px;display:none;}
+.progress.active{display:block;}
+.progress-label{font-size:.74rem;color:#7c6a9a;margin-bottom:6px;}
+.progressbar{height:4px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden;}
+.progressbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:99px;transition:width .25s ease;}
+
+/* Upload result */
+#upload-result{margin-top:12px;}
+
+/* Recent uploads */
+.section-label{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#5a4875;margin:18px 0 10px;}
+
+/* ── Analysis / History cards ─────────────────────────────────────────────── */
+.analysis-test-card{background:#130b1a;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;margin-bottom:10px;position:relative;overflow:hidden;}
+.analysis-test-card::before{content:'';position:absolute;top:0;left:12px;right:12px;height:1px;border-radius:999px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);}
+.test-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.test-top h3{margin:0;font-size:.95rem;font-weight:800;}
+.test-meta{font-size:.71rem;color:#7c6a9a;margin-top:4px;line-height:1.5;}
+.test-score{font-size:1.15rem;font-weight:900;color:#c4b5fd;white-space:nowrap;}
+.test-badge{display:inline-block;font-size:.64rem;padding:2px 8px;border-radius:99px;font-weight:700;margin-right:4px;}
+.badge-phys{background:rgba(34,211,238,.12);color:#22d3ee;border:1px solid rgba(34,211,238,.3);}
+.badge-chem{background:rgba(52,211,153,.12);color:#34d399;border:1px solid rgba(52,211,153,.3);}
+.badge-math{background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.3);}
+.badge-weak{background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.3);}
+.badge-synced{background:rgba(52,211,153,.1);color:#34d399;border:1px solid rgba(52,211,153,.25);}
+
+.card-toolbar{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap;}
+.card-btn{flex:1;min-width:0;padding:9px 12px;border-radius:9px;font-size:.75rem;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#f3ecff;transition:.15s;}
+.card-btn:hover{background:rgba(255,255,255,.09);}
+.card-btn.accent{border-color:rgba(139,92,246,.5);background:rgba(139,92,246,.1);color:#c4b5fd;}
+
+/* ── Test detail view ─────────────────────────────────────────────────────── */
+.detail-back{display:flex;align-items:center;gap:6px;font-size:.8rem;color:#a78bfa;cursor:pointer;margin-bottom:14px;width:fit-content;}
+.detail-back:hover{color:#c4b5fd;}
+.detail-head{background:#130b1a;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px;margin-bottom:12px;}
+.analysis-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.analysis-option{text-align:left;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.025);color:#f3ecff;padding:14px;border-radius:12px;cursor:pointer;transition:.15s;}
+.analysis-option.active{border-color:#7c3aed;background:rgba(124,58,237,.12);}
+.analysis-option span{font-size:1.25rem;display:block;margin-bottom:6px;}
+.analysis-option b{display:block;font-size:.84rem;}
+.analysis-option small{display:block;color:#7c6a9a;margin-top:4px;font-size:.7rem;line-height:1.4;}
+
+/* ── Analysis result cards ────────────────────────────────────────────────── */
+.analysis-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px;}
+.analysis-card{border:1px solid rgba(255,255,255,.08);border-radius:13px;padding:14px;background:#130b1a;}
+.analysis-card h3{margin:0 0 10px;font-size:.88rem;font-weight:800;color:#a78bfa;}
+.metric-row{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;}
+.metric{padding:9px;border-radius:9px;background:rgba(255,255,255,.04);}
+.metric b{display:block;font-size:.98rem;font-weight:800;}
+.metric span{font-size:.67rem;color:#7c6a9a;display:block;margin-top:2px;}
+.subject-card,.chapter-card-lite,.log-card{padding:11px;border:1px solid rgba(255,255,255,.07);border-radius:10px;margin-top:8px;background:rgba(255,255,255,.02);}
+.chapter-card-lite .top,.log-card .top{display:flex;justify-content:space-between;gap:10px;align-items:center;}
+.tag{font-size:.64rem;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:#7c6a9a;font-weight:700;}
+.tag.strong{background:rgba(52,211,153,.1);color:#34d399;}
+.tag.average{background:rgba(251,191,36,.1);color:#fbbf24;}
+.tag.weak{background:rgba(239,68,68,.1);color:#f87171;}
+.empty{padding:20px;border-radius:12px;background:rgba(255,255,255,.03);color:#5a4875;text-align:center;font-size:.82rem;}
+.muted{color:#7c6a9a;}
+.sync-note{font-size:.7rem;color:#34d399;padding:8px 11px;border-radius:8px;background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.2);margin-top:10px;}
+
+/* Mistake book checkbox */
+.mistake-book{margin-top:10px;padding:11px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(255,255,255,.02);display:flex;align-items:center;gap:10px;}
+.mistake-book input[type=checkbox]{width:17px;height:17px;accent-color:#7c3aed;}
+
+/* Q-table */
+.q-table-wrap{overflow:auto;border:1px solid rgba(255,255,255,.07);border-radius:12px;}
+.q-table{width:100%;border-collapse:collapse;min-width:860px;font-size:.71rem;}
+.q-table th,.q-table td{padding:8px 9px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left;vertical-align:top;}
+.q-table th{color:#5a4875;font-size:.63rem;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;background:#0d0715;}
+.status-correct{color:#34d399;font-weight:800;}
+.status-wrong{color:#f87171;font-weight:800;}
+.status-skip{color:#5a4875;}
+
+/* ── Bottom nav ───────────────────────────────────────────────────────────── */
+.lab-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,7,16,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.08);display:grid;grid-template-columns:1fr 1fr;padding-bottom:env(safe-area-inset-bottom,0px);z-index:100;}
+.lab-nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0 8px;font-size:.62rem;font-weight:700;letter-spacing:.05em;color:#5a4875;border:none;background:none;cursor:pointer;transition:.15s;}
+.lab-nav-btn.active{color:#a78bfa;}
+.lab-nav-btn .nav-icon{font-size:1.25rem;line-height:1;}
+.lab-nav-indicator{position:absolute;bottom:0;height:2px;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:2px 2px 0 0;transition:.25s;}
+
+/* ── Misc ─────────────────────────────────────────────────────────────────── */
+.lab-panel{animation:labIn .18s ease;}
+@keyframes labIn{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
+.section-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px;}
+.section-head h2{margin:0;font-size:1rem;font-weight:800;}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.compact{min-width:0!important;flex:0 0 auto!important;padding:8px 12px!important;}
+
+@media(max-width:520px){
+  .analysis-grid{grid-template-columns:1fr;}
+  .metric-row{grid-template-columns:repeat(2,1fr);}
+  .analysis-options{grid-template-columns:1fr;}
+  .section-head{flex-direction:column;align-items:flex-start;}
+  .section-head .lab-btn{width:100%;}
+}
+</style>
+</head>
+<body>
+
+<div class="lab-shell">
+
+  <!-- Header -->
+  <div class="lab-header">
+    <a class="lab-back" href="./index.html">← Tracker</a>
+    <div class="lab-title">
+      <h1>🧪 Analysis Lab</h1>
+      <small>JEE Test Intelligence</small>
     </div>
-    <div class="toolbar"><button class="add-btn" id="analyse" onclick="uploadAndAnalysePDF()" disabled>🔍 Analyse Test</button><button class="add-btn" onclick="resetPDFSync()">Clear</button></div>
-    <div class="progress" id="progress"><div class="muted" id="progress-label">Reading…</div><div class="progressbar"><i id="progress-fill"></i></div></div>
-    <div id="upload-result" style="margin-top:14px"></div>
+    <div class="lab-header-spacer"></div>
   </div>
-  <div class="log-section" style="margin-top:14px"><h2>Recent Uploads</h2><div id="uploads-list"></div></div>
-</section>
 
-<section id="analysis-panel" class="lab-panel" style="display:none">
-  <div class="section-head"><div><h2>📊 Analysis</h2><p class="muted">Each test is a separate card. Open it to choose the analysis you want.</p></div><button class="add-btn compact" onclick="switchLabTab('uploads')">＋ Upload Test</button></div>
-  <div id="analysis-list"></div>
-</section>
+  <!-- ── Uploads panel ──────────────────────────────────────────────────── -->
+  <section id="uploads-panel" class="lab-panel">
 
-<section id="test-detail" class="lab-panel" style="display:none">
-  <div class="toolbar" style="margin-top:0"><button class="add-btn compact" onclick="switchLabTab('analysis')">← Back to Analysis</button></div>
-  <div id="test-detail-head" class="analysis-card" style="margin-top:12px"></div>
-  <div class="analysis-options">
-    <button id="attempt-option" class="analysis-option active" onclick="showAnalysisMode('attempt')"><span>🎯</span><b>Attempt Analysis</b><small>Score, accuracy, subjects, chapters, mistakes, score loss, insights and revision targets.</small></button>
-    <button id="question-option" class="analysis-option" onclick="showAnalysisMode('questions')"><span>📝</span><b>Question Paper Analysis</b><small>Question-by-question result, chapter, topic, difficulty, official answer, your answer and mistake pattern.</small></button>
-  </div>
-  <div id="detail-result"></div>
-</section>
+    <div class="upload-card">
+      <div class="upload-card-head">
+        <span class="upload-card-icon">📂</span>
+        <div>
+          <p class="upload-card-title">Upload Test PDF</p>
+          <p class="upload-card-sub">Select one or both report PDFs for the same test. Same Test ID → merged automatically.</p>
+        </div>
+      </div>
 
-<div id="result" style="display:none"></div>
-</div>
+      <div class="drop" id="drop"
+           ondragover="event.preventDefault();this.classList.add('drag')"
+           ondragleave="this.classList.remove('drag')"
+           ondrop="this.classList.remove('drag');onPDFFileSelected({files:event.dataTransfer.files})">
+        <input id="file" type="file"
+               accept=".pdf,application/pdf,.png,image/png,.jpg,.jpeg,image/jpeg,.webp,image/webp,.txt,text/plain,.json,application/json"
+               multiple onchange="onPDFFileSelected(this)">
+        <span class="drop-icon">📄</span>
+        <div class="drop-label"><strong>Tap here to choose PDF</strong> (or drag & drop)</div>
+        <div class="drop-sub">PDF · PNG · JPG · TXT · JSON<br>ALLEN · Aakash · JEE Main · any platform</div>
+        <div id="selected" class="muted" style="font-size:.74rem;margin-top:8px;"></div>
+        <div id="selected-files"></div>
+      </div>
+
+      <div class="lab-actions">
+        <button class="lab-btn primary" id="analyse" onclick="uploadAndAnalysePDF()" disabled>🔍 Analyse Test</button>
+        <button class="lab-btn clear" onclick="resetPDFSync()">✕ Clear</button>
+      </div>
+
+      <div class="progress" id="progress">
+        <div class="progress-label" id="progress-label">Reading…</div>
+        <div class="progressbar"><i id="progress-fill"></i></div>
+      </div>
+
+      <div id="upload-result"></div>
+    </div>
+
+    <div class="section-label">Recent Uploads</div>
+    <div id="uploads-list"></div>
+
+  </section>
+
+  <!-- ── Analysis panel ─────────────────────────────────────────────────── -->
+  <section id="analysis-panel" class="lab-panel" style="display:none">
+    <div class="section-head">
+      <h2>📊 Tests</h2>
+      <button class="lab-btn primary compact" onclick="switchLabTab('uploads')">＋ Upload</button>
+    </div>
+    <div id="analysis-list"></div>
+  </section>
+
+  <!-- ── Test detail panel ──────────────────────────────────────────────── -->
+  <section id="test-detail" class="lab-panel" style="display:none">
+    <div class="detail-back" onclick="switchLabTab('analysis')">← Back to tests</div>
+    <div id="test-detail-head" class="detail-head"></div>
+    <div class="analysis-options">
+      <button id="attempt-option" class="analysis-option active" onclick="showAnalysisMode('attempt')">
+        <span>🎯</span>
+        <b>Attempt Analysis</b>
+        <small>Score, accuracy, subjects, chapters, mistakes, score loss and revision targets.</small>
+      </button>
+      <button id="question-option" class="analysis-option" onclick="showAnalysisMode('questions')">
+        <span>📝</span>
+        <b>Question-by-Question</b>
+        <small>Every question — result, chapter, topic, your answer, official answer and mistake type.</small>
+      </button>
+    </div>
+    <div id="detail-result"></div>
+  </section>
+
+  <div id="result" style="display:none"></div>
+
+</div><!-- /.lab-shell -->
+
+<!-- Bottom nav -->
+<nav class="lab-nav">
+  <button class="lab-nav-btn active" id="tab-uploads" onclick="switchLabTab('uploads')">
+    <span class="nav-icon">📥</span>UPLOADS
+  </button>
+  <button class="lab-nav-btn" id="tab-analysis" onclick="switchLabTab('analysis')">
+    <span class="nav-icon">📊</span>ANALYSIS
+  </button>
+</nav>
 <script>
 const localDB={
   get:async(k,shared)=>{const v=localStorage.getItem(k);if(v===null)throw Error('Key not found');return{value:v}},
@@ -3583,7 +3778,17 @@ window.addEventListener('DOMContentLoaded', initSharedState);
 function saveChapterTests() {
   try { localStorage.setItem('jee-chapter-tests', JSON.stringify(chapterTests)); } catch(e) {}
 }
-function renderChapterTests() { /* no dedicated UI in test-analysis — data is visible in tracker */ }
+// These tracker UI functions are no-ops here — they run in index.html automatically
+// when it next reads the shared localStorage keys we've already written.
+function renderChapterTests()    { /* tracker will update on next load */ }
+function renderWeakSpotRadar()   {}
+function renderDangerZone()      {}
+function renderSubjectRadarChart(){}
+function renderZoneShrinking()   {}
+function renderRevisionDue()     {}
+function renderAchievements()    {}
+function renderPDFAnalysisDashboard() {}
+function switchTab(t)            { /* tab switching handled by lab's own UI */ }
 function dateStr(offset=0){const d=new Date();d.setDate(d.getDate()+(offset||0));return d.toISOString().slice(0,10);}
 const PHYSICS_CHAPTERS = [
   {id:'phy-units-measurements', name:'Units and Measurements'},
@@ -4213,8 +4418,8 @@ async function addToBattleLog(id){const history=JSON.parse(localStorage.getItem(
     }catch(e){}
     renderHistory();renderAnalysis(record,true);alert('Added to Battle Log ✓')}
 function renderMetric(label,val){return '<div class="metric"><b>'+escapePDFBattleText(val==null?'—':val)+'</b><span>'+label+'</span></div>'}
-function renderAnalysis(data,added=false){latestAnalysis=data;const ov=data.overall||{},score=data.totalScore||{};const subs=(data.subjects||[]).map(s=>'<div class="subject-card"><b>'+escapePDFBattleText(s.subject)+'</b><div class="metric-row" style="margin-top:8px">'+renderMetric('Score',s.myScore!=null?s.myScore+'/'+(s.maxScore??'?'):null)+renderMetric('Accuracy',s.accuracy!=null?s.accuracy+'%':null)+renderMetric('Attempted',s.attempted)+renderMetric('Wrong',s.wrong)+'</div></div>').join('');const ch=(data.chapters||[]).map(c=>'<div class="chapter-card-lite"><div class="top"><b>'+escapePDFBattleText(c.subject)+' — '+escapePDFBattleText(c.name)+'</b><span class="tag">'+escapePDFBattleText(c.status||'UNKNOWN')+'</span></div><div class="muted" style="font-size:.73rem;margin-top:5px">'+escapePDFBattleText([c.score!=null?'Score '+c.score:null,c.accuracy!=null?c.accuracy+'%':null,c.attempted!=null?'Attempted '+c.attempted:null,c.correct!=null?'✓ '+c.correct:null,c.wrong!=null?'✕ '+c.wrong:null,c.skipped!=null?'Skipped '+c.skipped:null,c.mistakeType,c.priority].filter(Boolean).join(' · ')||'No metrics reported')+'</div>'+(c.topics?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Topics:</b> '+escapePDFBattleText(c.topics.join(', '))+'</div>':'')+(c.questions?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Questions:</b> '+escapePDFBattleText(c.questions.join(', '))+'</div>':'')+(c.evidence?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Evidence:</b> '+escapePDFBattleText(c.evidence.join(' | '))+'</div>':'')+'</div>').join('');const rev=(data.revisionTargets||[]).map(x=>'<div>• <b>'+escapePDFBattleText(x.subject)+' — '+escapePDFBattleText(x.chapter)+'</b>: '+escapePDFBattleText(x.reason||'Revision target')+'</div>').join('');document.getElementById('result').innerHTML='<div class="analysis-grid"><div class="analysis-card"><h3>Overall</h3><div class="metric-row">'+renderMetric('Score',score.my!=null?score.my+'/'+(score.max??'?'):null)+renderMetric('Accuracy',ov.accuracy!=null?ov.accuracy+'%':null)+renderMetric('Attempted',ov.attempted)+renderMetric('Wrong',ov.wrong)+'</div></div><div class="analysis-card"><h3>Test</h3><div style="font-size:.8rem"><b>'+escapePDFBattleText(data.testName||data.fileName||'Unnamed Test')+'</b><div class="muted" style="margin-top:4px">'+escapePDFBattleText([data.date,data.exam,data.fileName].filter(Boolean).join(' · '))+'</div></div></div></div><div class="analysis-card" style="margin-top:12px"><h3>Subject Performance</h3>'+(subs||'<div class="empty">No subject-level metrics were found.</div>')+'</div><div class="analysis-card" style="margin-top:12px"><h3>Chapter / Topic Analysis</h3>'+(ch||'<div class="empty">No chapter-level evidence was found.</div>')+'</div>'+(rev?'<div class="analysis-card" style="margin-top:12px"><h3>Revision Targets</h3>'+rev+'</div>':'')+'<div class="toolbar" style="margin-top:12px"><button class="add-btn" onclick="addToBattleLog(\''+escapePDFBattleText(data._recordId||'')+'\')">'+(added?'✓ Added to Battle Log':'➕ Add to Battle Log')+'</button></div>'}
-async function renderHistory(){let h=[];try{h=JSON.parse(localStorage.getItem('jee-test-analysis-history')||'[]')}catch(e){}const el=document.getElementById('history-list');if(!h.length){el.innerHTML='<div class="empty">No analysed tests yet.</div>';return}el.innerHTML=h.map(r=>'<div class="log-card"><div class="top"><b>'+escapePDFBattleText(r.testName||r.fileName||'Test')+'</b><span class="tag">'+escapePDFBattleText(r.date||'-')+'</span></div><div class="muted" style="font-size:.72rem;margin-top:5px">'+escapePDFBattleText([r.exam,r.fileName,r.totalScore?.my!=null?'Score '+r.totalScore.my+'/'+(r.totalScore.max??'?'):null].filter(Boolean).join(' · '))+'</div><div class="toolbar"><button class="add-btn" onclick="viewHistory(\''+escapePDFBattleText(r.id)+'\')">View Analysis</button><button class="add-btn" onclick="addToBattleLog(\''+escapePDFBattleText(r.id)+'\')">➕ Add to Battle Log</button></div></div>').join('')}
+function renderAnalysis(data,added=false){latestAnalysis=data;const ov=data.overall||{},score=data.totalScore||{};const subs=(data.subjects||[]).map(s=>'<div class="subject-card"><b>'+escapePDFBattleText(s.subject)+'</b><div class="metric-row" style="margin-top:8px">'+renderMetric('Score',s.myScore!=null?s.myScore+'/'+(s.maxScore??'?'):null)+renderMetric('Accuracy',s.accuracy!=null?s.accuracy+'%':null)+renderMetric('Attempted',s.attempted)+renderMetric('Wrong',s.wrong)+'</div></div>').join('');const ch=(data.chapters||[]).map(c=>'<div class="chapter-card-lite"><div class="top"><b>'+escapePDFBattleText(c.subject)+' — '+escapePDFBattleText(c.name)+'</b><span class="tag">'+escapePDFBattleText(c.status||'UNKNOWN')+'</span></div><div class="muted" style="font-size:.73rem;margin-top:5px">'+escapePDFBattleText([c.score!=null?'Score '+c.score:null,c.accuracy!=null?c.accuracy+'%':null,c.attempted!=null?'Attempted '+c.attempted:null,c.correct!=null?'✓ '+c.correct:null,c.wrong!=null?'✕ '+c.wrong:null,c.skipped!=null?'Skipped '+c.skipped:null,c.mistakeType,c.priority].filter(Boolean).join(' · ')||'No metrics reported')+'</div>'+(c.topics?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Topics:</b> '+escapePDFBattleText(c.topics.join(', '))+'</div>':'')+(c.questions?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Questions:</b> '+escapePDFBattleText(c.questions.join(', '))+'</div>':'')+(c.evidence?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Evidence:</b> '+escapePDFBattleText(c.evidence.join(' | '))+'</div>':'')+'</div>').join('');const rev=(data.revisionTargets||[]).map(x=>'<div>• <b>'+escapePDFBattleText(x.subject)+' — '+escapePDFBattleText(x.chapter)+'</b>: '+escapePDFBattleText(x.reason||'Revision target')+'</div>').join('');document.getElementById('result').innerHTML='<div class="analysis-grid"><div class="analysis-card"><h3>Overall</h3><div class="metric-row">'+renderMetric('Score',score.my!=null?score.my+'/'+(score.max??'?'):null)+renderMetric('Accuracy',ov.accuracy!=null?ov.accuracy+'%':null)+renderMetric('Attempted',ov.attempted)+renderMetric('Wrong',ov.wrong)+'</div></div><div class="analysis-card"><h3>Test</h3><div style="font-size:.8rem"><b>'+escapePDFBattleText(data.testName||data.fileName||'Unnamed Test')+'</b><div class="muted" style="margin-top:4px">'+escapePDFBattleText([data.date,data.exam,data.fileName].filter(Boolean).join(' · '))+'</div></div></div></div><div class="analysis-card" style="margin-top:12px"><h3>Subject Performance</h3>'+(subs||'<div class="empty">No subject-level metrics were found.</div>')+'</div><div class="analysis-card" style="margin-top:12px"><h3>Chapter / Topic Analysis</h3>'+(ch||'<div class="empty">No chapter-level evidence was found.</div>')+'</div>'+(rev?'<div class="analysis-card" style="margin-top:12px"><h3>Revision Targets</h3>'+rev+'</div>':'')+'<div style="margin-top:10px; font-size:0.74rem; color:var(--chem); opacity:0.8;">✓ Synced to tracker automatically</div>'}
+async function renderHistory(){let h=[];try{h=JSON.parse(localStorage.getItem('jee-test-analysis-history')||'[]')}catch(e){}const el=document.getElementById('history-list');if(!h.length){el.innerHTML='<div class="empty">No analysed tests yet.</div>';return}el.innerHTML=h.map(r=>'<div class="log-card"><div class="top"><b>'+escapePDFBattleText(r.testName||r.fileName||'Test')+'</b><span class="tag">'+escapePDFBattleText(r.date||'-')+'</span></div><div class="muted" style="font-size:.72rem;margin-top:5px">'+escapePDFBattleText([r.exam,r.fileName,r.totalScore?.my!=null?'Score '+r.totalScore.my+'/'+(r.totalScore.max??'?'):null].filter(Boolean).join(' · '))+'</div><div class="toolbar"><button class="add-btn" onclick="viewHistory(\''+escapePDFBattleText(r.id)+'\')">View Analysis</button></div></div>').join('')}
 function viewHistory(id){const h=JSON.parse(localStorage.getItem('jee-test-analysis-history')||'[]');const r=h.find(x=>x.id===id);if(r){renderAnalysis(r,false);window.scrollTo({top:0,behavior:'smooth'})}}
 async function uploadAndAnalysePDF(){if(!pdfSyncFile){showPDFResult({error:'Please select a file first.'});return}const btn=document.getElementById('analyse');btn.disabled=true;try{const name=pdfSyncFile.name.toLowerCase();let parsed;pdfLocalProgress(5,'Reading file…');if(pdfSyncFile.type==='application/pdf'||name.endsWith('.pdf')){const lib=await loadPDFJS(),bytes=new Uint8Array(await pdfSyncFile.arrayBuffer()),pdf=await lib.getDocument({data:bytes}).promise;let native=false;for(let n=1;n<=Math.min(3,pdf.numPages);n++){const p=await pdf.getPage(n),c=await p.getTextContent({includeMarkedContent:true});if(c.items.some(x=>String(x.str||'').trim().length>2))native=true;p.cleanup();if(native)break}parsed=native?await extractPDFIntelligently(pdfSyncFile):await extractScannedPDFIntelligently(pdfSyncFile)}else if(/^image\//.test(pdfSyncFile.type)||/\.(png|jpe?g|webp)$/i.test(name))parsed=await extractImageIntelligently(pdfSyncFile);else if(/\.(txt|json)$/i.test(name)||/^(text\/plain|application\/json)$/.test(pdfSyncFile.type))parsed=await extractTextFileIntelligently(pdfSyncFile);else throw Error('Unsupported file type.');const normalized=normalizePDFAnalysis(parsed);let syncStats={chaptersAdded:0,skipped:0,weakSubjectsAdded:[]};try{syncStats=await applyPDFAnalysis(normalized)}catch(e){console.warn('Chapter sync error:',e)}const record=await persistStandaloneAnalysis({...normalized,_syncStats:syncStats});record._recordId=record.id;let h=JSON.parse(localStorage.getItem('jee-test-analysis-history')||'[]');h=h.map(x=>x.id===record.id?record:x);localStorage.setItem('jee-test-analysis-history',JSON.stringify(h));latestAnalysis=record;pdfLocalProgress(100,'Analysis complete ✓ — '+syncStats.chaptersAdded+' chapters synced to tracker');renderAnalysis(record,false);await renderHistory()}catch(err){console.error(err);showPDFResult({error:'Analysis failed: '+err.message})}finally{btn.disabled=false;document.getElementById('progress').classList.remove('active')}}
 function resetPDFSync(){pdfSyncFile=null;document.getElementById('selected').textContent='';document.getElementById('analyse').disabled=true;document.getElementById('file').value='';document.getElementById('result').innerHTML=''}
@@ -4430,7 +4635,7 @@ function renderAnalysis(data,added=false){
   const subs=(data.subjects||[]).map(s=>'<div class="subject-card"><b>'+esc(s.subject)+'</b><div class="metric-row" style="margin-top:8px">'+renderMetric('Score',s.myScore!=null?s.myScore+'/'+(s.maxScore??'?'):null)+renderMetric('Accuracy',s.accuracy!=null?s.accuracy+'%':null)+renderMetric('Attempted',s.attempted)+renderMetric('Correct',s.correct)+renderMetric('Wrong',s.wrong)+renderMetric('Skipped',s.skipped)+'</div></div>').join('');
   const ch=(data.chapters||[]).map(c=>'<div class="chapter-card-lite"><div class="top"><b>'+esc(c.subject)+' — '+esc(c.name)+'</b><span class="tag">'+esc(c.status||'UNKNOWN')+'</span></div><div class="muted" style="font-size:.73rem;margin-top:5px">'+esc([c.score!=null?'Score '+c.score:null,c.accuracy!=null?c.accuracy+'% accuracy':null,c.priority&&c.priority!=='NONE'?'Priority '+c.priority:null,c.mistakeType?'Pattern '+c.mistakeType:null].filter(Boolean).join(' · ')||'No metrics reported')+'</div>'+(c.topics?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Topics:</b> '+esc(c.topics.join(', '))+'</div>':'')+(c.questions?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Questions:</b> '+esc(c.questions.join(', '))+'</div>':'')+(c.evidence?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Evidence:</b> '+esc(c.evidence.join(' | '))+'</div>':'')+'</div>').join('');
   const rev=(data.revisionTargets||[]).map(x=>'<div>• <b>'+esc(x.subject)+' — '+esc(x.chapter)+'</b>: '+esc(x.reason||'Revision target')+'</div>').join('');
-  document.getElementById('result').innerHTML='<div class="analysis-grid"><div class="analysis-card"><h3>Overall</h3><div class="metric-row">'+renderMetric('Score',score.my!=null?score.my+'/'+(score.max??'?'):null)+renderMetric('Accuracy',ov.accuracy!=null?ov.accuracy+'%':null)+renderMetric('Attempted',ov.attempted)+renderMetric('Wrong',ov.wrong)+'</div></div><div class="analysis-card"><h3>Test</h3><div style="font-size:.8rem"><b>'+esc(data.testName||data.fileName||'Unnamed Test')+'</b><div class="muted" style="margin-top:4px">'+esc([data.testId?'Test ID '+data.testId:null,data.date,data.exam,data.fileName].filter(Boolean).join(' · '))+'</div></div></div></div>'+(subs?'<div class="analysis-card" style="margin-top:12px"><h3>Subject Performance</h3>'+subs+'</div>':'')+taRenderExtra(data)+'<div class="analysis-card" style="margin-top:12px"><h3>Chapter-wise Performance</h3>'+(ch||'<div class="empty">No chapter rows were detected.</div>')+'</div>'+'<div class="toolbar" style="margin-top:12px"><button class="add-btn" onclick="addToBattleLog(\''+esc(data._recordId||'')+'\')">'+(added?'✓ Added to Battle Log':'➕ Add to Battle Log')+'</button></div>';
+  document.getElementById('result').innerHTML='<div class="analysis-grid"><div class="analysis-card"><h3>Overall</h3><div class="metric-row">'+renderMetric('Score',score.my!=null?score.my+'/'+(score.max??'?'):null)+renderMetric('Accuracy',ov.accuracy!=null?ov.accuracy+'%':null)+renderMetric('Attempted',ov.attempted)+renderMetric('Wrong',ov.wrong)+'</div></div><div class="analysis-card"><h3>Test</h3><div style="font-size:.8rem"><b>'+esc(data.testName||data.fileName||'Unnamed Test')+'</b><div class="muted" style="margin-top:4px">'+esc([data.testId?'Test ID '+data.testId:null,data.date,data.exam,data.fileName].filter(Boolean).join(' · '))+'</div></div></div></div>'+(subs?'<div class="analysis-card" style="margin-top:12px"><h3>Subject Performance</h3>'+subs+'</div>':'')+taRenderExtra(data)+'<div class="analysis-card" style="margin-top:12px"><h3>Chapter-wise Performance</h3>'+(ch||'<div class="empty">No chapter rows were detected.</div>')+'</div>'+'<div style="margin-top:10px; font-size:0.74rem; color:var(--chem); opacity:0.8;">✓ Synced to tracker automatically</div>';
 }
 
 
@@ -4511,11 +4716,11 @@ function switchLabTab(tab){
   if(tab==='analysis')renderAnalysisIndex();
   window.scrollTo({top:0,behavior:'smooth'});
 }
-function renderLabUploadResult(){const el=document.getElementById('upload-result');if(!el)return; if(!latestAnalysis){el.innerHTML='';return} const d=latestAnalysis,s=d.totalScore||{};el.innerHTML='<div class="analysis-card"><div class="test-top"><div><h3>✓ Analysis ready</h3><div class="test-meta">'+labEsc(d.testName||d.fileName||'Test')+' · '+labEsc(d.date||'Test date not reported')+'</div></div><div class="test-score">'+labEsc(s.my!=null?(s.my+'/'+(s.max??'?')):'—')+'</div></div><div class="toolbar"><button class="add-btn compact" onclick="openTestAnalysis(\''+labEsc(d._recordId||d.id||'')+'\')">Open in Analysis</button></div></div>';}
+function renderLabUploadResult(){const el=document.getElementById('upload-result');if(!el)return;if(!latestAnalysis){el.innerHTML='';return}const d=latestAnalysis,s=d.totalScore||{};el.innerHTML='<div class="analysis-card" style="margin-top:12px"><div class="test-top"><div><h3 style="color:#34d399;">✓ Analysis ready</h3><div class="test-meta">'+labEsc(d.testName||d.fileName||'Test')+' · '+labEsc(d.date||'–')+'</div></div><div class="test-score">'+labEsc(s.my!=null?(s.my+'/'+(s.max??'?')):'—')+'</div></div><div class="card-toolbar"><button class="card-btn accent" onclick="openTestAnalysis(\''+labEsc(d._recordId||d.id||'')+'\')">Open Analysis →</button></div><div class="sync-note">✓ Synced to tracker — Danger Zone and Battle Log updated.</div></div>';}
 function renderUploads(){
   const el=document.getElementById('uploads-list');if(!el)return;const arr=labUploads();
-  if(!arr.length){el.innerHTML='<div class="empty">No uploads yet. Upload your first test report above.</div>';return}
-  el.innerHTML=arr.map(u=>'<div class="log-card"><div class="top"><b>'+labEsc(u.name)+'</b><span class="tag">'+labEsc(u.status||'Uploaded')+'</span></div><div class="test-meta">Uploaded '+labEsc(u.uploadedAt?new Date(u.uploadedAt).toLocaleString():u.date||'—')+(u.analysisId?' · Analysis available':'')+'</div></div>').join('');
+  if(!arr.length){el.innerHTML='<div class="empty">No uploads yet.<br>Upload your first test report above.</div>';return}
+  el.innerHTML=arr.map(u=>'<div class="analysis-test-card"><div class="test-top"><div><h3>'+labEsc(u.name)+'</h3><div class="test-meta">'+labEsc(u.uploadedAt?new Date(u.uploadedAt).toLocaleDateString():u.date||'–')+(u.analysisId?' · Analysis available':'')+'</div></div><span class="tag '+(u.analysisId?'strong':'')+'">'+labEsc(u.status||'Uploaded')+'</span></div></div>').join('');
 }
 function renderAnalysisIndex(){
   const el=document.getElementById('analysis-list');if(!el)return;const h=labHistory();
@@ -4524,7 +4729,7 @@ function renderAnalysisIndex(){
     const s=r.totalScore||{},o=r.overall||{},mb=r.mistakeBookUpdated===true;
     const date=r.date||('Analysed '+new Date(r.importedAt||Date.now()).toLocaleDateString());
     const label=[r.exam,o.attempted!=null?(o.attempted+' attempted'):null,o.wrong!=null?(o.wrong+' wrong'):null].filter(Boolean).join(' · ');
-    return '<div class="analysis-test-card"><div class="test-top"><div><h3>'+labEsc(r.testName||r.fileName||'Unnamed Test')+'</h3><div class="test-meta">'+labEsc(date)+' · '+labEsc(label||'Test analysis')+'</div></div><div class="test-score">'+labEsc(s.my!=null?(s.my+'/'+(s.max??'?')):'—')+'</div></div><div class="toolbar"><button class="add-btn compact" onclick="openTestAnalysis(\''+labEsc(r.id)+'\')">Open Test</button><button class="add-btn compact" onclick="addToBattleLog(\''+labEsc(r.id)+'\')">'+(r.battleLogAdded?'✓ In Battle Log':'＋ Add to Battle Log')+'</button></div><div class="mistake-book"><input type="checkbox" '+(mb?'checked':'')+' onchange="setMistakeBookUpdated(\''+labEsc(r.id)+'\',this.checked)"><div><b>Have you updated the mistake book?</b><div class="test-meta">This is saved for this test and carried into the Battle Log.</div></div></div></div>';
+    return '<div class="analysis-test-card"><div class="test-top"><div><h3>'+labEsc(r.testName||r.fileName||'Unnamed Test')+'</h3><div class="test-meta">'+labEsc(date)+' · '+labEsc(label||'Test analysis')+'</div></div><div class="test-score">'+labEsc(s.my!=null?(s.my+'/'+(s.max??'?')):'—')+'</div></div><div class="toolbar"><button class="add-btn compact" onclick="openTestAnalysis(\''+labEsc(r.id)+'\')">Open Test</button></div><div class="mistake-book"><input type="checkbox" '+(mb?'checked':'')+' onchange="setMistakeBookUpdated(\''+labEsc(r.id)+'\',this.checked)"><div><b>Have you updated the mistake book?</b><div class="test-meta">This is saved for this test and carried into the Battle Log.</div></div></div></div>';
   }).join('');
 }
 function openTestAnalysis(id){
@@ -4532,7 +4737,7 @@ function openTestAnalysis(id){
   document.getElementById('uploads-panel').style.display='none';document.getElementById('analysis-panel').style.display='none';document.getElementById('test-detail').style.display='block';
   document.getElementById('tab-uploads').classList.remove('active');document.getElementById('tab-analysis').classList.add('active');
   const s=r.totalScore||{},o=r.overall||{};
-  document.getElementById('test-detail-head').innerHTML='<div class="test-top"><div><h2 style="margin:0 0 5px">'+labEsc(r.testName||r.fileName||'Unnamed Test')+'</h2><div class="test-meta">'+labEsc([r.date?'Test date: '+r.date:null,r.exam,r.testId?'Test ID: '+r.testId:null].filter(Boolean).join(' · ')||'Date not reported')+'</div></div><div class="test-score">'+labEsc(s.my!=null?(s.my+'/'+(s.max??'?')):'—')+'</div></div><div class="mistake-book"><input type="checkbox" id="mistake-book-detail" '+(r.mistakeBookUpdated?'checked':'')+' onchange="setMistakeBookUpdated(\''+labEsc(r.id)+'\',this.checked)"><div><b>Have you updated the mistake book?</b><div class="test-meta">Mark this only after you have actually transferred the relevant mistakes.</div></div></div><div class="sync-note">🔒 Isolated analysis: opening or analysing this test does not change Chapter Tests, revision, weak subjects, dashboards or analytics. The only export is <b>Add to Battle Log</b>.</div>';
+  document.getElementById('test-detail-head').innerHTML='<div class="test-top"><div><h2 style="margin:0 0 5px">'+labEsc(r.testName||r.fileName||'Unnamed Test')+'</h2><div class="test-meta">'+labEsc([r.date?'Test date: '+r.date:null,r.exam,r.testId?'Test ID: '+r.testId:null].filter(Boolean).join(' · ')||'Date not reported')+'</div></div><div class="test-score">'+labEsc(s.my!=null?(s.my+'/'+(s.max??'?')):'—')+'</div></div><div class="mistake-book"><input type="checkbox" id="mistake-book-detail" '+(r.mistakeBookUpdated?'checked':'')+' onchange="setMistakeBookUpdated(\''+labEsc(r.id)+'\',this.checked)"><div><b>Have you updated the mistake book?</b><div class="test-meta">Mark this only after you have actually transferred the relevant mistakes.</div></div></div><div class="sync-note">✓ This analysis is synced to the tracker automatically — chapter tests, weak subjects, and the Battle Log are already updated.</div>';
   showAnalysisMode('attempt',r);
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -4589,7 +4794,7 @@ function renderAttemptAnalysis(data){
   const rev=(data.revisionTargets||[]).map(x=>'<div class="chapter-card-lite"><b>'+esc(x.subject)+' — '+esc(x.chapter)+'</b><div class="test-meta">'+esc(x.reason||'Revision target')+' · '+esc(x.priority||'')+'</div></div>').join('');
   const insights=(data.insights||[]).map(x=>'<div style="margin:5px 0">• '+esc(x)+'</div>').join('');
   const actions=(data.actionItems||[]).map(x=>'<div style="margin:5px 0">• '+esc(x)+'</div>').join('');
-  el.innerHTML='<div class="analysis-card"><h3>Overall Performance</h3><div class="metric-row">'+metrics.map(x=>renderMetric(x[0],x[1])).join('')+'</div></div><div class="analysis-card" style="margin-top:12px"><h3>Subject Performance</h3>'+(subjects||'<div class="empty">No subject-level metrics found.</div>')+'</div><div class="analysis-card" style="margin-top:12px"><h3>Chapter-wise Performance</h3>'+(chapters||'<div class="empty">No chapter rows found.</div>')+'</div>'+(mistakes?'<div class="analysis-card" style="margin-top:12px"><h3>Mistake Analysis</h3>'+mistakes+'</div>':'')+(scoreLoss?'<div class="analysis-card" style="margin-top:12px"><h3>Score Loss Analysis</h3>'+scoreLoss+'</div>':'')+(insights?'<div class="analysis-card" style="margin-top:12px"><h3>Performance Insights</h3>'+insights+'</div>':'')+(rev?'<div class="analysis-card" style="margin-top:12px"><h3>Revision Targets</h3>'+rev+'</div>':'')+(actions?'<div class="analysis-card" style="margin-top:12px"><h3>Action Plan</h3>'+actions+'</div>':'')+renderRevisionPlan(data)+'<div class="toolbar"><button class="add-btn" onclick="addToBattleLog(\''+esc(data.id)+'\')">'+(data.battleLogAdded?'✓ Added to Battle Log':'＋ Add to Battle Log')+'</button></div>';
+  el.innerHTML='<div class="analysis-card"><h3>Overall Performance</h3><div class="metric-row">'+metrics.map(x=>renderMetric(x[0],x[1])).join('')+'</div></div><div class="analysis-card" style="margin-top:12px"><h3>Subject Performance</h3>'+(subjects||'<div class="empty">No subject-level metrics found.</div>')+'</div><div class="analysis-card" style="margin-top:12px"><h3>Chapter-wise Performance</h3>'+(chapters||'<div class="empty">No chapter rows found.</div>')+'</div>'+(mistakes?'<div class="analysis-card" style="margin-top:12px"><h3>Mistake Analysis</h3>'+mistakes+'</div>':'')+(scoreLoss?'<div class="analysis-card" style="margin-top:12px"><h3>Score Loss Analysis</h3>'+scoreLoss+'</div>':'')+(insights?'<div class="analysis-card" style="margin-top:12px"><h3>Performance Insights</h3>'+insights+'</div>':'')+(rev?'<div class="analysis-card" style="margin-top:12px"><h3>Revision Targets</h3>'+rev+'</div>':'')+(actions?'<div class="analysis-card" style="margin-top:12px"><h3>Action Plan</h3>'+actions+'</div>':'')+renderRevisionPlan(data)+'<div class="toolbar"><button class="add-btn" onclick="addToBattleLog(\''+esc(data.id)+'\')">'+'<div style="margin-top:10px; font-size:0.74rem; color:var(--chem); opacity:0.8;">✓ Synced to tracker automatically</div>';
 }
 function taParseQuestionPaper(lines){
   const rows=[];let blocks=[];let current=null;
@@ -4634,7 +4839,7 @@ function renderQuestionPaperAnalysis(data){
   const table=rows.length?'<div class="analysis-card" style="margin-top:12px"><h3>Question-by-Question Analysis</h3><div class="q-table-wrap"><table class="q-table"><thead><tr><th>Q</th><th>Subject</th><th>Chapter</th><th>Topic</th><th>Difficulty</th><th>Official</th><th>My Answer</th><th>Result</th><th>Marks</th><th>Mistake</th></tr></thead><tbody>'+rows.map(r=>'<tr><td><b>'+esc(r.question)+'</b></td><td>'+esc(r.subject)+'</td><td>'+esc(r.chapter)+'</td><td>'+esc(r.topic)+'</td><td>'+esc(r.difficulty)+'</td><td>'+esc(r.officialAnswer)+'</td><td>'+esc(r.myAnswer)+'</td><td class="'+(/WRONG/i.test(r.status)?'status-wrong':/UNATTEMPTED|SKIPPED/i.test(r.status)?'status-skip':'status-correct')+'">'+esc(r.status)+'</td><td>'+esc(r.marks)+'</td><td>'+esc(r.mistakeType||'—')+'</td></tr>').join('')+'</tbody></table></div></div>':'<div class="analysis-card"><div class="empty">No question-by-question table was detected in this uploaded report. Upload the detailed Question Paper Analysis PDF to unlock this view.</div></div>';
   const grouped={};rows.forEach(r=>{const k=(r.subject||'Other')+' — '+(r.chapter||'Unknown chapter');(grouped[k]??=[]).push(r)});
   const qSummary=Object.entries(grouped).map(([k,v])=>'<div class="chapter-card-lite"><b>'+esc(k)+'</b><div class="test-meta">'+v.length+' questions · '+v.filter(x=>/CORRECT/i.test(x.status)).length+' correct · '+v.filter(x=>/WRONG/i.test(x.status)).length+' wrong · '+v.filter(x=>/UNATTEMPTED|SKIPPED/i.test(x.status)).length+' skipped</div></div>').join('');
-  el.innerHTML=summary+table+(qSummary?'<div class="analysis-card" style="margin-top:12px"><h3>Question Distribution by Chapter</h3>'+qSummary+'</div>':'')+'<div class="toolbar"><button class="add-btn" onclick="addToBattleLog(\''+esc(data.id)+'\')">'+(data.battleLogAdded?'✓ Added to Battle Log':'＋ Add to Battle Log')+'</button></div>';
+  el.innerHTML=summary+table+(qSummary?'<div class="analysis-card" style="margin-top:12px"><h3>Question Distribution by Chapter</h3>'+qSummary+'</div>':'')+'<div class="toolbar"><button class="add-btn" onclick="addToBattleLog(\''+esc(data.id)+'\')">'+'<div style="margin-top:10px; font-size:0.74rem; color:var(--chem); opacity:0.8;">✓ Synced to tracker automatically</div>';
 }
 function mergeTestRecord(existing,incoming){
   const merged={...existing,...incoming,id:existing.id,importedAt:existing.importedAt||incoming.importedAt,fileName:[existing.fileName,incoming.fileName].filter(Boolean).filter((x,i,a)=>a.indexOf(x)===i).join(' + '),mistakeBookUpdated:existing.mistakeBookUpdated===true,battleLogAdded:existing.battleLogAdded===true};
@@ -4724,14 +4929,22 @@ function updateSelectedFilesUI(){
   const b=document.getElementById('analyse');if(b)b.disabled=!files.length;
 }
 function setPDFFiles(files){
-  const arr=[...(files||[])].filter(Boolean);
-  pdfSyncFiles=arr;pdfSyncFile=arr[0]||null;pdfSyncBase64=null;pdfSyncMime=pdfSyncFile?.type||'application/pdf';
+  const arr=[...(files||[])].filter(Boolean).filter(f=>{
+    const n=String(f.name||'').toLowerCase();
+    return f.type==='application/pdf'||/^image\/(png|jpeg|webp)$/i.test(f.type)||/\.(pdf|png|jpe?g|webp|txt|json)$/i.test(n);
+  });
+  if(!arr.length){
+    const r=document.getElementById('upload-result');
+    if(r)r.innerHTML='<div class="empty">Please choose a PDF, image, TXT or JSON file.</div>';
+    return;
+  }
+  pdfSyncFiles=arr;pdfSyncFile=arr[0];pdfSyncBase64=null;pdfSyncMime=pdfSyncFile.type||'application/pdf';
   updateSelectedFilesUI();
   const res=document.getElementById('result');if(res)res.innerHTML='';
   renderUploads();
 }
 function setPDFFile(file){setPDFFiles(file?[file]:[])}
-function onPDFFileSelected(input){setPDFFiles(input?.files?Array.from(input.files):[])}
+function onPDFFileSelected(input){setPDFFiles(input&&input.files?Array.from(input.files):[])}
 function handlePDFDrop(event){
   event.preventDefault();document.getElementById('drop')?.classList.remove('drag');
   const files=event.dataTransfer?.files?Array.from(event.dataTransfer.files):[];if(files.length)setPDFFiles(files);
