@@ -3507,6 +3507,13 @@
 .ji-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.ji-kpi-grid .marks-chip{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:66px}.ji-kpi-grid small{font-size:.68rem;color:var(--text-muted);margin-top:3px}.ji-priority-list{margin-top:4px}.ji-priority-item{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 12px;margin:7px 0;border:1px solid var(--border);border-radius:10px;background:var(--surface-2)}.ji-priority-item>div{display:flex;flex-direction:column}.ji-priority-item span{font-size:.72rem;color:var(--text-muted);margin-top:2px}.ji-priority-item>b{font-size:.85rem}.ji-priority-item p{grid-column:1/-1;margin:5px 0 0;font-size:.73rem;color:var(--text-muted)}.ji-graph-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.ji-graph-card{border:1px solid var(--border);border-radius:10px;padding:12px;background:var(--surface-2)}.ji-graph-card h3{font-size:.82rem;margin:0 0 10px}.ji-graph-card p{font-size:.72rem;color:var(--text-muted)}.ji-bar-row{margin:8px 0}.ji-bar-label{display:flex;justify-content:space-between;font-size:.7rem;margin-bottom:4px}.ji-bar-track{height:8px;border-radius:99px;background:var(--border);overflow:hidden}.ji-bar-fill{height:100%;border-radius:99px;background:var(--phys);transition:width .3s ease}.ji-insight{margin:9px 0 0!important}.ji-list-row{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid var(--border)}.ji-list-row:last-child{border-bottom:0}.ji-list-row .rank{width:24px;text-align:center;font-weight:800}.ji-list-main{flex:1;display:flex;flex-direction:column}.ji-list-main strong{font-size:.82rem}.ji-list-main span,.ji-list-meta{font-size:.68rem;color:var(--text-muted)}.ji-list-meta{text-align:right;min-width:52px}.ji-list-meta b{color:var(--text)}.ji-boss{display:flex;gap:12px;padding:12px;margin:7px 0;border:1px solid var(--border);border-radius:10px;background:var(--surface-2)}.ji-boss-icon{font-size:1.6rem}.ji-boss strong{font-size:.85rem}.ji-boss span{display:block;font-size:.7rem;color:var(--text-muted);margin-top:2px}.ji-boss p{font-size:.73rem;margin:7px 0 0}.ji-autopsy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.ji-autopsy-grid>div{padding:10px;border:1px solid var(--border);border-radius:9px;background:var(--surface-2);display:flex;flex-direction:column;gap:4px}.ji-autopsy-grid span{font-size:.65rem;color:var(--text-muted)}.ji-autopsy-grid strong{font-size:.78rem}.ji-autopsy-verdict{margin-top:10px;padding:11px;border-radius:9px;background:var(--surface-2);font-size:.75rem}.ai-analyse-card{border:1px solid var(--border)}
 @media(max-width:700px){.ji-kpi-grid{grid-template-columns:repeat(2,1fr)}.ji-graph-grid{grid-template-columns:1fr}.ji-autopsy-grid{grid-template-columns:repeat(2,1fr)}}
 
+
+/* Batch metadata confirmation */
+#pdf-meta-modal{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.72)}
+#pdf-meta-modal.show{display:flex}
+.pdf-meta-box{width:min(560px,100%);max-height:90vh;overflow:auto;background:var(--card-bg,#111);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.pdf-meta-box h3{margin:0 0 6px}.pdf-meta-help{font-size:.76rem;color:var(--text-muted);line-height:1.5;margin-bottom:14px}.pdf-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pdf-meta-field{display:flex;flex-direction:column;gap:5px}.pdf-meta-field.full{grid-column:1/-1}.pdf-meta-field label{font-size:.72rem;color:var(--text-muted);font-weight:700}.pdf-meta-field input,.pdf-meta-field select{width:100%;box-sizing:border-box;padding:10px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2,#181818);color:var(--text-main,#fff)}.pdf-meta-actions{display:flex;gap:8px;margin-top:15px}.pdf-meta-actions button{flex:1}
+@media(max-width:520px){.pdf-meta-grid{grid-template-columns:1fr}.pdf-meta-field.full{grid-column:auto}}
 </style>
 <style>
 /* ═══ LAB SHELL ════════════════════════════════════════════════════════════ */
@@ -3523,6 +3530,10 @@ body{background:#0a0710;color:#f3ecff;margin:0;font-family:Inter,system-ui,sans-
 .lab-title small{font-size:.68rem;color:#7c6a9a;}
 .lab-header-spacer{width:72px;} /* balance the back link */
 
+.file-picker-native{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;}
+.drop-picker{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;}
+.jee-file-status.processing{border-color:#f59e0b!important}.jee-file-status.done{border-color:#34d399!important}.jee-file-status.failed{border-color:#fb7185!important}
+.pdf-meta-field.is-hidden{display:none!important}
 /* ── Upload card ─────────────────────────────────────────────────────────── */
 .upload-card{background:#130b1a;border:1px solid #2a1a3e;border-radius:18px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden;}
 .upload-card::before{content:'';position:absolute;top:0;left:16px;right:16px;height:1px;border-radius:999px;background:linear-gradient(90deg,transparent,rgba(139,92,246,.5),transparent);}
@@ -3649,8 +3660,34 @@ body{background:#0a0710;color:#f3ecff;margin:0;font-family:Inter,system-ui,sans-
   .section-head .lab-btn{width:100%;}
 }
 </style>
+
+<style id="jee-feedback-style">
+#jee-action-toast{position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));transform:translate(-50%,18px);z-index:99999;min-width:220px;max-width:min(92vw,430px);padding:11px 15px;border:1px solid rgba(167,139,250,.35);border-radius:12px;background:rgba(15,10,24,.96);color:#f6f1ff;box-shadow:0 12px 35px rgba(0,0,0,.35);font-size:.78rem;font-weight:750;text-align:center;opacity:0;pointer-events:none;transition:.2s ease;backdrop-filter:blur(10px)}
+#jee-action-toast.show{opacity:1;transform:translate(-50%,0)}
+#jee-action-toast.ok{border-color:rgba(52,211,153,.4)}#jee-action-toast.err{border-color:rgba(248,113,113,.45)}
+.jee-action-busy{opacity:.72!important;transform:scale(.985);transition:.12s ease}
+.jee-file-status{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0;padding:8px 10px;border:1px solid rgba(255,255,255,.08);border-radius:9px;background:rgba(255,255,255,.025);font-size:.72rem}
+.jee-file-status .state{font-weight:800;white-space:nowrap}.jee-file-status.ready .state{color:#a78bfa}.jee-file-status.done .state{color:#34d399}.jee-file-status.fail .state{color:#f87171}
+</style>
 </head>
 <body>
+<div id="pdf-meta-modal" aria-hidden="true">
+  <div class="pdf-meta-box" role="dialog" aria-modal="true" aria-labelledby="pdf-meta-title">
+    <h3 id="pdf-meta-title">📋 Confirm test details</h3>
+    <div class="pdf-meta-help" id="pdf-meta-help">Some details are missing from the selected PDF(s). Fill only what you know; the tracker will never invent missing values.</div>
+    <div class="pdf-meta-grid">
+      <div class="pdf-meta-field full"><label for="pdf-meta-name">Test name</label><input id="pdf-meta-name" placeholder="e.g. JEE Main Mock 12"></div>
+      <div class="pdf-meta-field"><label for="pdf-meta-date">Test date</label><input id="pdf-meta-date" type="date"></div>
+      <div class="pdf-meta-field"><label for="pdf-meta-exam">Exam</label><select id="pdf-meta-exam"><option value="">Auto-detect</option><option value="mains">JEE Main</option><option value="advanced">JEE Advanced</option><option value="other">Other</option></select></div>
+      <div class="pdf-meta-field"><label for="pdf-meta-correct">Marks for correct answer</label><input id="pdf-meta-correct" type="number" step="0.25" placeholder="e.g. 4"></div>
+      <div class="pdf-meta-field"><label for="pdf-meta-wrong">Marks for wrong answer</label><input id="pdf-meta-wrong" type="number" step="0.25" placeholder="e.g. -1"></div>
+      <div class="pdf-meta-field"><label for="pdf-meta-max">Maximum marks (if missing)</label><input id="pdf-meta-max" type="number" step="1" placeholder="e.g. 300"></div>
+    </div>
+    <div class="pdf-meta-help" style="margin-top:10px;margin-bottom:0;">For multiple PDFs, these details apply to the whole batch. If the PDFs contain their own date/marking scheme, those values take priority.</div>
+    <div class="pdf-meta-actions"><button type="button" class="lab-btn clear" onclick="closePDFMetaModal()">Cancel</button><button type="button" class="lab-btn primary" onclick="confirmPDFMetaAndAnalyse()">Continue analysis →</button></div>
+  </div>
+</div>
+
 
 <div class="lab-shell">
 
@@ -3681,17 +3718,18 @@ body{background:#0a0710;color:#f3ecff;margin:0;font-family:Inter,system-ui,sans-
            ondragleave="this.classList.remove('drag')"
            ondrop="this.classList.remove('drag');onPDFFileSelected({files:event.dataTransfer.files})">
         <input id="file" type="file"
-               accept=".pdf,application/pdf,.png,image/png,.jpg,.jpeg,image/jpeg,.webp,image/webp,.txt,text/plain,.json,application/json"
-               multiple onchange="onPDFFileSelected(this)">
+               accept="application/pdf,.pdf,image/png,.png,image/jpeg,.jpg,.jpeg,image/webp,.webp,text/plain,.txt,application/json,.json"
+               multiple onchange="onPDFFileSelected(this)" class="file-picker-native" aria-label="Choose PDF files">
         <span class="drop-icon">📄</span>
-        <div class="drop-label"><strong>Tap here to choose PDF</strong> (or drag & drop)</div>
+        <label for="file" class="drop-picker">📤 Choose PDF(s)</label>
+        <div class="drop-label" style="margin-top:8px;"><strong>Tap the button above to choose one or multiple files</strong> (or drag & drop)</div>
         <div class="drop-sub">PDF · PNG · JPG · TXT · JSON<br>ALLEN · Aakash · JEE Main · any platform</div>
         <div id="selected" class="muted" style="font-size:.74rem;margin-top:8px;"></div>
         <div id="selected-files"></div>
       </div>
 
       <div class="lab-actions">
-        <button class="lab-btn primary" id="analyse" onclick="uploadAndAnalysePDF()" disabled>🔍 Analyse Test</button>
+        <button class="lab-btn primary" id="analyse" onclick="openPDFMetaModal()" disabled>🔍 Analyse Test</button>
         <button class="lab-btn clear" onclick="resetPDFSync()">✕ Clear</button>
       </div>
 
@@ -4140,12 +4178,13 @@ function showPDFResult(obj){const el=document.getElementById('result');if(!el)re
 // ═══════════════════════════════════════════════════════
 
 let pdfSyncFile = null;
+let pdfSyncFiles = [];
 let pdfSyncBase64 = null;
 let pdfSyncMime = null;
 
 function onPDFFileSelected(input){
-  const file=input?.files?.[0];
-  if(file) setPDFFile(file);
+  const files = input && input.files ? Array.from(input.files) : [];
+  setPDFFiles(files);
 }
 
 function handlePDFDrop(event){
@@ -4159,15 +4198,7 @@ function handlePDFDrop(event){
   setPDFFile(file);
 }
 
-function setPDFFile(file){
-  pdfSyncFile=file;pdfSyncBase64=null;pdfSyncMime=file.type||'application/pdf';
-  const nameEl=document.getElementById('pdf-selected-name');
-  if(nameEl){nameEl.textContent=file.name;nameEl.style.display='block';}
-  const btn=document.getElementById('pdf-analyse-btn');
-  if(btn){btn.disabled=false;btn.classList.add('ready');}
-  const res=document.getElementById('pdf-result');
-  if(res){res.className='pdf-result';res.innerHTML='';}
-}
+function setPDFFile(file){ setPDFFiles(file ? [file] : []); }
 
 async function openPDFAnalyzerFromDashboard(){
   switchTab('prompts');
@@ -4346,19 +4377,17 @@ function normalizePDFAnalysis(raw){
   out.subjects=(Array.isArray(data.subjects)?data.subjects:[]).map(s=>({subject:pdfNormalizeSubject(s.subject),myScore:pdfCleanNumber(s.myScore),maxScore:pdfCleanNumber(s.maxScore),correct:pdfCleanNumber(s.correct),wrong:pdfCleanNumber(s.wrong),skipped:pdfCleanNumber(s.skipped),attempted:pdfCleanNumber(s.attempted),accuracy:pdfCleanNumber(s.accuracy)})).filter(s=>s.subject);
   const merged=new Map();(Array.isArray(data.chapters)?data.chapters:[]).forEach(c=>{const subject=pdfNormalizeSubject(c.subject);if(!subject||!String(c.name||'').trim())return;const match=pdfChapterMatch(c.name,subject),cleanName=match?match.ch.name:String(c.name).replace(/\s+/g,' ').trim(),key=subject+'|'+cleanName.toLowerCase(),ex=merged.get(key)||{subject,name:cleanName,score:null,maxScore:null,attempted:null,correct:null,wrong:null,skipped:null,accuracy:null,status:'UNKNOWN',priority:'UNKNOWN',mistakeType:null,topics:[],questions:[],evidence:[]};['score','maxScore','attempted','correct','wrong','skipped','accuracy'].forEach(k=>{const n=pdfCleanNumber(c[k]);if(n!==null&&ex[k]===null)ex[k]=n});const st=pdfNormalizeStatus(c.status);if(st!=='UNKNOWN')ex.status=st;const pr=pdfNormalizePriority(c.priority);if(pr!=='UNKNOWN')ex.priority=ex.priority==='HIGH'||pr==='HIGH'?'HIGH':pr;const mt=pdfNormalizeMistake(c.mistakeType);if(mt)ex.mistakeType=ex.mistakeType&&ex.mistakeType!==mt?'Mixed':mt;(Array.isArray(c.topics)?c.topics:[]).forEach(t=>{if(t&&!ex.topics.includes(String(t)))ex.topics.push(String(t))});(Array.isArray(c.questions)?c.questions:[]).forEach(q=>{if(q!==null&&q!==undefined&&!ex.questions.includes(String(q)))ex.questions.push(String(q))});(Array.isArray(c.evidence)?c.evidence:[]).map(pdfEvidenceText).filter(Boolean).forEach(e=>{if(!ex.evidence.includes(e))ex.evidence.push(e)});merged.set(key,ex)});
   (Array.isArray(data.revisionTargets)?data.revisionTargets:[]).forEach(r=>{const subject=pdfNormalizeSubject(r.subject);if(!subject||!r.chapter)return;const match=pdfChapterMatch(r.chapter,subject);if(!match)return;const ex=merged.get(subject+'|'+match.ch.name.toLowerCase());if(ex){const p=pdfNormalizePriority(r.priority);if(p!=='UNKNOWN')ex.priority=ex.priority==='HIGH'||p==='HIGH'?'HIGH':p;const ev='Most Important Revision Targets: '+String(r.reason||'listed as a revision target');if(!ex.evidence.includes(ev))ex.evidence.push(ev)}});
-  out.chapters=[...merged.values()].map(ch=>{if(ch.accuracy===null&&ch.correct!==null&&ch.attempted!==null&&ch.attempted>0)ch.accuracy=Math.round(ch.correct/ch.attempted*1000)/10;ch.evidence=[...new Set(ch.evidence)];ch.topics=[...new Set(ch.topics)];ch.questions=[...new Set(ch.questions)];return ch});out.revisionTargets=(Array.isArray(data.revisionTargets)?data.revisionTargets:[]).map(r=>({subject:pdfNormalizeSubject(r.subject),chapter:r.chapter?String(r.chapter):null,reason:r.reason?String(r.reason):null,priority:pdfNormalizePriority(r.priority)})).filter(r=>r.subject&&r.chapter);return out;
+  out.chapters=[...merged.values()].map(ch=>{if(ch.accuracy===null&&ch.correct!==null&&ch.attempted!==null&&ch.attempted>0)ch.accuracy=Math.round(ch.correct/ch.attempted*1000)/10;ch.evidence=[...new Set(ch.evidence)];ch.topics=[...new Set(ch.topics)];ch.questions=[...new Set(ch.questions)];return ch});out.markingScheme=data.markingScheme&&Number.isFinite(Number(data.markingScheme.correct))&&Number.isFinite(Number(data.markingScheme.wrong))?{type:data.markingScheme.type||'custom',correct:Number(data.markingScheme.correct),wrong:Number(data.markingScheme.wrong),max:Number.isFinite(Number(data.markingScheme.max))?Number(data.markingScheme.max):null}:null;out.revisionTargets=(Array.isArray(data.revisionTargets)?data.revisionTargets:[]).map(r=>({subject:pdfNormalizeSubject(r.subject),chapter:r.chapter?String(r.chapter):null,reason:r.reason?String(r.reason):null,priority:pdfNormalizePriority(r.priority)})).filter(r=>r.subject&&r.chapter);return out;
 }
 
-function resolvePDFMarkingScheme(exam){
+function resolvePDFMarkingScheme(exam,override){
+  if(override&&Number.isFinite(Number(override.correct))&&Number.isFinite(Number(override.wrong))){return{type:override.type||'custom',correct:Number(override.correct),wrong:Number(override.wrong),max:Number.isFinite(Number(override.max))?Number(override.max):null};}
   // First try the shared markingScheme loaded from localStorage (set in main tracker)
   if(markingScheme&&Number.isFinite(Number(markingScheme.correct))&&Number.isFinite(Number(markingScheme.wrong))){
     return{type:markingScheme.type||'custom',correct:Number(markingScheme.correct),wrong:Number(markingScheme.wrong)};
   }
   // Fall back to exam type defaults
   if(exam==='advanced')return{type:'advanced',correct:3,wrong:-1};
-  return{type:'mains',correct:4,wrong:-1};
-};
-  try{const raw=localStorage.getItem('jee-marking-scheme');if(raw){const s=JSON.parse(raw);if(Number.isFinite(Number(s.correct))&&Number.isFinite(Number(s.wrong)))return{type:s.type||'custom',correct:Number(s.correct),wrong:Number(s.wrong)}}}catch(e){}
   return{type:'mains',correct:4,wrong:-1};
 }
 async function persistPDFAnalysisRecord(data,stats){const key='jee-pdf-analysis-history';let history=[];try{const existing=await localDB.get(key,false);if(existing?.value)history=JSON.parse(existing.value)||[]}catch(e){}const record={id:'pdf_'+Date.now()+'_'+Math.random().toString(36).slice(2,8),importedAt:new Date().toISOString(),fileName:pdfSyncFile?.name||null,...data,importStats:stats};history.unshift(record);history=history.slice(0,100);await localDB.set(key,JSON.stringify(history),false);return record.id}
@@ -4373,7 +4402,7 @@ async function applyPDFAnalysis(data){
   const subjectKeyMap={Physics:'physics',Chemistry:'chemistry',Maths:'maths'},newWeakSubs=new Set(selfWeakSubjects||[]);
   data.subjects.forEach(s=>{const key=subjectKeyMap[s.subject],supportedWeak=data.chapters.some(c=>c.subject===s.subject&&(c.status==='WEAK'||c.status==='PRIORITY'||c.priority==='HIGH'))||data.revisionTargets.some(r=>r.subject===s.subject&&['HIGH','MEDIUM'].includes(r.priority));if(key&&supportedWeak&&!newWeakSubs.has(key)){newWeakSubs.add(key);stats.weakSubjectsAdded.push(key)}});
   if(stats.weakSubjectsAdded.length){selfWeakSubjects=[...newWeakSubs];try{await localDB.set('jee-self-weak-subjects',JSON.stringify(selfWeakSubjects),false)}catch(e){}}
-  const ms=resolvePDFMarkingScheme(data.exam),testName=data.testName||'PDF Import';
+  const ms=resolvePDFMarkingScheme(data.exam,data.markingScheme),testName=data.testName||'PDF Import';
   data.chapters.forEach(ch=>{const matched=pdfChapterMatch(ch.name,ch.subject);if(!matched){stats.skipped++;return}const totalQuestions=[ch.correct,ch.wrong,ch.skipped].every(v=>v!==null)?ch.correct+ch.wrong+ch.skipped:(ch.attempted!==null?ch.attempted:null),score=ch.score!==null?ch.score:(ch.correct!==null&&ch.wrong!==null?ch.correct*ms.correct+ch.wrong*ms.wrong:null);if(totalQuestions===null||totalQuestions<=0||score===null)return;const mistakeMap={Conceptual:'Concept Gap',Calculation:'Silly Mistake',Formula:'Formula Gap',Silly:'Silly Mistake',Guessing:'Guessed Wrong','Incorrect approach':'Incorrect Approach',Skipped:'Skipped',Mixed:'Concept Gap'},mistake=ch.mistakeType||'Mixed';const duplicate=chapterTests.some(t=>t.topic===matched.ch.name&&t.subject===matched.subject&&t.date===today&&String(t.note||'').includes(testName));if(duplicate)return;const detailParts=[];if(ch.accuracy!=null)detailParts.push('Accuracy: '+ch.accuracy+'%');if(ch.status&&ch.status!=='UNKNOWN')detailParts.push('Status: '+ch.status);if(ch.priority&&ch.priority!=='UNKNOWN')detailParts.push('Priority: '+ch.priority);if(ch.topics?.length)detailParts.push('Topics: '+ch.topics.join(', '));if(ch.questions?.length)detailParts.push('Questions: '+ch.questions.join(', '));if(ch.evidence?.length)detailParts.push('Evidence: '+ch.evidence.join(' | '));chapterTests.unshift({subject:matched.subject,topic:matched.ch.name,level:'chapter',questions:String(totalQuestions),myscore:String(score),topperscore:'',date:today,mistake:[mistakeMap[mistake]||'Concept Gap'],note:'Auto-synced from PDF: '+testName+(detailParts.length?' — '+detailParts.join(' — '):'')});stats.chaptersAdded++});
   if(stats.chaptersAdded>0){await saveChapterTests();renderChapterTests()}
   renderWeakSpotRadar();renderDangerZone();renderSubjectRadarChart();renderZoneShrinking();renderRevisionDue();renderAchievements();
@@ -4418,7 +4447,7 @@ async function addToBattleLog(id){const history=JSON.parse(localStorage.getItem(
     }catch(e){}
     renderHistory();renderAnalysis(record,true);alert('Added to Battle Log ✓')}
 function renderMetric(label,val){return '<div class="metric"><b>'+escapePDFBattleText(val==null?'—':val)+'</b><span>'+label+'</span></div>'}
-function renderAnalysis(data,added=false){latestAnalysis=data;const ov=data.overall||{},score=data.totalScore||{};const subs=(data.subjects||[]).map(s=>'<div class="subject-card"><b>'+escapePDFBattleText(s.subject)+'</b><div class="metric-row" style="margin-top:8px">'+renderMetric('Score',s.myScore!=null?s.myScore+'/'+(s.maxScore??'?'):null)+renderMetric('Accuracy',s.accuracy!=null?s.accuracy+'%':null)+renderMetric('Attempted',s.attempted)+renderMetric('Wrong',s.wrong)+'</div></div>').join('');const ch=(data.chapters||[]).map(c=>'<div class="chapter-card-lite"><div class="top"><b>'+escapePDFBattleText(c.subject)+' — '+escapePDFBattleText(c.name)+'</b><span class="tag">'+escapePDFBattleText(c.status||'UNKNOWN')+'</span></div><div class="muted" style="font-size:.73rem;margin-top:5px">'+escapePDFBattleText([c.score!=null?'Score '+c.score:null,c.accuracy!=null?c.accuracy+'%':null,c.attempted!=null?'Attempted '+c.attempted:null,c.correct!=null?'✓ '+c.correct:null,c.wrong!=null?'✕ '+c.wrong:null,c.skipped!=null?'Skipped '+c.skipped:null,c.mistakeType,c.priority].filter(Boolean).join(' · ')||'No metrics reported')+'</div>'+(c.topics?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Topics:</b> '+escapePDFBattleText(c.topics.join(', '))+'</div>':'')+(c.questions?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Questions:</b> '+escapePDFBattleText(c.questions.join(', '))+'</div>':'')+(c.evidence?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Evidence:</b> '+escapePDFBattleText(c.evidence.join(' | '))+'</div>':'')+'</div>').join('');const rev=(data.revisionTargets||[]).map(x=>'<div>• <b>'+escapePDFBattleText(x.subject)+' — '+escapePDFBattleText(x.chapter)+'</b>: '+escapePDFBattleText(x.reason||'Revision target')+'</div>').join('');document.getElementById('result').innerHTML='<div class="analysis-grid"><div class="analysis-card"><h3>Overall</h3><div class="metric-row">'+renderMetric('Score',score.my!=null?score.my+'/'+(score.max??'?'):null)+renderMetric('Accuracy',ov.accuracy!=null?ov.accuracy+'%':null)+renderMetric('Attempted',ov.attempted)+renderMetric('Wrong',ov.wrong)+'</div></div><div class="analysis-card"><h3>Test</h3><div style="font-size:.8rem"><b>'+escapePDFBattleText(data.testName||data.fileName||'Unnamed Test')+'</b><div class="muted" style="margin-top:4px">'+escapePDFBattleText([data.date,data.exam,data.fileName].filter(Boolean).join(' · '))+'</div></div></div></div><div class="analysis-card" style="margin-top:12px"><h3>Subject Performance</h3>'+(subs||'<div class="empty">No subject-level metrics were found.</div>')+'</div><div class="analysis-card" style="margin-top:12px"><h3>Chapter / Topic Analysis</h3>'+(ch||'<div class="empty">No chapter-level evidence was found.</div>')+'</div>'+(rev?'<div class="analysis-card" style="margin-top:12px"><h3>Revision Targets</h3>'+rev+'</div>':'')+'<div style="margin-top:10px; font-size:0.74rem; color:var(--chem); opacity:0.8;">✓ Synced to tracker automatically</div>'}
+function renderAnalysis(data,added=false){latestAnalysis=data;const ov=data.overall||{},score=data.totalScore||{};const subs=(data.subjects||[]).map(s=>'<div class="subject-card"><b>'+escapePDFBattleText(s.subject)+'</b><div class="metric-row" style="margin-top:8px">'+renderMetric('Score',s.myScore!=null?s.myScore+'/'+(s.maxScore??'?'):null)+renderMetric('Accuracy',s.accuracy!=null?s.accuracy+'%':null)+renderMetric('Attempted',s.attempted)+renderMetric('Wrong',s.wrong)+'</div></div>').join('');const ch=(data.chapters||[]).map(c=>'<div class="chapter-card-lite"><div class="top"><b>'+escapePDFBattleText(c.subject)+' — '+escapePDFBattleText(c.name)+'</b><span class="tag">'+escapePDFBattleText(c.status||'UNKNOWN')+'</span></div><div class="muted" style="font-size:.73rem;margin-top:5px">'+escapePDFBattleText([c.score!=null?'Score '+c.score:null,c.accuracy!=null?c.accuracy+'%':null,c.attempted!=null?'Attempted '+c.attempted:null,c.correct!=null?'✓ '+c.correct:null,c.wrong!=null?'✕ '+c.wrong:null,c.skipped!=null?'Skipped '+c.skipped:null,c.mistakeType,c.priority].filter(Boolean).join(' · ')||'No metrics reported')+'</div>'+(c.topics?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Topics:</b> '+escapePDFBattleText(c.topics.join(', '))+'</div>':'')+(c.questions?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Questions:</b> '+escapePDFBattleText(c.questions.join(', '))+'</div>':'')+(c.evidence?.length?'<div style="font-size:.72rem;margin-top:4px"><b>Evidence:</b> '+escapePDFBattleText(c.evidence.join(' | '))+'</div>':'')+'</div>').join('');const rev=(data.revisionTargets||[]).map(x=>'<div>• <b>'+escapePDFBattleText(x.subject)+' — '+escapePDFBattleText(x.chapter)+'</b>: '+escapePDFBattleText(x.reason||'Revision target')+'</div>').join('');document.getElementById('result').innerHTML='<div class="analysis-grid"><div class="analysis-card"><h3>Overall</h3><div class="metric-row">'+renderMetric('Score',score.my!=null?score.my+'/'+(score.max??'?'):null)+renderMetric('Accuracy',ov.accuracy!=null?ov.accuracy+'%':null)+renderMetric('Attempted',ov.attempted)+renderMetric('Wrong',ov.wrong)+'</div></div><div class="analysis-card"><h3>Test</h3><div style="font-size:.8rem"><b>'+escapePDFBattleText(data.testName||data.fileName||'Unnamed Test')+'</b><div class="muted" style="margin-top:4px">'+escapePDFBattleText([data.date,data.exam,data.fileName].filter(Boolean).join(' · '))+'</div></div></div></div><div class="analysis-card" style="margin-top:12px"><h3>Subject Performance</h3>'+(subs||'<div class="empty">No subject-level metrics were found.</div>')+'</div><div class="analysis-card" style="margin-top:12px"><h3>Chapter / Topic Analysis</h3>'+(ch||'<div class="empty">No chapter-level evidence was found.</div>')+'</div>'+(rev?'<div class="analysis-card" style="margin-top:12px"><h3>Revision Targets</h3>'+rev+'</div>':'')+'<div style="margin-top:10px; font-size:0.74rem; color:var(--chem); opacity:0.8;">✓ Synced to tracker automatically</div><div class="toolbar" style="margin-top:12px"><button class="add-btn compact" onclick="generateStandWeaknessPDF()">📄 Download Stand & Weakness PDF</button></div>'}
 async function renderHistory(){let h=[];try{h=JSON.parse(localStorage.getItem('jee-test-analysis-history')||'[]')}catch(e){}const el=document.getElementById('history-list');if(!h.length){el.innerHTML='<div class="empty">No analysed tests yet.</div>';return}el.innerHTML=h.map(r=>'<div class="log-card"><div class="top"><b>'+escapePDFBattleText(r.testName||r.fileName||'Test')+'</b><span class="tag">'+escapePDFBattleText(r.date||'-')+'</span></div><div class="muted" style="font-size:.72rem;margin-top:5px">'+escapePDFBattleText([r.exam,r.fileName,r.totalScore?.my!=null?'Score '+r.totalScore.my+'/'+(r.totalScore.max??'?'):null].filter(Boolean).join(' · '))+'</div><div class="toolbar"><button class="add-btn" onclick="viewHistory(\''+escapePDFBattleText(r.id)+'\')">View Analysis</button></div></div>').join('')}
 function viewHistory(id){const h=JSON.parse(localStorage.getItem('jee-test-analysis-history')||'[]');const r=h.find(x=>x.id===id);if(r){renderAnalysis(r,false);window.scrollTo({top:0,behavior:'smooth'})}}
 async function uploadAndAnalysePDF(){if(!pdfSyncFile){showPDFResult({error:'Please select a file first.'});return}const btn=document.getElementById('analyse');btn.disabled=true;try{const name=pdfSyncFile.name.toLowerCase();let parsed;pdfLocalProgress(5,'Reading file…');if(pdfSyncFile.type==='application/pdf'||name.endsWith('.pdf')){const lib=await loadPDFJS(),bytes=new Uint8Array(await pdfSyncFile.arrayBuffer()),pdf=await lib.getDocument({data:bytes}).promise;let native=false;for(let n=1;n<=Math.min(3,pdf.numPages);n++){const p=await pdf.getPage(n),c=await p.getTextContent({includeMarkedContent:true});if(c.items.some(x=>String(x.str||'').trim().length>2))native=true;p.cleanup();if(native)break}parsed=native?await extractPDFIntelligently(pdfSyncFile):await extractScannedPDFIntelligently(pdfSyncFile)}else if(/^image\//.test(pdfSyncFile.type)||/\.(png|jpe?g|webp)$/i.test(name))parsed=await extractImageIntelligently(pdfSyncFile);else if(/\.(txt|json)$/i.test(name)||/^(text\/plain|application\/json)$/.test(pdfSyncFile.type))parsed=await extractTextFileIntelligently(pdfSyncFile);else throw Error('Unsupported file type.');const normalized=normalizePDFAnalysis(parsed);let syncStats={chaptersAdded:0,skipped:0,weakSubjectsAdded:[]};try{syncStats=await applyPDFAnalysis(normalized)}catch(e){console.warn('Chapter sync error:',e)}const record=await persistStandaloneAnalysis({...normalized,_syncStats:syncStats});record._recordId=record.id;let h=JSON.parse(localStorage.getItem('jee-test-analysis-history')||'[]');h=h.map(x=>x.id===record.id?record:x);localStorage.setItem('jee-test-analysis-history',JSON.stringify(h));latestAnalysis=record;pdfLocalProgress(100,'Analysis complete ✓ — '+syncStats.chaptersAdded+' chapters synced to tracker');renderAnalysis(record,false);await renderHistory()}catch(err){console.error(err);showPDFResult({error:'Analysis failed: '+err.message})}finally{btn.disabled=false;document.getElementById('progress').classList.remove('active')}}
@@ -4867,6 +4896,35 @@ async function addToBattleLog(id){
 }
 async function renderHistory(){renderAnalysisIndex();renderUploads()}
 function renderAnalysis(data,added=false){latestAnalysis=data;openTestAnalysis(data.id)}
+let pdfPendingMeta = null;
+function openPDFMetaModal(){
+  const modal=document.getElementById('pdf-meta-modal'); if(!modal)return;
+  const files=Array.isArray(pdfSyncFiles)?pdfSyncFiles:[];
+  const names=files.map(f=>f.name).slice(0,3).join(', ');
+  const more=files.length>3?' + '+(files.length-3)+' more':'';
+  const help=document.getElementById('pdf-meta-help');
+  if(help)help.innerHTML='<b>'+files.length+' file'+(files.length===1?'':'s')+' selected.</b> '+escapePDFBattleText(names+more)+'<br>We found some fields may be missing. Please confirm them before analysis.';
+  const first=files[0];
+  const name=document.getElementById('pdf-meta-name'); if(name&&!name.value)name.value=(first?.name||'').replace(/\.[^.]+$/,'');
+  const date=document.getElementById('pdf-meta-date'); if(date)date.value='';
+  const exam=document.getElementById('pdf-meta-exam'); if(exam&&!exam.value&&markingScheme?.type)exam.value=markingScheme.type==='advanced'?'advanced':(markingScheme.type==='mains'?'mains':'');
+  const correct=document.getElementById('pdf-meta-correct'); if(correct&&!correct.value&&Number.isFinite(Number(markingScheme?.correct)))correct.value=markingScheme.correct;
+  const wrong=document.getElementById('pdf-meta-wrong'); if(wrong&&!wrong.value&&Number.isFinite(Number(markingScheme?.wrong)))wrong.value=markingScheme.wrong;
+  modal.classList.add('show');modal.setAttribute('aria-hidden','false');
+}
+function closePDFMetaModal(){const m=document.getElementById('pdf-meta-modal');if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true')}}
+function confirmPDFMetaAndAnalyse(){
+  pdfPendingMeta={
+    testName:document.getElementById('pdf-meta-name')?.value.trim()||null,
+    date:document.getElementById('pdf-meta-date')?.value||null,
+    exam:document.getElementById('pdf-meta-exam')?.value||null,
+    correct:document.getElementById('pdf-meta-correct')?.value,
+    wrong:document.getElementById('pdf-meta-wrong')?.value,
+    max:document.getElementById('pdf-meta-max')?.value
+  };
+  closePDFMetaModal();uploadAndAnalysePDF();
+}
+
 async function uploadAndAnalysePDF(){
   const files=Array.isArray(pdfSyncFiles)&&pdfSyncFiles.length?pdfSyncFiles:(pdfSyncFile?[pdfSyncFile]:[]);
   if(!files.length){const el=document.getElementById('upload-result');if(el)el.innerHTML='<div class="empty">Please select one or both test-analysis PDFs first.</div>';return}
@@ -4880,6 +4938,12 @@ async function uploadAndAnalysePDF(){
       const raw=await taExtractFile(file);
       pdfLocalProgress(Math.min(92,Math.round((processed+.75)/files.length*90)),`Reconstructing ${file.name}…`);
       const data=taBuildStructured(raw,file);
+      if(pdfPendingMeta){
+        if(!data.testName&&pdfPendingMeta.testName)data.testName=pdfPendingMeta.testName;
+        if(!data.date&&pdfPendingMeta.date)data.date=pdfPendingMeta.date;
+        if(!data.exam&&pdfPendingMeta.exam)data.exam=pdfPendingMeta.exam;
+        if(pdfPendingMeta.correct!==''&&pdfPendingMeta.wrong!=='') data.markingScheme={type:'custom',correct:Number(pdfPendingMeta.correct),wrong:Number(pdfPendingMeta.wrong),max:pdfPendingMeta.max!==''?Number(pdfPendingMeta.max):null};
+      }
       const lines=taLinesFromPages(raw._rawPages||[]);
       data._questionRows=taParseQuestionPaper(lines);
       data.questionPaper={questions:data._questionRows,questionCount:data._questionRows.length};
@@ -4901,6 +4965,7 @@ async function uploadAndAnalysePDF(){
     const finalRecords=labHistory().filter(r=>ids.includes(r.id));
     latestAnalysis=finalRecords[0]||records[0];
     pdfLocalProgress(100,files.length>1?'All selected files analysed and merged ✓':'Analysis complete ✓');
+    pdfPendingMeta=null;
     renderUploads();renderAnalysisIndex();
     const el=document.getElementById('upload-result');
     if(el){
@@ -4912,21 +4977,22 @@ async function uploadAndAnalysePDF(){
   }finally{if(btn)btn.disabled=false;if(proc)proc.classList.remove('active');}
 }
 function resetPDFSync(){
-  pdfSyncFile=null;pdfSyncFiles=[];
+  pdfSyncFile=null;pdfSyncFiles=[];pdfPendingMeta=null;
   const s=document.getElementById('selected');if(s)s.textContent='';
   const sf=document.getElementById('selected-files');if(sf)sf.innerHTML='';
   const b=document.getElementById('analyse');if(b)b.disabled=true;
   const f=document.getElementById('file');if(f)f.value='';
   const r=document.getElementById('upload-result');if(r)r.innerHTML='';
-  latestAnalysis=null;
+  latestAnalysis=null;pdfPendingMeta=null;
 }
 pdfSyncFiles=[];
 function updateSelectedFilesUI(){
   const files=pdfSyncFiles||[];
   const s=document.getElementById('selected');const sf=document.getElementById('selected-files');
   if(s)s.textContent=files.length?(files.length+' file'+(files.length===1?'':'s')+' selected'):'No files selected';
-  if(sf)sf.innerHTML=files.map((f,i)=>'<div class="tag" style="display:inline-block;margin:3px 4px 0 0">'+(i+1)+'. '+labEsc(f.name)+'</div>').join('');
+  if(sf)sf.innerHTML=files.map((f,i)=>'<div class="jee-file-status ready"><span>📄 '+(i+1)+'. '+labEsc(f.name)+'</span><span class="state">✓ Ready</span></div>').join('');
   const b=document.getElementById('analyse');if(b)b.disabled=!files.length;
+  const r=document.getElementById('upload-result');if(r&&files.length)r.innerHTML='<div class="sync-note">✓ '+files.length+' file'+(files.length===1?'':'s')+' selected and ready. Tap <b>Analyse Test</b> when you are ready.</div>';
 }
 function setPDFFiles(files){
   const arr=[...(files||[])].filter(Boolean).filter(f=>{
@@ -4950,7 +5016,7 @@ function handlePDFDrop(event){
   const files=event.dataTransfer?.files?Array.from(event.dataTransfer.files):[];if(files.length)setPDFFiles(files);
 }
 // Keep the drag/drop zone on the new Uploads panel.
-const dropZone=document.getElementById('drop');if(dropZone){dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('drag')});dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('drag'));dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('drag');const fs=e.dataTransfer?.files?Array.from(e.dataTransfer.files):[];if(fs.length)setPDFFiles(fs)})}
+const dropZone=document.getElementById('drop');if(dropZone){dropZone.setAttribute('role','button');dropZone.setAttribute('tabindex','0');dropZone.setAttribute('aria-label','Choose PDF or other analysis file');dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('drag')});dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('drag'));dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('drag');const fs=e.dataTransfer?.files?Array.from(e.dataTransfer.files):[];if(fs.length)setPDFFiles(fs)})}
 renderUploads();renderAnalysisIndex();
 </script>
 <script>
@@ -4961,5 +5027,252 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.warn('[SW] Registration failed:', err));
   });
 }
+</script>
+
+<script id="jee-visual-feedback">
+(function(){
+  function toast(msg,type){
+    let el=document.getElementById('jee-action-toast');
+    if(!el){el=document.createElement('div');el.id='jee-action-toast';document.body.appendChild(el)}
+    el.textContent=msg;el.className='show '+(type||'');clearTimeout(window.__jeeToastTimer);window.__jeeToastTimer=setTimeout(()=>el.classList.remove('show'),2200);
+  }
+  window.jeeFeedback={toast:toast,success:m=>toast('✓ '+m,'ok'),error:m=>toast('✕ '+m,'err'),working:m=>toast('⏳ '+m)};
+  document.addEventListener('click',function(e){
+    const b=e.target.closest('button,a,[role="button"]'); if(!b||b.dataset.noFeedback==='true')return;
+    const text=(b.innerText||b.getAttribute('aria-label')||'Action').replace(/\s+/g,' ').trim(); if(!text)return;
+    if(b.matches('button')&&!b.disabled){b.classList.add('jee-action-busy');setTimeout(()=>b.classList.remove('jee-action-busy'),180)}
+    if(text.includes('Choose PDF')) return toast('📂 Opening file picker…');
+    if(text.includes('Analyse Test')) return toast('🔍 Preparing analysis…');
+    if(text.includes('Continue analysis')) return toast('⏳ Starting analysis…');
+    if(text.includes('Clear')) return toast('↺ Clearing selection…');
+    if(text.includes('Upload')) return toast('📤 Opening upload…');
+    if(text.includes('Open Analysis')||text.includes('Open Test')) return toast('📊 Opening analysis…');
+    if(text.includes('Mark Complete')) return toast('✓ Saving completion…');
+    if(text.includes('Add to Battle Log')) return toast('⚔️ Adding to Battle Log…');
+    if(text.includes('Create 1–2 Day Plan')) return toast('⚡ Creating revision plan…');
+  },true);
+  document.addEventListener('change',function(e){
+    const el=e.target;
+    if(el && el.type==='file' && el.files?.length) toast('✓ '+el.files.length+' file'+(el.files.length===1?'':'s')+' selected','ok');
+    else if(el && (el.matches('input[type=checkbox]')||el.matches('select'))) toast('✓ Setting updated','ok');
+  },true);
+  window.addEventListener('error',function(){toast('Something went wrong — please try again','err')});
+})();
+</script>
+<script>
+/* ===== FINAL PDF BATCH / MOBILE UPLOAD OVERRIDES ===== */
+let pdfPreparedBatch = null;
+let pdfPreparing = false;
+
+function pdfSetFieldVisible(id, visible){
+  const el=document.getElementById(id); const wrap=el?.closest('.pdf-meta-field');
+  if(wrap) wrap.classList.toggle('is-hidden', !visible);
+}
+function pdfSetMetaHelp(html){const el=document.getElementById('pdf-meta-help');if(el)el.innerHTML=html}
+function pdfMissingFields(parsed){
+  const all=parsed||[];
+  const has=v=>all.some(x=>v(x));
+  const missing=[];
+  if(!has(x=>x.testName))missing.push('test name');
+  if(!has(x=>x.date))missing.push('test date');
+  if(!has(x=>x.exam))missing.push('exam');
+  if(!has(x=>x.markingScheme?.correct) || !has(x=>x.markingScheme?.wrong))missing.push('marking scheme');
+  if(!has(x=>x.totalScore?.max) && !has(x=>x.markingScheme?.max))missing.push('maximum marks');
+  return missing;
+}
+function pdfApplyPendingMeta(data){
+  const m=pdfPendingMeta||{};
+  if(!data.testName&&m.testName)data.testName=m.testName;
+  if(!data.date&&m.date)data.date=m.date;
+  if(!data.exam&&m.exam)data.exam=m.exam;
+  const corr=m.correct!==''&&m.correct!=null?Number(m.correct):null;
+  const wrong=m.wrong!==''&&m.wrong!=null?Number(m.wrong):null;
+  const max=m.max!==''&&m.max!=null?Number(m.max):null;
+  if((data.markingScheme?.correct==null || data.markingScheme?.wrong==null) && Number.isFinite(corr)&&Number.isFinite(wrong)){
+    data.markingScheme={...(data.markingScheme||{}),type:'custom',correct:corr,wrong:wrong,max:Number.isFinite(max)?max:(data.markingScheme?.max??null)};
+  } else if(data.markingScheme && data.markingScheme.max==null && Number.isFinite(max)) data.markingScheme.max=max;
+  if(data.totalScore?.max==null && Number.isFinite(max)) data.totalScore={...(data.totalScore||{}),max:max};
+  return data;
+}
+
+async function preparePDFAnalysis(){
+  const files=Array.isArray(pdfSyncFiles)&&pdfSyncFiles.length?pdfSyncFiles:(pdfSyncFile?[pdfSyncFile]:[]);
+  if(!files.length){const r=document.getElementById('upload-result');if(r)r.innerHTML='<div class="empty">📄 Please choose at least one PDF first.</div>';return;}
+  if(pdfPreparing)return;
+  pdfPreparing=true;
+  const btn=document.getElementById('analyse'); if(btn)btn.disabled=true;
+  const status=document.getElementById('upload-result');
+  try{
+    pdfPreparedBatch=[];
+    for(let i=0;i<files.length;i++){
+      const file=files[i]; pdfSyncFile=file;
+      const row=document.querySelectorAll('#selected-files .jee-file-status')[i];
+      if(row){row.className='jee-file-status processing';row.querySelector('.state').textContent='⏳ Reading…';}
+      if(status)status.innerHTML='<div class="sync-note">⏳ Reading '+(i+1)+'/'+files.length+': <b>'+labEsc(file.name)+'</b></div>';
+      const raw=await taExtractFile(file);
+      const data=taBuildStructured(raw,file);
+      const lines=taLinesFromPages(raw._rawPages||[]);
+      data._questionRows=taParseQuestionPaper(lines);
+      data.questionPaper={questions:data._questionRows,questionCount:data._questionRows.length};
+      pdfPreparedBatch.push({file,raw,data});
+      if(row){row.className='jee-file-status ready';row.querySelector('.state').textContent='✓ Read';}
+    }
+    const missing=pdfMissingFields(pdfPreparedBatch.map(x=>x.data));
+    openPDFMetaModalForPrepared(missing);
+    if(status)status.innerHTML='<div class="sync-note">✓ All '+files.length+' file'+(files.length===1?'':'s')+' read successfully. '+(missing.length?'Please provide the missing details below.':'All required details were detected.')+'</div>';
+  }catch(err){
+    console.error('PDF preflight failed',err);
+    pdfPreparedBatch=null;
+    if(status)status.innerHTML='<div class="empty">❌ Could not read the selected PDF(s): '+labEsc(err.message||String(err))+'</div>';
+    (pdfSyncFiles||[]).forEach((_,i)=>{const row=document.querySelectorAll('#selected-files .jee-file-status')[i];if(row){row.className='jee-file-status failed';row.querySelector('.state').textContent='✕ Failed';}});
+  }finally{pdfPreparing=false;if(btn)btn.disabled=!pdfSyncFiles?.length;}
+}
+function openPDFMetaModalForPrepared(missing){
+  const modal=document.getElementById('pdf-meta-modal');if(!modal)return;
+  const files=pdfPreparedBatch.map(x=>x.file); const names=files.map(f=>f.name).slice(0,3).join(', ')+(files.length>3?' + '+(files.length-3)+' more':'');
+  const first=pdfPreparedBatch[0]?.data||{};
+  const pick=(field)=>first[field]||pdfPreparedBatch.map(x=>x.data[field]).find(Boolean)||'';
+  const ms=first.markingScheme||{};
+  document.getElementById('pdf-meta-name').value=pick('testName')||files[0].name.replace(/\.[^.]+$/,'');
+  document.getElementById('pdf-meta-date').value=pick('date')||'';
+  document.getElementById('pdf-meta-exam').value=pick('exam')||'';
+  document.getElementById('pdf-meta-correct').value=ms.correct??'';
+  document.getElementById('pdf-meta-wrong').value=ms.wrong??'';
+  document.getElementById('pdf-meta-max').value=first.totalScore?.max??ms.max??'';
+  const missSet=new Set(missing);
+  pdfSetFieldVisible('pdf-meta-name',missSet.has('test name'));
+  pdfSetFieldVisible('pdf-meta-date',missSet.has('test date'));
+  pdfSetFieldVisible('pdf-meta-exam',missSet.has('exam'));
+  pdfSetFieldVisible('pdf-meta-correct',missSet.has('marking scheme'));
+  pdfSetFieldVisible('pdf-meta-wrong',missSet.has('marking scheme'));
+  pdfSetFieldVisible('pdf-meta-max',missSet.has('maximum marks'));
+  pdfSetMetaHelp('<b>'+files.length+' file'+(files.length===1?'':'s')+' ready ✓</b> '+labEsc(names)+'<br>'+(missing.length?'The tracker could not reliably find: <b>'+labEsc(missing.join(', '))+'</b>. Please provide only those details.':'Everything required was detected. You can continue.')+'<br><span style="opacity:.8">The two report PDFs will be combined into one test analysis when they belong to the same upload batch.</span>');
+  modal.classList.add('show');modal.setAttribute('aria-hidden','false');
+}
+
+/* Replace the old modal confirmation with the prepared-data pipeline. */
+confirmPDFMetaAndAnalyse=async function(){
+  pdfPendingMeta={testName:document.getElementById('pdf-meta-name')?.value.trim()||null,date:document.getElementById('pdf-meta-date')?.value||null,exam:document.getElementById('pdf-meta-exam')?.value||null,correct:document.getElementById('pdf-meta-correct')?.value||'',wrong:document.getElementById('pdf-meta-wrong')?.value||'',max:document.getElementById('pdf-meta-max')?.value||''};
+  closePDFMetaModal();
+  await uploadPreparedPDFBatch();
+};
+
+async function uploadPreparedPDFBatch(){
+  const batch=pdfPreparedBatch;
+  if(!batch?.length){await preparePDFAnalysis();return;}
+  const btn=document.getElementById('analyse'),proc=document.getElementById('progress'),status=document.getElementById('upload-result');
+  if(btn)btn.disabled=true;if(proc)proc.classList.add('active');
+  try{
+    let combined=null,records=[];
+    for(let i=0;i<batch.length;i++){
+      const item=batch[i]; pdfSyncFile=item.file;
+      const data=pdfApplyPendingMeta(item.data);
+      let syncStats={chaptersAdded:0,skipped:0,weakSubjectsAdded:[]};
+      try{syncStats=await applyPDFAnalysis(data)}catch(e){console.warn('Chapter sync error:',e)}
+      data._syncStats=syncStats;
+      if(!combined){
+        combined=await persistStandaloneAnalysis(data);
+      }else{
+        combined=mergeTestRecord(combined,data);
+        const h=labHistory(),idx=h.findIndex(x=>x.id===combined.id);if(idx>=0){h[idx]=combined;saveLabHistory(h)}
+      }
+      const uploads=labUploads();const idx=uploads.findIndex(x=>x.name===item.file.name&&x.size===item.file.size);
+      const entry={id:idx>=0?uploads[idx].id:'upload_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),name:item.file.name,size:item.file.size,type:item.file.type,uploadedAt:idx>=0?uploads[idx].uploadedAt:new Date().toISOString(),status:'Analysed ✓',analysisId:combined.id};
+      if(idx>=0)uploads[idx]=entry;else uploads.unshift(entry);saveLabUploads(uploads);
+      records.push(combined);
+      const row=document.querySelectorAll('#selected-files .jee-file-status')[i];if(row){row.className='jee-file-status done';row.querySelector('.state').textContent='✓ Uploaded & analysed';}
+      if(status)status.innerHTML='<div class="sync-note">⏳ Analysed '+(i+1)+'/'+batch.length+': <b>'+labEsc(item.file.name)+'</b></div>';
+    }
+    latestAnalysis=combined;
+    pdfPendingMeta=null;pdfPreparedBatch=null;
+    pdfLocalProgress(100,'✓ All PDFs uploaded, combined and visualised');
+    renderUploads();renderAnalysisIndex();
+    if(status)status.innerHTML='<div class="analysis-card"><h3 style="color:#34d399">✓ Upload complete</h3><div class="test-meta"><b>'+batch.length+' PDF'+(batch.length===1?'':'s')+'</b> uploaded successfully. Their data has been combined into one test analysis and synced to the tracker.</div><div class="toolbar"><button class="add-btn compact" onclick="switchLabTab(\'analysis\')">View full visual analysis →</button></div></div>';
+    renderAnalysis(combined,false);
+  }catch(err){
+    console.error('Prepared PDF batch error',err);
+    if(status)status.innerHTML='<div class="empty">❌ Upload/analysis failed: '+labEsc(err.message||String(err))+'</div>';
+  }finally{if(btn)btn.disabled=false;if(proc)proc.classList.remove('active');}
+}
+/* New selection always resets the prepared parse and gives immediate visual confirmation. */
+setPDFFiles=function(files){
+  const arr=[...(files||[])].filter(Boolean).filter(f=>f.type==='application/pdf'||/^image\/(png|jpeg|webp)$/i.test(f.type)||/\.(pdf|png|jpe?g|webp|txt|json)$/i.test(String(f.name||'')));
+  if(!arr.length){const r=document.getElementById('upload-result');if(r)r.innerHTML='<div class="empty">❌ No supported files selected.</div>';return;}
+  pdfPreparedBatch=null;pdfPendingMeta=null;pdfSyncFiles=arr;pdfSyncFile=arr[0];pdfSyncBase64=null;pdfSyncMime=pdfSyncFile.type||'application/pdf';updateSelectedFilesUI();
+  const r=document.getElementById('upload-result');if(r)r.innerHTML='<div class="sync-note">✓ '+arr.length+' file'+(arr.length===1?'':'s')+' selected — ready to read.</div>';
+};
+onPDFFileSelected=function(input){setPDFFiles(input?.files?Array.from(input.files):[])};
+openPDFMetaModal=preparePDFAnalysis;
+
+/* ===== STAND + WEAKNESS REPORT PDF =========================================
+   Dependency-free PDF export. Aggregates all successfully analysed tests and
+   turns the tracker history into a student-facing standing/weakness report.
+*/
+function swpAscii(v){return String(v??'').normalize('NFKD').replace(/[^\x20-\x7E]/g,' ').replace(/\s+/g,' ').trim()}
+function swpNum(v){const n=Number(v);return Number.isFinite(n)?n:null}
+function swpPct(v){const n=swpNum(v);return n==null?'—':(Math.round(n*10)/10)+'%'}
+function swpDate(v){return v?String(v).slice(0,10):'—'}
+function swpHistory(){try{return JSON.parse(localStorage.getItem('jee-test-analysis-history')||'[]')}catch(e){return[]}}
+function swpAggregate(history){
+  const tests=history.filter(Boolean), subjectMap={}, chapterMap={}, mistakeMap={};
+  tests.forEach(t=>{
+    (t.subjects||[]).forEach(s=>{
+      const k=s.subject||'Unknown'; const a=subjectMap[k]||(subjectMap[k]={tests:0,score:0,max:0,acc:[],wrong:0,attempted:0});
+      a.tests++; if(s.myScore!=null)a.score+=Number(s.myScore)||0; if(s.maxScore!=null)a.max+=Number(s.maxScore)||0; if(s.accuracy!=null)a.acc.push(Number(s.accuracy)||0); a.wrong+=Number(s.wrong)||0; a.attempted+=Number(s.attempted)||0;
+    });
+    (t.chapters||[]).forEach(c=>{
+      const k=(c.subject||'Unknown')+' — '+(c.name||'Unknown'); const a=chapterMap[k]||(chapterMap[k]={subject:c.subject||'Unknown',chapter:c.name||'Unknown',tests:0,weak:0,priority:0,average:[],mistakes:[]});
+      a.tests++; if(c.status==='WEAK')a.weak++; if(c.status==='PRIORITY')a.priority++; if(c.accuracy!=null)a.average.push(Number(c.accuracy)||0); if(c.mistakeType)a.mistakes.push(c.mistakeType);
+    });
+    const text=[...(t.actionItems||[]),...(t.insights||[])].join(' '); ['Conceptual','Calculation','Formula','Silly','Guessing','Skipped','Incorrect approach'].forEach(m=>{if(new RegExp(m,'i').test(text))mistakeMap[m]=(mistakeMap[m]||0)+1});
+  });
+  Object.values(subjectMap).forEach(a=>{a.avgAccuracy=a.acc.length?a.acc.reduce((x,y)=>x+y,0)/a.acc.length:null;a.scorePct=a.max?a.score/a.max*100:null});
+  Object.values(chapterMap).forEach(a=>{a.avgAccuracy=a.average.length?a.average.reduce((x,y)=>x+y,0)/a.average.length:null;a.severity=a.weak*3+a.priority*2+(a.avgAccuracy!=null&&a.avgAccuracy<60?2:0)});
+  return {tests,subjects:Object.values(subjectMap),chapters:Object.values(chapterMap).sort((a,b)=>b.severity-a.severity),mistakes:Object.entries(mistakeMap).sort((a,b)=>b[1]-a[1])};
+}
+function swpLines(data){
+  const agg=swpAggregate(data.history), latest=data.latest||agg.tests[0]||{}; const ov=latest.overall||{}, sc=latest.totalScore||{};
+  const lines=[];
+  lines.push('JEE PERFORMANCE - STANDING & WEAKNESS REPORT');
+  lines.push('Generated: '+new Date().toLocaleDateString());
+  lines.push('');
+  lines.push('CURRENT STANDING');
+  lines.push('Tests analysed: '+agg.tests.length);
+  lines.push('Latest test: '+swpAscii(latest.testName||latest.fileName||'Unnamed Test')+' | Date: '+swpDate(latest.date));
+  lines.push('Score: '+(sc.my!=null?sc.my+'/'+(sc.max??'?'):'Not available')+' | Accuracy: '+swpPct(ov.accuracy)+' | Attempted: '+(ov.attempted??'—')+' | Wrong: '+(ov.wrong??'—')+' | Skipped: '+(ov.skipped??'—'));
+  if(agg.tests.length>1){
+    const recent=agg.tests.slice(0,Math.min(5,agg.tests.length)); const scores=recent.map(t=>swpNum(t.totalScore?.my)).filter(x=>x!=null); const acc=recent.map(t=>swpNum(t.overall?.accuracy)).filter(x=>x!=null);
+    if(scores.length>1)lines.push('Recent score trend: '+(scores[0]>scores[scores.length-1]?'improving':scores[0]<scores[scores.length-1]?'declining':'stable')+' ('+scores.map(x=>String(Math.round(x*10)/10)).join(' -> ')+')');
+    if(acc.length>1)lines.push('Recent accuracy trend: '+(acc[0]>acc[acc.length-1]?'improving':acc[0]<acc[acc.length-1]?'declining':'stable')+' ('+acc.map(x=>swpPct(x)).join(' -> ')+')');
+  }
+  lines.push(''); lines.push('SUBJECT STANDING');
+  if(agg.subjects.length)agg.subjects.sort((a,b)=>(b.scorePct??-1)-(a.scorePct??-1)).forEach(s=>lines.push((s.subject||'Unknown')+': '+(s.scorePct!=null?swpPct(s.scorePct):'score unavailable')+' | avg accuracy '+swpPct(s.avgAccuracy)+' | wrong '+s.wrong+' across '+s.tests+' test(s)'));
+  else lines.push('No subject-level metrics were detected.');
+  lines.push(''); lines.push('TOP WEAKNESSES / REVISION PRIORITIES');
+  const weak=agg.chapters.filter(c=>c.weak||c.priority||c.severity>0).slice(0,15);
+  if(weak.length)weak.forEach((c,i)=>lines.push((i+1)+'. '+swpAscii(c.subject)+' - '+swpAscii(c.chapter)+' | weak '+c.weak+' | priority '+c.priority+' | avg accuracy '+swpPct(c.avgAccuracy)+(c.mistakes.length?' | common issue: '+swpAscii(c.mistakes[0]):'')));
+  else lines.push('No chapter-level weaknesses were explicitly flagged.');
+  lines.push(''); lines.push('RECOMMENDED FOCUS');
+  if(weak.length){weak.slice(0,5).forEach(c=>lines.push('- Revise '+swpAscii(c.subject)+' - '+swpAscii(c.chapter)+' before adding more full-length tests.'));} else lines.push('- Continue testing and upload detailed weakness/question analysis PDFs for more precise recommendations.');
+  if(agg.mistakes.length)lines.push('- Watch recurring mistake patterns: '+agg.mistakes.slice(0,4).map(x=>x[0]+' ('+x[1]+' reports)').join(', ')+'.');
+  lines.push('- Re-test the highest-priority chapters after targeted revision and compare the next report with this baseline.');
+  lines.push(''); lines.push('DATA SOURCES');
+  agg.tests.slice(0,20).forEach(t=>lines.push('- '+swpAscii(t.testName||t.fileName||'Test')+' | '+swpDate(t.date)+' | '+swpAscii(t.fileName||'')));
+  return lines;
+}
+function swpWrap(text,max){const words=swpAscii(text).split(' '),out=[];let line='';words.forEach(w=>{if(!w)return; if((line+' '+w).trim().length>max){if(line)out.push(line);line=w}else line=(line+' '+w).trim()});if(line)out.push(line);return out.length?out:['']}
+function swpPdfBytes(lines){
+  const pageW=612,pageH=792,margin=42,leading=14,maxChars=92; const wrapped=[]; lines.forEach(l=>swpWrap(l,maxChars).forEach(x=>wrapped.push(x))); const perPage=49; const pages=[]; for(let i=0;i<wrapped.length;i+=perPage)pages.push(wrapped.slice(i,i+perPage));
+  const esc=s=>String(s).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)'); const objs=[]; const add=o=>{objs.push(o);return objs.length};
+  const catalog=add(null),pagesObj=add(null),font=add('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>'); const pageRefs=[];
+  pages.forEach(pg=>{let stream='BT\n/F1 10 Tf\n'+margin+' '+(pageH-margin-10)+' Td\n'; pg.forEach((line,idx)=>{if(idx===0&&line==='JEE PERFORMANCE - STANDING & WEAKNESS REPORT'){stream+='/F1 15 Tf\n('+esc(line)+') Tj\n/F1 10 Tf\n0 -22 Td\n'}else{stream+='('+esc(line)+') Tj\n0 -'+leading+' Td\n'}});stream+='ET'; const content=add('<< /Length '+stream.length+' >>\nstream\n'+stream+'\nendstream'); const page=add(null); pageRefs.push(page); objs[page-1]='<< /Type /Page /Parent '+pagesObj+' 0 R /MediaBox [0 0 '+pageW+' '+pageH+'] /Resources << /Font << /F1 '+font+' 0 R >> >> /Contents '+content+' 0 R >>';});
+  objs[pagesObj-1]='<< /Type /Pages /Kids ['+pageRefs.map(r=>r+' 0 R').join(' ') +'] /Count '+pageRefs.length+' >>'; objs[catalog-1]='<< /Type /Catalog /Pages '+pagesObj+' 0 R >>';
+  let pdf='%PDF-1.4\n%âãÏÓ\n',offsets=[0]; objs.forEach((o,i)=>{offsets[i+1]=pdf.length;pdf+=(i+1)+' 0 obj\n'+o+'\nendobj\n'});const xref=pdf.length;pdf+='xref\n0 '+(objs.length+1)+'\n0000000000 65535 f \n';for(let i=1;i<offsets.length;i++)pdf+=String(offsets[i]).padStart(10,'0')+' 00000 n \n';pdf+='trailer\n<< /Size '+(objs.length+1)+' /Root '+catalog+' 0 R >>\nstartxref\n'+xref+'\n%%EOF';return new TextEncoder().encode(pdf);
+}
+function generateStandWeaknessPDF(){
+  const history=swpHistory(); if(!history.length){window.jeeFeedback?.error?.('Analyse at least one test first.');return;}
+  const bytes=swpPdfBytes(swpLines({history,latest:latestAnalysis||history[0]})); const blob=new Blob([bytes],{type:'application/pdf'}); const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='JEE-Stand-and-Weakness-Report-'+new Date().toISOString().slice(0,10)+'.pdf';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);window.jeeFeedback?.success?.('Stand & Weakness PDF generated');
+}
+
 </script>
 </body></html>
