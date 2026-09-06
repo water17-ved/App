@@ -9,8 +9,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
 <title>🔥 JEE Battle Royale Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400&family=Orbitron:wght@600;800;900&family=Rajdhani:wght@600;700&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700;800&family=Bangers&family=Fredoka:wght@400;500;600;700&family=Black+Ops+One&family=Teko:wght@500;600;700&family=Cinzel:wght@600;700;900&family=Cinzel+Decorative:wght@700;900&display=swap" rel="stylesheet">
@@ -736,6 +734,13 @@
     position: fixed; inset: 0; z-index: 500; overflow: hidden;
     background: radial-gradient(circle at 50% 40%, #2a0f3a 0%, #0a0710 70%);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
+    /* Android/slow-device failsafe: the splash must never be able to trap the app
+       if initialization or a cached script stalls. This compositor animation is
+       independent of the JS init() watchdog below. */
+    animation: splash-auto-hide 0.8s ease 4.8s forwards;
+  }
+  @keyframes splash-auto-hide {
+    to { opacity: 0; visibility: hidden; pointer-events: none; }
   }
   /* Glow-exit: when JS adds .hide, a radial burst of blue light expands from the centre
      while the whole screen fades — both driven by GPU-composited opacity + transform so
@@ -743,6 +748,7 @@
   .splash-screen.hide {
     animation: splash-fade-out 1s ease forwards;
     pointer-events: none;
+    visibility: visible;
   }
   @keyframes splash-fade-out {
     0%   { opacity: 1; }
@@ -3500,6 +3506,13 @@
   body.efficient-mode .splash-screen.hide {
     opacity: 0 !important;
     pointer-events: none !important;
+    visibility: hidden !important;
+  }
+  /* Never let the splash remain visible forever, even when animations are disabled. */
+  @media (prefers-reduced-motion: reduce) {
+    .splash-screen {
+      animation: splash-auto-hide 0.1s ease 4.8s forwards !important;
+    }
   }
 
 /* Command Center */
@@ -3525,21 +3538,30 @@
 @media(max-width:700px){.ji-kpi-grid{grid-template-columns:repeat(2,1fr)}.ji-graph-grid{grid-template-columns:1fr}.ji-autopsy-grid{grid-template-columns:repeat(2,1fr)}}
 
 </style>
-<!-- Firebase (used only for: login accounts + the shared online leaderboard. All tracker
-     progress/tests/questions stay 100% local/offline via localStorage, untouched by this.)
-     NOTE: deliberately NOT loaded with `async`. The main inline script further down runs
-     at parse time and calls firebase.initializeApp() immediately — with `async`, the browser
-     could reach that code before the SDK finished loading, `firebase` would be undefined,
-     and Google Sign-In would silently fail. Ordinary blocking scripts guarantee they're
-     ready first. -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<!-- Secondary Firebase app (separate web-app registration in the same project, adds
-     Analytics + Realtime Database). Kept isolated from the primary app above. -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-
+<!-- Firebase is OPTIONAL and loaded non-blockingly. The tracker itself must never wait
+     for Google/Firebase network requests. This keeps Android/mobile startup reliable. -->
+<script>
+(function(){
+  const urls=[
+    'https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js',
+    'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js',
+    'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js',
+    'https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js',
+    'https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js'
+  ];
+  window.__jeeFirebaseReady=new Promise(async resolve=>{
+    for(const src of urls){
+      await new Promise(done=>{
+        const el=document.createElement('script'); el.src=src; el.async=true; el.crossOrigin='anonymous';
+        let finished=false; const finish=()=>{if(!finished){finished=true;done()}};
+        el.onload=finish; el.onerror=finish; document.head.appendChild(el); setTimeout(finish,6500);
+      });
+    }
+    window.__jeeFirebaseLoaded=true; resolve(!!window.firebase);
+    try{window.__initFirebaseWhenReady?.()}catch(e){console.warn('[Firebase] late init failed',e)}
+  });
+})();
+</script>
 <style id="jee-feedback-style">
 #jee-action-toast{position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));transform:translate(-50%,18px);z-index:99999;min-width:220px;max-width:min(92vw,430px);padding:11px 15px;border:1px solid rgba(167,139,250,.35);border-radius:12px;background:rgba(15,10,24,.96);color:#f6f1ff;box-shadow:0 12px 35px rgba(0,0,0,.35);font-size:.78rem;font-weight:750;text-align:center;opacity:0;pointer-events:none;transition:.2s ease;backdrop-filter:blur(10px)}
 #jee-action-toast.show{opacity:1;transform:translate(-50%,0)}
@@ -5650,14 +5672,25 @@ let leaderboardEntries = [];
 let leaderboardUnsub = null;
 let lbVisible = true; // "Show me on leaderboard" toggle — offline preference, defaults on
 
-try {
-  if (typeof firebase !== 'undefined' && firebaseConfig.apiKey && firebaseConfig.apiKey !== 'YOUR_API_KEY') {
-    firebase.initializeApp(firebaseConfig);
-    fbAuth = firebase.auth();
-    fbDb = firebase.firestore();
-    FIREBASE_ENABLED = true;
-  }
-} catch (e) { console.error('Firebase init failed:', e); FIREBASE_ENABLED = false; }
+function initializeFirebaseServices(){
+  try {
+    if (typeof firebase !== 'undefined' && firebaseConfig.apiKey && firebaseConfig.apiKey !== 'YOUR_API_KEY') {
+      if(!firebase.apps?.length) firebase.initializeApp(firebaseConfig);
+      fbAuth = firebase.auth(); fbDb = firebase.firestore(); FIREBASE_ENABLED = !!(fbAuth && fbDb);
+    }
+  } catch(e){ console.warn('[Firebase] primary services unavailable; local mode continues.',e); FIREBASE_ENABLED=false; }
+  try {
+    if(typeof firebase!=='undefined' && firebaseConfig2.apiKey){
+      fbApp2 = firebase.apps?.find(a=>a.name==='secondary') || firebase.initializeApp(firebaseConfig2,'secondary');
+      try{fbAnalytics2=firebase.analytics(fbApp2)}catch(e){fbAnalytics2=null}
+      try{fbRealtimeDb2=firebase.database(fbApp2)}catch(e){fbRealtimeDb2=null}
+    }
+  }catch(e){console.warn('[Firebase] secondary services unavailable.',e)}
+  try{if(typeof initAuthWatcher==='function')initAuthWatcher()}catch(e){}
+  try{if(typeof renderLeague==='function')renderLeague()}catch(e){}
+}
+window.__initFirebaseWhenReady=initializeFirebaseServices;
+if(typeof firebase!=='undefined')initializeFirebaseServices();
 
 // ---------- Secondary Firebase app (separate web-app registration, same project) ----------
 // Kept completely isolated from the primary app/config above via a named secondary app,
@@ -5674,13 +5707,6 @@ const firebaseConfig2 = {
 };
 
 let fbApp2 = null, fbAnalytics2 = null, fbRealtimeDb2 = null;
-try {
-  if (typeof firebase !== 'undefined' && firebaseConfig2.apiKey) {
-    fbApp2 = firebase.initializeApp(firebaseConfig2, "secondary");
-    fbAnalytics2 = firebase.analytics(fbApp2);
-    fbRealtimeDb2 = firebase.database(fbApp2);
-  }
-} catch (e) { console.error('Secondary Firebase init failed:', e); }
 
 function openLoginModal() {
   document.getElementById('login-modal-overlay').classList.add('open');
@@ -11530,7 +11556,7 @@ function exportWeeklyReport() {
   },true);
   window.addEventListener('error',function(){toast('Something went wrong — please try again','err')});
 })();
-</script>
+<\/script>
 </body></html>`;
 
   lastReportHtml = reportHtml;

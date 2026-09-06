@@ -3,12 +3,13 @@
 // Caches both app files so the tracker works fully offline after first load.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const CACHE_VERSION = 'jee-tracker-v2';
+const CACHE_VERSION = 'jee-tracker-v2026-09-06-hardened-final';
 
 // Core app files to pre-cache on install
 const PRECACHE = [
   './index.html',
-  './test-analysis.html'
+  './test-analysis.html',
+  './manifest.json'
 ];
 
 // CDN resources loaded at runtime — cache as they are fetched
