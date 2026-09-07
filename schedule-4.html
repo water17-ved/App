@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#170d20">
+<meta name="color-scheme" content="dark">
+<title>JEE — Schedule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0710;
+  --bg-glow: #2a0f3a;
+  --card: #130b1a;
+  --card2: #060a12;
+  --gold: #00c2ff;
+  --gold-b: #7df9ff;
+  --xp: #ff3d7d;
+  --phys: #22d3ee;
+  --chem: #39ff88;
+  --math: #c77dff;
+  --danger: #ff1a5e;
+  --border: #3a2452;
+  --border2: #28183a;
+  --text: #f3ecff;
+  --muted: #9a83b0;
+  --fD: 'Orbitron', sans-serif;
+  --fA: 'Rajdhani', sans-serif;
+  --fB: 'Roboto', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { font-size: 14px; color-scheme: dark; background: var(--bg); scroll-behavior: smooth; }
+body {
+  margin: 0; padding: 14px 14px 90px;
+  font-family: var(--fB); color: var(--text);
+  line-height: 1.55; min-height: 100vh;
+  background: var(--bg);
+}
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(34,211,238,.018) 0px, rgba(34,211,238,.018) 1px, transparent 1px, transparent 3px),
+    radial-gradient(circle at 10% 0%, rgba(34,211,238,.11) 0%, transparent 38%),
+    radial-gradient(circle at 90% 8%, rgba(199,125,255,.11) 0%, transparent 40%),
+    radial-gradient(circle at 14% 0%, var(--bg-glow) 0%, transparent 44%),
+    var(--bg);
+}
+p { color: var(--muted); margin: 0; }
+button, input, select, textarea { font: inherit; color: var(--text); }
+button { cursor: pointer; }
+.wrap { max-width: 980px; margin: 0 auto; }
+
+/* ── NAV ── */
+.nav {
+  position: sticky; top: 8px; z-index: 40;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 11px 14px; margin-bottom: 14px;
+  background: linear-gradient(160deg, rgba(23,13,32,.97), rgba(8,5,13,.97));
+  border: 1px solid var(--border); border-radius: 14px;
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.055), 0 14px 34px -16px #000;
+  overflow: hidden;
+}
+.nav::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(circle at 8% -20%, rgba(34,211,238,.13), transparent 42%),
+    radial-gradient(circle at 92% -20%, rgba(199,125,255,.13), transparent 42%);
+}
+.nav::after {
+  content: ''; position: absolute; left: 12px; right: 12px; bottom: 0; height: 1.5px;
+  background: linear-gradient(90deg, transparent, var(--phys), var(--math), transparent);
+  opacity: .4;
+}
+.nav-brand { position: relative; z-index: 1; display: flex; align-items: center; gap: 9px; }
+.nav-gem {
+  width: 34px; height: 34px; flex-shrink: 0;
+  border: 1px solid var(--gold); border-radius: 9px;
+  display: grid; place-items: center;
+  font-family: var(--fD); font-size: 13px; font-weight: 700;
+  color: var(--gold-b); background: rgba(255,106,0,.08);
+  box-shadow: 0 0 14px rgba(255,106,0,.12);
+}
+.nav-name { font-family: var(--fD); font-size: .78rem; font-weight: 700; letter-spacing: .07em; color: var(--gold-b); }
+.nav-tag { font-family: var(--fA); font-size: .62rem; color: var(--muted); letter-spacing: .09em; text-transform: uppercase; margin-top: 1px; }
+.nav-right { position: relative; z-index: 1; display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  border: 1px solid var(--border2); background: rgba(18,10,26,.6);
+  color: var(--muted); padding: 6px 13px; border-radius: 999px;
+  font-family: var(--fA); font-weight: 700; font-size: .78rem; letter-spacing: .1px;
+  white-space: nowrap; cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s, transform .12s, box-shadow .15s;
+}
+.btn:hover { border-color: var(--border); color: var(--text); background: rgba(18,10,26,.9); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn.hi { background: linear-gradient(135deg, rgba(8,52,80,.85), rgba(18,30,68,.85)); border-color: #1a7aad; color: #c8f4ff; }
+.btn.hi:hover { border-color: var(--gold-b); box-shadow: 0 0 12px rgba(34,211,238,.28); }
+.btn.ai { background: linear-gradient(135deg, rgba(38,14,56,.85), rgba(60,14,36,.85)); border-color: #8a3ea8; color: #e8c8ff; }
+.btn.ai:hover { border-color: var(--math); box-shadow: 0 0 12px rgba(199,125,255,.25); }
+.btn.sm { padding: 4px 10px; font-size: .7rem; }
+.btn.del:hover { border-color: var(--danger); color: #ffaabb; }
+.row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+
+/* ── HERO ── */
+.hero {
+  display: grid; grid-template-columns: 1fr auto; gap: 10px;
+  margin-bottom: 10px;
+}
+.hero-card {
+  background: linear-gradient(160deg, var(--card), var(--card2));
+  border: 1px solid var(--border); border-radius: 13px; padding: 16px;
+  position: relative; overflow: hidden;
+}
+.hero-card::before {
+  content: ''; position: absolute; top: 0; left: 16px; right: 16px; height: 1px;
+  border-radius: 999px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+  pointer-events: none;
+}
+.eyebrow { font-family: var(--fA); font-size: .63rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-b); margin-bottom: 5px; }
+.hero-h {
+  font-family: var(--fD); font-size: 1.35rem; font-weight: 900;
+  background: linear-gradient(90deg, #e0f7ff, var(--gold-b), #48a9f8, var(--math));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  margin: 0 0 6px; line-height: 1.1; letter-spacing: .01em;
+}
+.hero-p { font-size: .7rem; line-height: 1.65; color: var(--muted); }
+.hero-right { display: flex; flex-direction: column; gap: 5px; min-width: 132px; }
+
+/* ── METRICS ── */
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin-bottom: 10px; }
+.met {
+  padding: 10px 11px; border: 1px solid var(--border2); border-radius: 9px;
+  background: rgba(19,11,26,.65); position: relative;
+}
+.met::before {
+  content: ''; position: absolute; top: 0; left: 7px; right: 7px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+  border-radius: 999px;
+}
+.met b { display: block; font-family: var(--fD); font-weight: 900; font-size: 1.05rem; color: var(--gold-b); line-height: 1; margin-bottom: 3px; }
+.met span { font-size: .57rem; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
+
+/* ── COLLAPSIBLE SECTION ── */
+.sec {
+  background: linear-gradient(160deg, var(--card), var(--card2));
+  border: 1px solid var(--border2); border-radius: 13px;
+  margin-bottom: 7px; overflow: hidden;
+  transition: border-color .2s ease;
+}
+.sec:focus-within, .sec.open { border-color: var(--border); }
+.sec-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; padding: 13px 14px; cursor: pointer;
+  position: relative; user-select: none;
+}
+.sec-hd::before {
+  content: ''; position: absolute; top: 0; left: 14px; right: 14px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+  border-radius: 999px; pointer-events: none;
+}
+.sec-hd:hover .sec-title { color: var(--text); }
+.sec-left { display: flex; align-items: center; gap: 9px; }
+.sec-num { font-family: var(--fA); font-size: .6rem; font-weight: 700; color: var(--muted); letter-spacing: .1em; }
+.sec-title { font-family: var(--fD); font-size: .68rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--gold-b); transition: color .15s; }
+.sec-hint { font-size: .62rem; color: var(--muted); }
+.sec-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.sec-arrow {
+  width: 22px; height: 22px; border: 1px solid var(--border2); border-radius: 6px;
+  display: grid; place-items: center; color: var(--muted); font-size: .55rem;
+  transition: transform .28s ease, border-color .15s, color .15s;
+  flex-shrink: 0;
+}
+.sec.open .sec-arrow { transform: rotate(180deg); border-color: var(--border); color: var(--text); }
+
+/* slide body */
+.sec-body {
+  display: grid; grid-template-rows: 0fr;
+  transition: grid-template-rows .28s ease;
+}
+.sec.open .sec-body { grid-template-rows: 1fr; }
+.sec-inner { overflow: hidden; }
+.sec-pad { padding: 0 14px 14px; }
+
+/* ── FORM ELEMENTS ── */
+.fg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+.fg2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.s2 { grid-column: span 2; }
+.sf { }
+.sf label { display: block; font-size: .57rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
+.sf input, .sf select, .sf textarea {
+  width: 100%; background: rgba(8,5,13,.8); color: var(--text);
+  border: 1px solid var(--border2); border-radius: 8px;
+  padding: 8px 10px; outline: none; font-size: .78rem;
+  transition: border-color .18s ease;
+}
+.sf input:focus, .sf select:focus, .sf textarea:focus { border-color: rgba(199,125,255,.5); }
+.sf textarea { min-height: 72px; resize: vertical; }
+.sf input::placeholder, .sf textarea::placeholder { color: #4a3860; }
+.tip {
+  padding: 9px 11px; border: 1px dashed rgba(96,64,118,.6); border-radius: 8px;
+  background: rgba(19,11,27,.5); font-size: .67rem; color: #b8a5cc; line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+/* ── TIMELINE CARDS ── */
+.sc-list { display: flex; flex-direction: column; gap: 5px; }
+.empty { padding: 24px; text-align: center; color: var(--muted); border: 1px dashed var(--border2); border-radius: 10px; font-size: .7rem; }
+
+.sc {
+  border: 1px solid var(--border2);
+  border-left: 2.5px solid var(--math);
+  border-radius: 10px;
+  background: rgba(10,6,16,.85);
+  overflow: hidden;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+.sc:hover { border-color: rgba(88,50,124,.7); }
+.sc.open { border-color: rgba(88,50,124,.8); box-shadow: 0 4px 20px rgba(0,0,0,.4); }
+.sc.physics { border-left-color: var(--phys); }
+.sc.chemistry { border-left-color: var(--chem); }
+.sc.maths { border-left-color: var(--math); }
+.sc.other { border-left-color: var(--gold); }
+.sc.done .sc-name { text-decoration: line-through; opacity: .4; }
+.sc.done .sc-time { opacity: .4; }
+
+.sc-hd {
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  align-items: center; gap: 9px;
+  padding: 9px 11px; cursor: pointer; user-select: none;
+}
+.sc-time { font-family: var(--fA); font-size: .72rem; font-weight: 700; color: var(--gold-b); line-height: 1.2; }
+.sc-time small { display: block; font-size: .58rem; color: var(--muted); font-weight: 600; }
+.sc-name { font-size: .78rem; font-weight: 700; color: var(--text); line-height: 1.2; }
+.sc-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 3px; align-items: center; }
+.tag {
+  font-family: var(--fA); font-size: .58rem; font-weight: 700; letter-spacing: .04em;
+  padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border2); color: var(--muted);
+  text-transform: uppercase;
+}
+.tag.ai { border-color: rgba(143,72,200,.4); color: rgba(199,125,255,.8); }
+.sc-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.done-ring {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 1.5px solid var(--border); background: transparent;
+  display: grid; place-items: center; cursor: pointer;
+  font-size: .6rem; color: transparent;
+  transition: border-color .15s, background .15s, color .15s;
+  flex-shrink: 0;
+}
+.done-ring:hover { border-color: var(--chem); }
+.done-ring.on { background: var(--chem); border-color: var(--chem); color: #041808; }
+.sc-arr { font-size: .55rem; color: var(--muted); transition: transform .22s ease; margin-left: 2px; }
+.sc.open .sc-arr { transform: rotate(180deg); }
+
+/* inline edit body */
+.sc-body {
+  display: grid; grid-template-rows: 0fr;
+  transition: grid-template-rows .22s ease;
+}
+.sc.open .sc-body { grid-template-rows: 1fr; }
+.sc-inner { overflow: hidden; }
+.sc-pad {
+  padding: 10px 11px 11px;
+  border-top: 1px solid rgba(58,36,82,.45);
+  background: rgba(6,4,10,.55);
+}
+.sc-form-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.sc-form-wide { margin-top: 6px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.sf2 label { display: block; font-size: .56rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 3px; }
+.sf2 input, .sf2 select {
+  width: 100%; background: rgba(6,4,10,.9); color: var(--text);
+  border: 1px solid var(--border2); border-radius: 7px;
+  padding: 7px 9px; outline: none; font-size: .74rem;
+  transition: border-color .15s;
+}
+.sf2 input:focus, .sf2 select:focus { border-color: rgba(199,125,255,.4); }
+.sc-btns { display: flex; gap: 5px; margin-top: 9px; align-items: center; }
+
+/* ── AI OUTPUT ── */
+.ai-out {
+  white-space: pre-wrap; min-height: 100px; padding: 12px;
+  border-radius: 9px; background: rgba(6,4,10,.7);
+  border: 1px solid rgba(75,38,93,.6);
+  font-size: .7rem; line-height: 1.65; color: var(--muted);
+  margin-top: 10px;
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; right: 12px; bottom: 14px; z-index: 100;
+  background: #0d0819; border: 1px solid var(--phys); border-radius: 8px;
+  padding: 9px 13px; font-size: .7rem; font-weight: 700;
+  color: var(--gold-b); box-shadow: 0 8px 28px rgba(0,0,0,.7);
+}
+.hidden { display: none !important; }
+.fi { display: none; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 720px) {
+  body { padding: 10px 10px 88px; }
+  .nav { top: 4px; }
+  .hero { grid-template-columns: 1fr; }
+  .hero-right { flex-direction: row; flex-wrap: wrap; }
+  .hero-right .met { flex: 1 1 calc(50% - 3px); }
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+  .fg { grid-template-columns: 1fr 1fr; }
+  .sc-form-row { grid-template-columns: 1fr 1fr; }
+  .sc-form-wide { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .fg { grid-template-columns: 1fr; }
+  .s2 { grid-column: auto; }
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+  .nav-right { max-width: 170px; }
+  .sc-form-row { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">
+    <div>
+      <div class="nav-name">Mission Schedule</div>
+      <div class="nav-tag">Adaptive AI Planner · JEE 2026</div>
+    </div>
+  </div>
+  <div class="nav-right">
+    <button class="btn" onclick="location.href='index.html'">← Hub</button>
+    <button class="btn" onclick="location.href='test-analysis.html'">Diagnostics</button>
+    <button class="btn ai" onclick="toggle('s-ai')">✦ AI Planner</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-card">
+    <div class="eyebrow">Daily Operations</div>
+    <div class="hero-h">Adaptive Mission Schedule</div>
+    <p class="hero-p">Tap any section to expand. Click a timeline block to edit inline. Log what actually happened so the AI learns your real pace.</p>
+  </div>
+  <div class="hero-right">
+    <div class="met"><b id="todayLabel">—</b><span>Today</span></div>
+    <div class="met"><b id="blockCount">0</b><span>Blocks</span></div>
+    <div class="met"><b id="doneCount">0</b><span>Done</span></div>
+    <div class="met"><b id="logCount">0</b><span>Logs</span></div>
+  </div>
+</div>
+
+<!-- METRICS -->
+<div class="metrics">
+  <div class="met"><b id="plannedMin">0</b><span>Planned min</span></div>
+  <div class="met"><b id="doneMin">0</b><span>Done min</span></div>
+  <div class="met"><b id="staminaLabel">MEDIUM</b><span>Stamina</span></div>
+  <div class="met"><b id="aiState">OFFLINE</b><span>AI</span></div>
+</div>
+
+<!-- ── 01 TODAY'S TIMELINE (open by default) ── -->
+<div class="sec open" id="s-timeline">
+  <div class="sec-hd" onclick="toggle('s-timeline')">
+    <div class="sec-left">
+      <span class="sec-num">01</span>
+      <span class="sec-title">Today's Timeline</span>
+    </div>
+    <div class="sec-right">
+      <div class="row" onclick="event.stopPropagation()">
+        <button class="btn sm" onclick="addBlankBlock()">+ Add</button>
+        <button class="btn sm del" onclick="resetTodaySchedule()">Clear</button>
+        <button class="btn sm hi" onclick="generateDailySchedule()">✦ AI Generate</button>
+      </div>
+      <div class="sec-arrow">▾</div>
+    </div>
+  </div>
+  <div class="sec-body"><div class="sec-inner"><div class="sec-pad">
+    <div id="timeline" class="sc-list"></div>
+  </div></div></div>
+</div>
+
+<!-- ── 02 STAMINA ── -->
+<div class="sec" id="s-stamina">
+  <div class="sec-hd" onclick="toggle('s-stamina')">
+    <div class="sec-left">
+      <span class="sec-num">02</span>
+      <span class="sec-title">Stamina &amp; Day Capacity</span>
+    </div>
+    <div class="sec-right">
+      <span class="sec-hint">AI uses this</span>
+      <div class="sec-arrow">▾</div>
+    </div>
+  </div>
+  <div class="sec-body"><div class="sec-inner"><div class="sec-pad">
+    <div class="fg">
+      <div class="sf"><label>Stamina</label><select id="stamina"><option value="LOW">LOW — recovery</option><option value="MEDIUM" selected>MEDIUM — normal</option><option value="HIGH">HIGH — push</option></select></div>
+      <div class="sf"><label>Free Study Min</label><input id="freeMinutes" type="number" min="0" max="1000" step="15" value="240"></div>
+      <div class="sf"><label>Sleep hrs</label><input id="sleepHours" type="number" min="0" max="14" step="0.5" placeholder="e.g. 7"></div>
+      <div class="sf"><label>Energy Today</label><select id="energy"><option>Low</option><option selected>Medium</option><option>High</option></select></div>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- ── 03 SYLLABUS ── -->
+<div class="sec" id="s-syllabus">
+  <div class="sec-hd" onclick="toggle('s-syllabus')">
+    <div class="sec-left">
+      <span class="sec-num">03</span>
+      <span class="sec-title">Syllabus / Mission Brief</span>
+    </div>
+    <div class="sec-right">
+      <button class="btn sm hi" onclick="event.stopPropagation();saveSyllabus()">Save</button>
+      <div class="sec-arrow">▾</div>
+    </div>
+  </div>
+  <div class="sec-body"><div class="sec-inner"><div class="sec-pad">
+    <div class="tip">Tell the AI what coaching is covering now, upcoming deadlines, and what you want to prioritize. Persisted and included in every future plan.</div>
+    <div class="fg">
+      <div class="sf s2"><label>Current chapters in progress</label><textarea id="syllabusNow" placeholder="Physics — Current Electricity; Chemistry — Electrochemistry; Maths — Definite Integration"></textarea></div>
+      <div class="sf"><label>Next exam / deadline</label><input id="syllabusDeadline" type="date"></div>
+      <div class="sf"><label>Priority chapters</label><textarea id="priorityChapters" placeholder="Must-cover chapters"></textarea></div>
+      <div class="sf s2"><label>Backlog / weak chapters</label><textarea id="backlogChapters" placeholder="Chapters falling behind"></textarea></div>
+      <div class="sf s2"><label>Constraints</label><textarea id="scheduleConstraints" placeholder="Coaching hours, commute, fixed classes, preferred study window..."></textarea></div>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- ── 04 LOG TODAY ── -->
+<div class="sec" id="s-log">
+  <div class="sec-hd" onclick="toggle('s-log')">
+    <div class="sec-left">
+      <span class="sec-num">04</span>
+      <span class="sec-title">Log Today</span>
+    </div>
+    <div class="sec-right">
+      <span class="sec-hint">AI learning signal</span>
+      <div class="sec-arrow">▾</div>
+    </div>
+  </div>
+  <div class="sec-body"><div class="sec-inner"><div class="sec-pad">
+    <div class="fg">
+      <div class="sf s2"><label>What did you actually study?</label><textarea id="logStudy" placeholder="Subjects, chapters, PYQs, revision..."></textarea></div>
+      <div class="sf"><label>What got completed?</label><textarea id="logDone" placeholder="Finished targets"></textarea></div>
+      <div class="sf"><label>What went badly?</label><textarea id="logProblems" placeholder="Distractions, fatigue, time loss..."></textarea></div>
+      <div class="sf"><label>Accuracy / result</label><input id="logResult" placeholder="e.g. 38/50, 76%"></div>
+      <div class="sf"><label>Focus (1–5)</label><input id="logFocus" type="number" min="1" max="5" value="3"></div>
+      <div class="sf"><label>Actual study min</label><input id="logMinutes" type="number" min="0" max="1000" step="5" placeholder="e.g. 210"></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button class="btn hi" onclick="logToday()">✓ Log Today</button>
+      <button class="btn" onclick="showLearningHistory()">View Log History</button>
+    </div>
+  </div></div></div>
+</div>
+
+<!-- ── 05 AI LEARNING MEMORY ── -->
+<div class="sec" id="s-mem">
+  <div class="sec-hd" onclick="toggle('s-mem')">
+    <div class="sec-left">
+      <span class="sec-num">05</span>
+      <span class="sec-title">AI Learning Memory</span>
+    </div>
+    <div class="sec-right">
+      <span class="sec-hint">Grows from your logs</span>
+      <div class="sec-arrow">▾</div>
+    </div>
+  </div>
+  <div class="sec-body"><div class="sec-inner"><div class="sec-pad">
+    <div class="metrics" style="margin-bottom:9px">
+      <div class="met"><b id="avgFocus">—</b><span>Avg focus</span></div>
+      <div class="met"><b id="avgMinutes">—</b><span>Avg min/day</span></div>
+      <div class="met"><b id="completionRate">—</b><span>Completion</span></div>
+      <div class="met"><b id="logCount2">0</b><span>Total logs</span></div>
+    </div>
+    <div class="tip" id="memoryText">No logs yet. Start by logging today above.</div>
+  </div></div></div>
+</div>
+
+<!-- ── 06 AI SCHEDULE CORE ── -->
+<div class="sec" id="s-ai">
+  <div class="sec-hd" onclick="toggle('s-ai')">
+    <div class="sec-left">
+      <span class="sec-num">06</span>
+      <span class="sec-title">AI Schedule Core</span>
+    </div>
+    <div class="sec-right">
+      <span class="sec-hint">BYOK · Gemini / OpenAI</span>
+      <div class="sec-arrow">▾</div>
+    </div>
+  </div>
+  <div class="sec-body"><div class="sec-inner"><div class="sec-pad">
+    <div class="fg">
+      <div class="sf"><label>Provider</label><select id="aiProvider"><option value="gemini">Google Gemini</option><option value="openai">OpenAI</option></select></div>
+      <div class="sf s2"><label>API Key (device only)</label><input id="aiKey" type="password" autocomplete="off" placeholder="Paste API key"></div>
+      <div class="sf"><label>Model</label><select id="aiModel">
+        <option value="gemini-3.8-flash">Gemini 3.8 Flash</option>
+        <option value="gemini-3.7-flash">Gemini 3.7 Flash</option>
+        <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
+        <option value="gemini-3.5-flash-lite">Gemini Flash-Lite</option>
+        <option value="gpt-4.1-mini">GPT-4.1 mini</option>
+      </select></div>
+      <div class="sf"><label>Horizon</label><select id="horizon"><option value="1">Today</option><option value="3">3 days</option><option value="7">7 days</option></select></div>
+    </div>
+    <div class="row" style="margin-top:9px">
+      <button class="btn" onclick="saveAISettings()">Save Settings</button>
+      <button class="btn hi" onclick="generateDailySchedule()">✦ Create Schedule</button>
+      <button class="btn ai" onclick="learnFromHistory()">Learn from History</button>
+      <button class="btn del" onclick="clearAIKey()">Clear Key</button>
+    </div>
+    <div class="sf" style="margin-top:10px"><label>Ask the Scheduler</label><textarea id="aiQuestion" placeholder="e.g. I have coaching until 7pm, prioritise Organic Chemistry, leave 45 min for revision before bed."></textarea></div>
+    <div class="row" style="margin-top:7px"><button class="btn ai" onclick="askScheduler()">Ask AI</button></div>
+    <div id="aiOutput" class="ai-out">Configure an API key above to activate the adaptive planner.</div>
+  </div></div></div>
+</div>
+
+<!-- ── 07 DATA ── -->
+<div class="sec" id="s-data">
+  <div class="sec-hd" onclick="toggle('s-data')">
+    <div class="sec-left">
+      <span class="sec-num">07</span>
+      <span class="sec-title">Data Control</span>
+    </div>
+    <div class="sec-right">
+      <div class="row" onclick="event.stopPropagation()">
+        <button class="btn sm" onclick="exportData()">Export</button>
+        <label class="btn sm" for="importFile">Import</label>
+        <input id="importFile" class="fi" type="file" accept="application/json" onchange="importData(event)">
+        <button class="btn sm del" onclick="clearLearningData()">Clear AI Logs</button>
+      </div>
+      <div class="sec-arrow">▾</div>
+    </div>
+  </div>
+  <div class="sec-body"><div class="sec-inner"><div class="sec-pad">
+    <div class="tip">All pages share the same localStorage bus. Schedule changes broadcast to the main tracker via BroadcastChannel.</div>
+  </div></div></div>
+</div>
+
+</div><!-- /wrap -->
+<div id="toast" class="toast hidden"></div>
+
+<script>
+/* ── DATA ── */
+const K={schedule:'jee-daily-schedule',targets:'jee-daily-targets',targetProgress:'jee-target-progress',history:'jee-pdf-analysis-history',tests:'jee-test-analysis-history',stamina:'jee-schedule-stamina',logs:'jee-ai-daily-logs',syllabus:'jee-ai-syllabus-context',memory:'jee-ai-learning-profile'};
+const AIK={provider:'jee-ai-provider',key:'jee-ai-api-key',model:'jee-ai-model'};
+const BC='jee-tracker-sync-v1';
+const bc=('BroadcastChannel' in window)?new BroadcastChannel(BC):null;
+const read=(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}};
+const write=(k,v)=>{localStorage.setItem(k,JSON.stringify(v));try{bc?.postMessage({type:'set',key:k,at:Date.now()})}catch{}};
+const localDate=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.remove('hidden');clearTimeout(window._tt);window._tt=setTimeout(()=>e.classList.add('hidden'),2500)}
+function todayBlocks(){return read(K.schedule,[]).filter(x=>x.date===localDate())}
+function allBlocks(){return read(K.schedule,[])}
+function ensureDates(){const s=read(K.schedule,[]),t=localDate();let ch=false;const out=s.map(x=>x.date?x:(ch=true,{...x,date:t}));if(ch)write(K.schedule,out)}
+
+/* ── SECTION TOGGLE ── */
+function toggle(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.classList.toggle('open');
+}
+
+/* ── STATS ── */
+function renderStats(){
+  ensureDates();
+  const s=todayBlocks().sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+  const done=s.filter(x=>x.completed);
+  const logs=read(K.logs,[]);
+  document.getElementById('todayLabel').textContent=localDate().slice(5);
+  document.getElementById('blockCount').textContent=s.length;
+  document.getElementById('doneCount').textContent=done.length;
+  document.getElementById('logCount').textContent=logs.length;
+  document.getElementById('logCount2').textContent=logs.length;
+  document.getElementById('plannedMin').textContent=s.reduce((n,x)=>n+Number(x.duration||0),0);
+  document.getElementById('doneMin').textContent=done.reduce((n,x)=>n+Number(x.duration||0),0);
+  document.getElementById('staminaLabel').textContent=localStorage.getItem(K.stamina)||'MEDIUM';
+  document.getElementById('aiState').textContent=localStorage.getItem(AIK.key)?'READY':'OFFLINE';
+}
+
+/* ── BUILD TIMELINE CARD ── */
+function buildCard(x){
+  const sc=String(x.subject||'Other').toLowerCase();
+  const sOpts=['Physics','Chemistry','Maths','Other'].map(s=>`<option${s===x.subject?' selected':''}>${s}</option>`).join('');
+  const pOpts=['High','Medium','Low'].map(p=>`<option${p===x.priority?' selected':''}>${p}</option>`).join('');
+  return `<div class="sc ${sc}${x.completed?' done':''}" id="sc-${esc(x.id)}" data-id="${esc(x.id)}">
+  <div class="sc-hd" onclick="toggleCard('${esc(x.id)}',event)">
+    <div class="sc-time">${esc(x.time||'—')}<small>${x.end?'→ '+esc(x.end):x.duration?x.duration+'m':''}</small></div>
+    <div>
+      <div class="sc-name">${esc(x.label||'Untitled')}</div>
+      <div class="sc-tags">
+        <span class="tag">${esc(x.subject||'Other')}</span>
+        ${x.duration?`<span class="tag">${x.duration}m</span>`:''}
+        ${x.priority&&x.priority!=='Medium'?`<span class="tag">${esc(x.priority)}</span>`:''}
+        ${x.generatedBy?'<span class="tag ai">AI</span>':''}
+        ${x.note?`<span style="font-size:.58rem;color:var(--muted)">${esc(x.note)}</span>`:''}
+      </div>
+    </div>
+    <div class="sc-controls">
+      <div class="done-ring${x.completed?' on':''}" onclick="event.stopPropagation();toggleDone('${esc(x.id)}')" title="${x.completed?'Undo':'Done'}">${x.completed?'✓':''}</div>
+      <span class="sc-arr">▾</span>
+    </div>
+  </div>
+  <div class="sc-body"><div class="sc-inner"><div class="sc-pad">
+    <div class="sc-form-row">
+      <div class="sf2"><label>Start</label><input id="fi-t-${esc(x.id)}" type="time" value="${esc(x.time||'')}"></div>
+      <div class="sf2"><label>End</label><input id="fi-e-${esc(x.id)}" type="time" value="${esc(x.end||'')}"></div>
+      <div class="sf2"><label>Subject</label><select id="fi-s-${esc(x.id)}">${sOpts}</select></div>
+      <div class="sf2"><label>Duration (min)</label><input id="fi-d-${esc(x.id)}" type="number" min="5" max="600" step="5" value="${x.duration||60}"></div>
+      <div class="sf2"><label>Priority</label><select id="fi-p-${esc(x.id)}">${pOpts}</select></div>
+    </div>
+    <div class="sc-form-wide">
+      <div class="sf2"><label>Task</label><input id="fi-l-${esc(x.id)}" type="text" value="${esc(x.label||'')}" maxlength="120" placeholder="Task name"></div>
+      <div class="sf2"><label>Note / method</label><input id="fi-n-${esc(x.id)}" type="text" value="${esc(x.note||'')}" placeholder="PYQs / revision / lecture..."></div>
+    </div>
+    <div class="sc-btns">
+      <button class="btn sm hi" onclick="saveCard('${esc(x.id)}')">Save</button>
+      <button class="btn sm del" onclick="delBlock('${esc(x.id)}')">Delete</button>
+    </div>
+  </div></div></div>
+</div>`;
+}
+
+/* ── RENDER TIMELINE ── */
+function renderTimeline(){
+  const s=todayBlocks().sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+  const el=document.getElementById('timeline');
+  const open=new Set([...el.querySelectorAll('.sc.open')].map(c=>c.dataset.id));
+  el.innerHTML=s.length?s.map(buildCard).join(''):'<div class="empty">No blocks for today — add one or let the AI generate from your data.</div>';
+  open.forEach(id=>{const c=el.querySelector(`[data-id="${id}"]`);if(c)c.classList.add('open')});
+}
+
+function render(){renderStats();renderTimeline();renderMemory()}
+
+/* ── CARD ACCORDION ── */
+function toggleCard(id,e){
+  if(e?.target.closest('.sc-body,.done-ring'))return;
+  const card=document.getElementById('sc-'+id);
+  if(!card)return;
+  const was=card.classList.contains('open');
+  document.querySelectorAll('.sc.open').forEach(c=>c.classList.remove('open'));
+  if(!was)card.classList.add('open');
+}
+
+/* ── INLINE SAVE ── */
+function saveCard(id){
+  const g=k=>document.getElementById(`fi-${k}-${id}`)?.value;
+  const all=allBlocks(),idx=all.findIndex(x=>x.id===id);
+  if(idx<0)return;
+  all[idx]={...all[idx],time:g('t'),end:g('e'),label:(g('l')||'').trim(),subject:g('s'),duration:Number(g('d'))||all[idx].duration,priority:g('p'),note:(g('n')||'').trim()};
+  write(K.schedule,all);
+  toast('Saved ✓');
+  render();
+  setTimeout(()=>{const c=document.getElementById('sc-'+id);if(c)c.classList.add('open')},40);
+}
+
+/* ── ADD BLANK ── */
+function addBlankBlock(){
+  const id='sc_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  allBlocks().concat([{id,date:localDate(),time:'18:00',end:'19:00',label:'',subject:'Maths',duration:60,priority:'Medium',note:'',completed:false}]);
+  const all=allBlocks();all.push({id,date:localDate(),time:'18:00',end:'19:00',label:'',subject:'Maths',duration:60,priority:'Medium',note:'',completed:false});
+  write(K.schedule,all);
+  // open section if closed
+  document.getElementById('s-timeline').classList.add('open');
+  render();
+  setTimeout(()=>{const c=document.getElementById('sc-'+id);if(c){c.classList.add('open');c.scrollIntoView({behavior:'smooth',block:'center'});document.getElementById(`fi-l-${id}`)?.focus()}},50);
+}
+
+/* ── DONE TOGGLE ── */
+function toggleDone(id){
+  const all=allBlocks(),x=all.find(v=>v.id===id);if(!x)return;
+  x.completed=!x.completed;write(K.schedule,all);
+  const card=document.getElementById('sc-'+id);
+  if(card){
+    card.classList.toggle('done',x.completed);
+    const r=card.querySelector('.done-ring');
+    if(r){r.classList.toggle('on',x.completed);r.textContent=x.completed?'✓':'';r.title=x.completed?'Undo':'Done'}
+  }
+  toast(x.completed?'✓ Done':'Marked undone');
+  renderStats();renderMemory();
+}
+
+/* ── DELETE ── */
+function delBlock(id){
+  if(!confirm('Delete this block?'))return;
+  write(K.schedule,allBlocks().filter(x=>x.id!==id));toast('Deleted');render();
+}
+
+/* ── RESET TODAY ── */
+function resetTodaySchedule(){
+  if(!todayBlocks().length)return;
+  if(!confirm('Clear all blocks for today?'))return;
+  const t=localDate();write(K.schedule,allBlocks().filter(x=>x.date!==t));toast('Cleared');render();
+}
+
+/* ── SYLLABUS ── */
+function saveSyllabus(){
+  write(K.syllabus,{updatedAt:new Date().toISOString(),now:document.getElementById('syllabusNow').value.trim(),deadline:document.getElementById('syllabusDeadline').value,priority:document.getElementById('priorityChapters').value.trim(),backlog:document.getElementById('backlogChapters').value.trim(),constraints:document.getElementById('scheduleConstraints').value.trim()});
+  toast('Brief saved.');
+}
+function loadSyllabus(){
+  const v=read(K.syllabus,{});
+  document.getElementById('syllabusNow').value=v.now||'';
+  document.getElementById('syllabusDeadline').value=v.deadline||'';
+  document.getElementById('priorityChapters').value=v.priority||'';
+  document.getElementById('backlogChapters').value=v.backlog||'';
+  document.getElementById('scheduleConstraints').value=v.constraints||'';
+}
+
+/* ── STAMINA ── */
+function saveStamina(){localStorage.setItem(K.stamina,document.getElementById('stamina').value);localStorage.setItem('jee-schedule-free-minutes',document.getElementById('freeMinutes').value);renderStats()}
+
+/* ── LOG TODAY ── */
+function logToday(){
+  const study=document.getElementById('logStudy').value.trim();
+  if(!study){toast('Enter what you studied.');return}
+  const logs=read(K.logs,[]),today=localDate();
+  const entry={id:'log_'+Date.now().toString(36),date:today,createdAt:new Date().toISOString(),study,done:document.getElementById('logDone').value.trim(),problems:document.getElementById('logProblems').value.trim(),result:document.getElementById('logResult').value.trim(),focus:Number(document.getElementById('logFocus').value||3),actualMinutes:Number(document.getElementById('logMinutes').value||0),sleep:Number(document.getElementById('sleepHours').value||0),energy:document.getElementById('energy').value,freeMinutes:Number(document.getElementById('freeMinutes').value||0),plannedMinutes:todayBlocks().reduce((n,x)=>n+Number(x.duration||0),0),completedMinutes:todayBlocks().filter(x=>x.completed).reduce((n,x)=>n+Number(x.duration||0),0)};
+  const idx=logs.findIndex(x=>x.date===today);
+  if(idx>=0)logs[idx]=entry;else logs.push(entry);
+  write(K.logs,logs.slice(-90));
+  toast('Today logged ✓');renderMemory();renderStats();
+}
+
+/* ── MEMORY ── */
+function renderMemory(){
+  const logs=read(K.logs,[]);
+  if(!logs.length){document.getElementById('avgFocus').textContent='—';document.getElementById('avgMinutes').textContent='—';document.getElementById('completionRate').textContent='—';document.getElementById('memoryText').textContent='No logs yet. Start by logging today.';return}
+  const avgF=logs.reduce((n,x)=>n+Number(x.focus||0),0)/logs.length;
+  const avgM=logs.reduce((n,x)=>n+Number(x.actualMinutes||0),0)/logs.length;
+  const wp=logs.filter(x=>x.plannedMinutes>0);
+  const rate=wp.length?wp.reduce((n,x)=>n+Math.min(1,Number(x.completedMinutes||0)/Number(x.plannedMinutes||1)),0)/wp.length*100:null;
+  document.getElementById('avgFocus').textContent=avgF.toFixed(1)+'/5';
+  document.getElementById('avgMinutes').textContent=Math.round(avgM)+'m';
+  document.getElementById('completionRate').textContent=rate===null?'—':Math.round(rate)+'%';
+  const recent=logs.slice(-7);const en=recent.map(x=>x.energy).filter(Boolean);
+  const cnt=en.reduce((a,x)=>(a[x]=(a[x]||0)+1,a),{});
+  const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
+  document.getElementById('memoryText').textContent=`${logs.length} log(s) stored. Typical energy: ${top}. AI receives logs, completion ratios, syllabus and test weaknesses on each plan request.`;
+}
+
+/* ── AI ── */
+function aiCfg(){return{provider:localStorage.getItem(AIK.provider)||'gemini',key:localStorage.getItem(AIK.key)||'',model:localStorage.getItem(AIK.model)||'gemini-3.8-flash'}}
+function loadAISettings(){const a=aiCfg();document.getElementById('aiProvider').value=a.provider;document.getElementById('aiKey').value=a.key;document.getElementById('aiModel').value=a.model}
+function saveAISettings(){localStorage.setItem(AIK.provider,document.getElementById('aiProvider').value);localStorage.setItem(AIK.key,document.getElementById('aiKey').value.trim());localStorage.setItem(AIK.model,document.getElementById('aiModel').value);toast('AI settings saved');renderStats()}
+function clearAIKey(){localStorage.removeItem(AIK.key);document.getElementById('aiKey').value='';toast('Key cleared');renderStats()}
+async function callAI(prompt){
+  const a=aiCfg();if(!a.key)throw Error('Add an API key in section 06.');
+  const model=a.model||'gemini-3.8-flash';
+  if(a.provider==='gemini'){const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(a.key)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}]})});const j=await r.json();if(!r.ok)throw Error(j.error?.message||'Gemini error');return j.candidates?.[0]?.content?.parts?.map(x=>x.text||'').join('')||'No response.'}
+  const r=await fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+a.key},body:JSON.stringify({model,input:prompt})});const j=await r.json();if(!r.ok)throw Error(j.error?.message||'OpenAI error');return j.output_text||j.output?.flatMap(x=>x.content||[]).map(x=>x.text||'').join('')||'No response.';
+}
+function ctx(){return{today:localDate(),learningMemory:read(K.memory,{}),stamina:document.getElementById('stamina').value,freeMinutes:Number(document.getElementById('freeMinutes').value||0),sleep:Number(document.getElementById('sleepHours').value||0),energy:document.getElementById('energy').value,syllabus:read(K.syllabus,{}),learningLogs:read(K.logs,[]).slice(-30),recentTests:read(K.tests,[]).slice(-8),recentPDF:read(K.history,[]).slice(0,5),todaySchedule:todayBlocks(),targets:read(K.targets,[])}}
+function extractJSON(t){const c=t.replace(/```json|```/gi,'').trim();const s=c.indexOf('{'),e=c.lastIndexOf('}');if(s<0||e<0)throw Error('No JSON in response');return JSON.parse(c.slice(s,e+1))}
+async function generateDailySchedule(){
+  const out=document.getElementById('aiOutput');
+  document.getElementById('s-ai').classList.add('open');
+  try{
+    out.textContent='Generating from your real logs, syllabus and tracker data…';
+    const days=Number(document.getElementById('horizon').value||1);
+    const raw=await callAI(`You are the adaptive JEE study scheduler. Use ONLY real supplied data. Plan ${days} day(s). Return ONLY JSON: {"summary":"...","memoryUpdate":"...","days":[{"date":"YYYY-MM-DD","blocks":[{"time":"HH:MM","end":"HH:MM","label":"...","subject":"Physics|Chemistry|Maths|Other","duration":60,"priority":"High|Medium|Low","note":"..."}]}]}. Data:\n${JSON.stringify(ctx(),null,2)}`);
+    const obj=extractJSON(raw);
+    out.textContent=JSON.stringify(obj,null,2);
+    if(obj.memoryUpdate)write(K.memory,{updatedAt:new Date().toISOString(),summary:obj.memoryUpdate});
+    if(obj.days?.[0]?.blocks?.length){
+      const day=obj.days[0],date=day.date||localDate();
+      const blocks=(day.blocks||[]).map((x,i)=>({id:'ai_'+Date.now().toString(36)+'_'+i,date,time:x.time,end:x.end||'',label:x.label,subject:x.subject||'Other',duration:Number(x.duration||0),priority:x.priority||'Medium',note:x.note||'',completed:false,generatedBy:'ai'}));
+      write(K.schedule,[...allBlocks().filter(x=>x.date!==date),...blocks]);
+      document.getElementById('s-timeline').classList.add('open');
+      toast('Schedule generated ✓');render();
+    }else toast('AI returned no blocks');
+    renderMemory();
+  }catch(e){out.textContent='Error: '+e.message;toast(e.message)}
+}
+async function learnFromHistory(){
+  const out=document.getElementById('aiOutput');
+  document.getElementById('s-ai').classList.add('open');
+  try{
+    out.textContent='Building learning profile from your history…';
+    const raw=await callAI(`Analyse this JEE student's logs. Return ONLY JSON: {"patterns":[],"strengths":[],"risks":[],"bestStudyWindow":"","recommendedDailyCapacity":0,"memory":""}. Data:\n${JSON.stringify(ctx(),null,2)}`);
+    const p=extractJSON(raw);write(K.memory,{updatedAt:new Date().toISOString(),...p,logCount:read(K.logs,[]).length});
+    out.textContent=JSON.stringify(p,null,2);toast('Memory updated ✓');renderMemory();
+  }catch(e){out.textContent='Error: '+e.message;toast(e.message)}
+}
+async function askScheduler(){
+  const q=document.getElementById('aiQuestion').value.trim();
+  if(!q){toast('Enter a question first.');return}
+  const out=document.getElementById('aiOutput');
+  document.getElementById('s-ai').classList.add('open');
+  try{out.textContent='Thinking…';const raw=await callAI(`You are the JEE schedule coach. Answer using real context. Request: ${q}\nContext:\n${JSON.stringify(ctx(),null,2)}`);out.textContent=raw}
+  catch(e){out.textContent='Error: '+e.message;toast(e.message)}
+}
+function showLearningHistory(){
+  const logs=read(K.logs,[]);
+  document.getElementById('aiOutput').textContent=logs.length?logs.map(x=>`${x.date} | focus ${x.focus}/5 | ${x.actualMinutes}m | ${x.energy}\n${x.study}${x.problems?'\nProblems: '+x.problems:''}`).join('\n\n'):'No logs yet.';
+  document.getElementById('s-ai').classList.add('open');
+  document.getElementById('s-ai').scrollIntoView({behavior:'smooth'});
+}
+function clearLearningData(){if(!confirm('Clear AI logs, syllabus brief and memory? Schedule and test data stay.'))return;[K.logs,K.syllabus,K.memory].forEach(k=>localStorage.removeItem(k));toast('AI data cleared');loadSyllabus();render()}
+function exportData(){
+  const keys=[...Object.values(K),K.stamina,'jee-schedule-free-minutes',AIK.provider,AIK.model];
+  const data={};keys.forEach(k=>{const v=localStorage.getItem(k);if(v!==null){try{data[k]=JSON.parse(v)}catch{data[k]=v}}});
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({version:3,exportedAt:new Date().toISOString(),data},null,2)],{type:'application/json'}));a.download='jee-schedule-backup.json';a.click();URL.revokeObjectURL(a.href);toast('Exported');
+}
+function importData(e){const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);Object.entries(x.data||{}).forEach(([k,v])=>{if(Object.values(K).includes(k)||[K.stamina,'jee-schedule-free-minutes',AIK.provider,AIK.model].includes(k))write(k,v)});loadSyllabus();loadAISettings();toast('Imported');render()}catch(err){toast('Import failed: '+err.message)}};r.readAsText(f)}
+
+/* ── INIT ── */
+function init(){
+  loadSyllabus();loadAISettings();
+  document.getElementById('stamina').value=localStorage.getItem(K.stamina)||'MEDIUM';
+  document.getElementById('freeMinutes').value=localStorage.getItem('jee-schedule-free-minutes')||240;
+  document.getElementById('stamina').addEventListener('change',saveStamina);
+  document.getElementById('freeMinutes').addEventListener('change',saveStamina);
+  render();
+}
+window.addEventListener('storage',e=>{if(e.key?.startsWith('jee-'))render()});
+bc?.addEventListener('message',e=>{if(e.data?.key?.startsWith('jee-'))render()});
+init();
+</script>
+</body>
+</html>
