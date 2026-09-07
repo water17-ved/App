@@ -1381,6 +1381,20 @@
   .util-btn-danger { border-color: rgba(255,26,94,0.45); color: var(--danger); }
   .util-btn-danger:hover { border-color: var(--danger); box-shadow: 0 0 14px rgba(255,26,94,0.4); background: rgba(255,26,94,0.08); }
 
+  .ai-activity-overlay{position:fixed;inset:0;background:rgba(3,3,9,.76);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .2s;z-index:300;}
+  .ai-activity-overlay.open{opacity:1;pointer-events:auto;}
+  .ai-activity-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-48%) scale(.97);width:760px;max-width:92vw;max-height:82vh;overflow:auto;background:linear-gradient(160deg,var(--panel-bg),#08050d);border:1px solid rgba(255,106,0,.55);border-radius:14px;padding:18px;box-shadow:0 18px 60px rgba(0,0,0,.65);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:301;}
+  .ai-activity-modal.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1);}
+  .ai-activity-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;}
+  .ai-activity-head h2{margin:0;font-family:var(--font-display);font-size:1rem;color:var(--gold-bright);letter-spacing:.04em;}
+  .ai-activity-empty{padding:24px;text-align:center;color:var(--text-muted);border:1px dashed var(--border);border-radius:10px;}
+  .ai-activity-item{border:1px solid var(--border);border-left:3px solid var(--gold);background:rgba(255,255,255,.025);border-radius:9px;padding:11px;margin:8px 0;}
+  .ai-activity-item .top{position:static;padding:0;background:none;border:0;box-shadow:none;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+  .ai-activity-kind{font-family:var(--font-display);font-size:.68rem;color:var(--gold-bright);letter-spacing:.05em;}
+  .ai-activity-time{font-size:.68rem;color:var(--text-muted);}
+  .ai-activity-title{font-weight:800;margin-top:5px;}
+  .ai-activity-meta{font-size:.75rem;color:var(--text-muted);line-height:1.45;margin-top:4px;}
+  .ai-activity-data{margin-top:7px;padding:8px;border-radius:7px;background:rgba(0,0,0,.22);font:600 .68rem/1.45 var(--font-body);white-space:pre-wrap;color:var(--text-main);max-height:180px;overflow:auto;}
   .reset-modal-overlay {
     position: fixed; inset: 0; background: rgba(3,3,9,0.72); backdrop-filter: blur(2px);
     opacity: 0; pointer-events: none; transition: opacity 0.25s ease; z-index: 240;
@@ -3655,6 +3669,12 @@
   <button class="add-btn" onclick="closeFormHelp()">Got it</button>
 </div>
 
+<div class="ai-activity-overlay" id="ai-activity-overlay" onclick="closeAIActivityLog()"></div>
+<div class="ai-activity-modal" id="ai-activity-modal" role="dialog" aria-modal="true" aria-label="AI activity log">
+  <div class="ai-activity-head"><h2>✦ AI ACTIVITY / ENTRIES MADE BY AI</h2><button class="util-btn" onclick="closeAIActivityLog()">Close</button></div>
+  <p style="font-size:.76rem;color:var(--text-muted);margin:0 0 10px;">This is an audit trail of changes and entries created by the AI across the tracker. Manually entered data is not labelled as AI-created.</p>
+  <div id="ai-activity-list"></div>
+</div>
 <div class="reset-modal-overlay" id="reset-modal-overlay" onclick="closeResetModal()"></div>
 <div class="reset-modal" id="reset-modal">
   <h2>🗑 Reset All Data</h2>
@@ -4803,6 +4823,11 @@
               <button class="util-btn" onclick="event.stopPropagation(); clearMainGeminiSettings()">Clear</button>
             </div>
             <p id="main-gemini-status" style="font-size:.78rem;color:var(--text-muted);margin-top:8px;">Not configured</p>
+            <div class="util-bar" onclick="event.stopPropagation()" style="margin-top:10px;flex-wrap:wrap;">
+              <button class="util-btn util-btn-violet" onclick="event.stopPropagation(); openAIActivityLog()">▣ View AI Entries / Actions</button>
+              <button class="util-btn util-btn-danger" onclick="event.stopPropagation(); clearAIActivityLog()">Clear AI Activity</button>
+              <span id="ai-activity-count" style="font-size:.72rem;color:var(--text-muted);align-self:center;">0 recorded</span>
+            </div>
           </div>
         </div>
       </div>
@@ -5666,6 +5691,15 @@ Storage.prototype.removeItem = function(key) {
 // ── Shared Gemini configuration ───────────────────────────────────────────
 const JEE_GEMINI_KEY = 'jee-ai-api-key';
 const JEE_GEMINI_MODEL = 'jee-ai-model';
+const JEE_AI_ACTIVITY_KEY = 'jee-ai-activity-log-v1';
+function readAIActivityLog(){try{const x=JSON.parse(localStorage.getItem(JEE_AI_ACTIVITY_KEY)||'[]');return Array.isArray(x)?x:[]}catch(e){return []}}
+function recordAIActivity(entry){try{const logs=readAIActivityLog();logs.push({id:'ai_action_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7),createdAt:new Date().toISOString(),...entry});localStorage.setItem(JEE_AI_ACTIVITY_KEY,JSON.stringify(logs.slice(-300)));updateAIActivityCount();}catch(e){console.warn('AI activity log failed',e)}}
+function updateAIActivityCount(){const el=document.getElementById('ai-activity-count');if(el)el.textContent=`${readAIActivityLog().length} recorded`; }
+function openAIActivityLog(){const list=document.getElementById('ai-activity-list');if(!list)return;const logs=readAIActivityLog().slice().reverse();list.innerHTML=logs.length?logs.map(x=>{const when=x.createdAt?new Date(x.createdAt).toLocaleString():'';const data=x.details?JSON.stringify(x.details,null,2):'';return `<div class="ai-activity-item"><div class="top"><span class="ai-activity-kind">${escapeHtmlAI(x.kind||'AI ACTION')}</span><span class="ai-activity-time">${escapeHtmlAI(when)}</span></div><div class="ai-activity-title">${escapeHtmlAI(x.title||'Untitled AI action')}</div><div class="ai-activity-meta">Source: ${escapeHtmlAI(x.source||'Unknown')} ${x.date?'• Date: '+escapeHtmlAI(x.date):''}</div>${data?`<div class="ai-activity-data">${escapeHtmlAI(data)}</div>`:''}</div>`}).join(''):'<div class="ai-activity-empty">No AI-created entries have been recorded yet.</div>';document.getElementById('ai-activity-overlay')?.classList.add('open');document.getElementById('ai-activity-modal')?.classList.add('open');}
+function closeAIActivityLog(){document.getElementById('ai-activity-overlay')?.classList.remove('open');document.getElementById('ai-activity-modal')?.classList.remove('open')}
+function clearAIActivityLog(){if(!confirm('Clear the AI activity audit trail? This does not delete schedules, logs, tests or other tracker data.'))return;localStorage.removeItem(JEE_AI_ACTIVITY_KEY);updateAIActivityCount();openAIActivityLog();}
+function escapeHtmlAI(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+
 function loadMainGeminiSettings(){
   try{
     const key=localStorage.getItem(JEE_GEMINI_KEY)||'';
@@ -5686,7 +5720,7 @@ function saveMainGeminiSettings(){
 function clearMainGeminiSettings(){localStorage.removeItem(JEE_GEMINI_KEY);loadMainGeminiSettings();}
 window.addEventListener('storage',e=>{if(e.key===JEE_GEMINI_KEY||e.key===JEE_GEMINI_MODEL)loadMainGeminiSettings()});
 try{const _jeeGeminiBC=('BroadcastChannel' in window)?new BroadcastChannel('jee-tracker-sync-v1'):null;_jeeGeminiBC?.addEventListener('message',e=>{if(e.data?.key===JEE_GEMINI_KEY||e.data?.key===JEE_GEMINI_MODEL)loadMainGeminiSettings()});}catch(e){}
-document.addEventListener('DOMContentLoaded',loadMainGeminiSettings);
+document.addEventListener('DOMContentLoaded',()=>{loadMainGeminiSettings();updateAIActivityCount()});
 
 const localDB = {
   async get(key, shared) {
@@ -5727,6 +5761,7 @@ async function refreshMainFromSharedStorage(keys) {
     if (set.has('jee-daily-targets')) { dailyTargets = (await loadKey('jee-daily-targets')) || []; renderTargets(); }
     if (set.has('jee-target-progress')) { targetProgress = (await loadKey('jee-target-progress')) || {}; renderTargets(); }
     if (set.has('jee-study-hours')) { studyHours = (await loadKey('jee-study-hours')) || []; renderStudyHoursToday(); }
+    if (set.has('jee-daily-questions')) { dailyQuestions = (await loadKey('jee-daily-questions')) || []; renderDailyQuestions(); }
     if (set.has('jee-self-weak-subjects')) { selfWeakSubjects = (await loadKey('jee-self-weak-subjects')) || []; renderWeakSpotRadar(); renderDangerZone(); renderSubjectAnalysisDetail(); }
     if (set.has('jee-pdf-analysis-history')) { renderBattlePlanPanel?.(); renderCommandCenter(); }
     if (set.has('jee-test-analysis-history')) { renderCommandCenter(); }

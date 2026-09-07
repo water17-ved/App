@@ -3,822 +3,232 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#170d20">
-<meta name="color-scheme" content="dark">
-<title>JEE — Schedule</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Orbitron:wght@700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0a0710">
+<title>JEE Battle Royale — AI Schedule Command</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Orbitron:wght@600;800;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #0a0710;
-  --bg-glow: #2a0f3a;
-  --card: #130b1a;
-  --card2: #060a12;
-  --gold: #00c2ff;
-  --gold-b: #7df9ff;
-  --xp: #ff3d7d;
-  --phys: #22d3ee;
-  --chem: #39ff88;
-  --math: #c77dff;
-  --danger: #ff1a5e;
-  --border: #3a2452;
-  --border2: #28183a;
-  --text: #f3ecff;
-  --muted: #9a83b0;
-  --fD: 'Orbitron', sans-serif;
-  --fA: 'Rajdhani', sans-serif;
-  --fB: 'Roboto', sans-serif;
+:root{
+  --bg:#0a0710;--glow:#2a0f3a;--card:#130b1a;--panel:#170d20;
+  --gold:#ff6a00;--gold2:#ffcf3d;--xp:#ff3d7d;--phys:#22d3ee;--chem:#39ff88;--math:#c77dff;--danger:#ff1a5e;
+  --text:#f3ecff;--muted:#9a83b0;--border:#3a2452;
+  --fontD:'Orbitron',sans-serif;--fontA:'Rajdhani',sans-serif;--fontB:'Roboto',sans-serif
 }
-*, *::before, *::after { box-sizing: border-box; }
-html { font-size: 14px; color-scheme: dark; background: var(--bg); scroll-behavior: smooth; }
-body {
-  margin: 0; padding: 14px 14px 90px;
-  font-family: var(--fB); color: var(--text);
-  line-height: 1.55; min-height: 100vh;
-  background: var(--bg);
+*{box-sizing:border-box}
+html{background:var(--bg);color-scheme:dark;scroll-behavior:smooth}
+body{margin:0;padding:12px 12px 110px;background:
+ radial-gradient(circle at 8% -4%,color-mix(in srgb,var(--glow) 92%,transparent),transparent 34%),
+ radial-gradient(circle at 96% 10%,color-mix(in srgb,var(--gold) 9%,transparent),transparent 25%),
+ linear-gradient(180deg,var(--bg),#07050b 80%);color:var(--text);font-family:var(--fontB);font-size:13px;min-height:100vh}
+button,input,select,textarea{font:inherit}
+.wrap{width:min(1080px,100%);margin:auto}
+.top{position:sticky;top:8px;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 14px;margin-bottom:14px;background:color-mix(in srgb,var(--panel) 94%,#000);border:1px solid var(--border);border-radius:14px;backdrop-filter:blur(16px);box-shadow:0 12px 30px -18px #000,inset 0 1px rgba(255,255,255,.05)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}.brandmark{width:38px;height:38px;flex:0 0 38px;border:1px solid var(--gold);border-radius:10px;display:grid;place-items:center;color:var(--gold2);font:900 14px var(--fontD);box-shadow:0 0 16px color-mix(in srgb,var(--gold) 18%,transparent)}
+h1{font:900 14px var(--fontD);margin:0;letter-spacing:.055em;white-space:nowrap}.sub{font:700 9px var(--fontA);color:var(--muted);margin-top:3px;letter-spacing:.07em}
+.actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.btn{border:1px solid var(--border);background:#100914;color:var(--text);padding:8px 11px;border-radius:8px;font-size:10px;font-weight:900;letter-spacing:.025em;cursor:pointer;transition:.16s}.btn:hover{border-color:var(--gold);transform:translateY(-1px)}.btn.primary{background:linear-gradient(135deg,color-mix(in srgb,var(--gold) 30%,#130b1a),color-mix(in srgb,var(--xp) 15%,#130b1a));border-color:color-mix(in srgb,var(--gold) 68%,var(--border));color:#fff3df}.btn.ai{background:linear-gradient(135deg,color-mix(in srgb,var(--math) 22%,#130b1a),color-mix(in srgb,var(--xp) 16%,#130b1a));border-color:color-mix(in srgb,var(--math) 58%,var(--border))}.btn.danger:hover{border-color:var(--danger);color:#ffb5c7}
+.hero{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(250px,.55fr);gap:12px}.card{background:linear-gradient(145deg,color-mix(in srgb,var(--card) 97%,#000),color-mix(in srgb,var(--panel) 86%,#000));border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:inset 0 1px rgba(255,255,255,.045),0 14px 34px -22px #000;position:relative;overflow:hidden}.card:before{content:'';position:absolute;left:18px;right:18px;top:0;height:1px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--gold2) 38%,white),transparent);opacity:.65}
+.eyebrow{font:800 10px var(--fontA);color:var(--gold2);letter-spacing:.15em;text-transform:uppercase}.title{font:900 25px var(--fontD);margin:7px 0 6px;line-height:1.12;background:linear-gradient(90deg,#fff0c2,var(--gold2),var(--gold),var(--xp));-webkit-background-clip:text;background-clip:text;color:transparent}.muted{font-size:10px;line-height:1.6;color:var(--muted)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.metric{padding:11px 12px;border:1px solid var(--border);border-radius:10px;background:color-mix(in srgb,var(--panel) 72%,transparent)}.metric b{display:block;font:900 17px var(--fontD);color:var(--gold2);line-height:1.1}.metric span{display:block;margin-top:5px;font:700 8px var(--fontA);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.hero>.card:last-child{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}
+.section{margin-top:12px}.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:11px}.section-title h2{font:900 11px var(--fontD);margin:0;letter-spacing:.055em;color:var(--text)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.field label{display:block;font:800 8px var(--fontA);color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}.field input,.field select,.field textarea{width:100%;background:#0b0710;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:9px 10px;outline:none;font-size:11px;transition:.16s}.field textarea{min-height:78px;resize:vertical;line-height:1.5}.field input::placeholder,.field textarea::placeholder{color:#685675}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);box-shadow:0 0 0 2px color-mix(in srgb,var(--gold) 12%,transparent)}.wide{grid-column:span 2}
+.notice{padding:10px 11px;border:1px dashed color-mix(in srgb,var(--math) 42%,var(--border));border-radius:9px;background:color-mix(in srgb,var(--panel) 82%,transparent);font-size:10px;color:#c9b5d5;line-height:1.6}
+.timeline{display:grid;gap:7px}.row{display:block;position:relative;padding:0;border:1px solid var(--border);border-left:2px solid var(--math);border-radius:9px;background:linear-gradient(105deg,color-mix(in srgb,var(--math) 5%,var(--card)),var(--card) 48%);min-height:0;overflow:hidden;cursor:pointer;transition:transform .14s,border-color .14s,box-shadow .14s}.row:hover{transform:translateY(-1px)}.row:hover{border-color:color-mix(in srgb,var(--gold) 48%,var(--border));transform:translateY(-1px);box-shadow:0 10px 24px -20px #000}.row.physics{border-left-color:var(--phys);background:linear-gradient(110deg,color-mix(in srgb,var(--phys) 6%,var(--card)),var(--card) 42%)}.row.chemistry{border-left-color:var(--chem);background:linear-gradient(110deg,color-mix(in srgb,var(--chem) 6%,var(--card)),var(--card) 42%)}.row.maths{border-left-color:var(--math);background:linear-gradient(110deg,color-mix(in srgb,var(--math) 6%,var(--card)),var(--card) 42%)}.row.other{border-left-color:var(--gold);background:linear-gradient(110deg,color-mix(in srgb,var(--gold) 6%,var(--card)),var(--card) 42%)}.row.done{opacity:.6}.row.done .taskname{text-decoration:line-through}.schedule-summary{display:grid;grid-template-columns:72px minmax(0,1fr) 24px;gap:10px;align-items:center;padding:8px 10px;min-height:45px}.time{font:900 9px var(--fontA);color:var(--gold2);letter-spacing:.03em;white-space:nowrap}.taskname{font-size:11px;font-weight:900;line-height:1.25}.summary-meta{font-size:8px;color:var(--muted);margin-top:4px;line-height:1.3}.expand-mark{width:22px;height:22px;display:grid;place-items:center;border:1px solid var(--border);border-radius:7px;color:var(--muted);font-size:12px;transition:.18s}.row.open .expand-mark{transform:rotate(180deg);color:var(--gold2);border-color:color-mix(in srgb,var(--gold) 45%,var(--border))}.schedule-detail{display:none;padding:0 10px 9px;border-top:1px solid color-mix(in srgb,var(--border) 72%,transparent);background:color-mix(in srgb,var(--panel) 55%,transparent)}.row.open .schedule-detail{display:block}.detail-line{padding-top:9px;font-size:9px;color:var(--muted);line-height:1.5}.detail-line b{color:var(--text)}.detail-actions{display:flex;gap:6px;align-items:center;margin-top:9px}.controls{display:flex;gap:5px;align-items:center}.icon{width:29px;height:29px;border:1px solid var(--border);border-radius:7px;background:#0b0710;color:var(--text);cursor:pointer}.icon:hover{border-color:var(--gold);color:var(--gold2)}.check{width:18px;height:18px;accent-color:var(--gold)}
+.empty{padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:10px}.aiout{white-space:pre-wrap;min-height:110px;padding:12px;border-radius:10px;background:#0b0710;border:1px solid color-mix(in srgb,var(--math) 42%,var(--border));font-size:10px;line-height:1.6;color:#d9cde4}.memory{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.memory .metric b{font-size:16px}.file{display:none}.hidden{display:none!important}.toast{position:fixed;right:14px;bottom:18px;z-index:100;background:var(--panel);border:1px solid var(--gold);border-radius:9px;padding:10px 13px;font-size:10px;box-shadow:0 10px 30px #000;max-width:360px}
+body.mode-fortnite{--fontD:'Fredoka',sans-serif;--fontA:'Rajdhani',sans-serif;--fontB:'Roboto',sans-serif}body.mode-cod{--fontD:'Black Ops One',sans-serif;--fontA:'Rajdhani',sans-serif;--fontB:'Roboto',sans-serif}body.mode-shadowfight{--fontD:'Cinzel',serif;--fontA:'Rajdhani',sans-serif;--fontB:'Roboto',sans-serif}
+@media(max-width:760px){body{padding:8px 8px 92px}.top{top:4px;padding:10px 11px}.actions{max-width:190px}.hero{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.form{grid-template-columns:1fr 1fr}.wide{grid-column:1/-1}.row{grid-template-columns:68px minmax(0,1fr) auto;padding:10px;gap:9px}.title{font-size:21px}.hero>.card:last-child{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.form{grid-template-columns:1fr}.wide{grid-column:auto}.memory{grid-template-columns:1fr}.btn{padding:8px 9px}.section-title{align-items:flex-start;flex-direction:column}.section-title>.actions{width:100%;max-width:none}.top .sub{font-size:8px}.top h1{font-size:12px}.brandmark{width:34px;height:34px;flex-basis:34px}.row{grid-template-columns:58px minmax(0,1fr);}.row .controls{grid-column:2;justify-content:flex-start}.metrics .metric{padding:10px}.card{padding:13px}}
+
+
+/* =========================================================
+   MAIN HUB VISUAL LANGUAGE — SCHEDULE TAB
+   Sleek collapsed cards; details/actions open on tap.
+   Uses the same attributes as the main hub: Orbitron/Rajdhani/Roboto,
+   dark purple panels, orange/gold accents, thin borders, restrained glow.
+   ========================================================= */
+:root{
+  --bg:#0a0710;--glow:#2a0f3a;--card:#130b1a;--panel:#170d20;
+  --gold:#ff6a00;--gold2:#ffcf3d;--xp:#ff3d7d;
+  --phys:#22d3ee;--chem:#39ff88;--math:#c77dff;--danger:#ff1a5e;
+  --text:#f3ecff;--muted:#9a83b0;--border:#3a2452;
+  --fontD:'Orbitron',sans-serif;--fontA:'Rajdhani',sans-serif;--fontB:'Roboto',sans-serif;
 }
-body::before {
-  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+html,body{background:var(--bg);color:var(--text)}
+body{
+  padding:10px 12px 96px;
+  font-family:var(--fontB);
   background:
-    repeating-linear-gradient(0deg, rgba(34,211,238,.018) 0px, rgba(34,211,238,.018) 1px, transparent 1px, transparent 3px),
-    radial-gradient(circle at 10% 0%, rgba(34,211,238,.11) 0%, transparent 38%),
-    radial-gradient(circle at 90% 8%, rgba(199,125,255,.11) 0%, transparent 40%),
-    radial-gradient(circle at 14% 0%, var(--bg-glow) 0%, transparent 44%),
-    var(--bg);
+    repeating-linear-gradient(0deg,rgba(41,193,255,.025) 0,rgba(41,193,255,.025) 1px,transparent 1px,transparent 4px),
+    radial-gradient(circle at 10% 0%,color-mix(in srgb,var(--glow) 95%,transparent),transparent 46%),
+    radial-gradient(circle at 90% 8%,color-mix(in srgb,var(--gold) 7%,transparent),transparent 32%),
+    var(--bg)!important;
 }
-p { color: var(--muted); margin: 0; }
-button, input, select, textarea { font: inherit; color: var(--text); }
-button { cursor: pointer; }
-.wrap { max-width: 980px; margin: 0 auto; }
+.wrap{width:min(980px,100%)}
+.top{
+  top:7px;margin-bottom:12px;padding:9px 12px;border-radius:10px;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--panel) 94%,transparent),#09060e);
+  border:1px solid var(--border);box-shadow:inset 0 1px rgba(255,255,255,.055),0 10px 28px -20px #000;
+}
+.brand{gap:9px}.brandmark{width:34px;height:34px;flex-basis:34px;border-radius:8px;border-color:var(--gold);color:var(--gold2);box-shadow:0 0 14px color-mix(in srgb,var(--gold) 16%,transparent)}
+h1{font-size:13px}.sub{font-size:8px;color:var(--muted)}
+.actions{gap:5px}.btn{padding:7px 9px;border-radius:7px;background:rgba(255,255,255,.025);border-color:var(--border);font:800 9px var(--fontA);letter-spacing:.06em;text-transform:uppercase}.btn:hover{border-color:var(--gold);box-shadow:0 0 0 1px color-mix(in srgb,var(--gold) 18%,transparent);transform:none}.btn.ai{background:color-mix(in srgb,var(--math) 9%,var(--card));border-color:color-mix(in srgb,var(--math) 40%,var(--border))}.btn.primary{background:color-mix(in srgb,var(--gold) 10%,var(--card));border-color:color-mix(in srgb,var(--gold) 50%,var(--border))}
+.hero{grid-template-columns:minmax(0,1fr) minmax(220px,.48fr);gap:10px}.card{
+  background:linear-gradient(165deg,color-mix(in srgb,var(--panel) 92%,transparent),color-mix(in srgb,var(--card) 96%,#000));
+  border:1px solid var(--border);border-radius:10px;padding:13px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),inset 0 0 0 1px rgba(255,255,255,.018),0 14px 30px -22px #000;
+}
+.card:before{left:14px;right:14px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--gold2) 35%,white),transparent);opacity:.55}
+.eyebrow{font-size:9px;color:var(--gold);letter-spacing:.13em}.title{font-size:21px;margin:5px 0 4px;background:linear-gradient(90deg,#fff0c2,var(--gold2),var(--gold),var(--xp));-webkit-background-clip:text;background-clip:text}.muted{font-size:9px;color:var(--muted)}
+.metrics{gap:6px}.metric{padding:9px 10px;border-radius:8px;background:rgba(255,255,255,.018);border-color:var(--border)}.metric b{font-size:14px}.metric span{font-size:7px}
+.section{margin-top:10px}.section-title{margin-bottom:8px}.section-title h2{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--text)}
+.section-title:after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent);opacity:.75}.section-title>*:last-child{margin-left:auto}
+.grid2{gap:10px}.form{gap:8px}.field label{font-size:7px;color:var(--muted);letter-spacing:.1em}.field input,.field select,.field textarea{background:#0b0710;border-color:var(--border);border-radius:7px;padding:8px 9px;font-size:10px}.field textarea{min-height:68px}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);box-shadow:0 0 0 2px color-mix(in srgb,var(--gold) 10%,transparent)}
+.notice{padding:8px 9px;border-radius:8px;background:rgba(255,255,255,.018);border-color:color-mix(in srgb,var(--math) 35%,var(--border));font-size:9px;color:var(--muted)}
+/* The actual schedule cards: compact by default, details hidden. */
+.timeline{gap:6px}
+.row{
+  display:block;min-height:0;padding:0;overflow:hidden;cursor:pointer;
+  border:1px solid var(--border);border-left:3px solid var(--accent,var(--gold));border-radius:9px;
+  background:linear-gradient(110deg,color-mix(in srgb,var(--accent,var(--gold)) 4%,var(--card)),var(--card) 48%);
+  box-shadow:inset 0 1px rgba(255,255,255,.035),0 8px 18px -18px #000;
+  transition:border-color .16s,box-shadow .16s,transform .16s;
+}
+.row:hover{transform:translateY(-1px);border-color:color-mix(in srgb,var(--accent,var(--gold)) 42%,var(--border));box-shadow:0 0 0 1px color-mix(in srgb,var(--accent,var(--gold)) 8%,transparent),0 10px 20px -18px #000}
+.schedule-summary{min-height:52px;padding:8px 9px;display:grid;grid-template-columns:60px minmax(0,1fr) 20px;align-items:center;gap:8px;background:transparent}
+.time{font:800 10px var(--fontD);color:var(--gold2);white-space:nowrap}.taskname{font:800 11px var(--fontB);color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.summary-meta{margin-top:2px;font:700 8px var(--fontA);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.expand-mark{width:20px;height:20px;border:1px solid var(--border);border-radius:6px;display:grid;place-items:center;color:var(--muted);font-size:13px;transition:transform .18s,color .18s,border-color .18s}.row.open .expand-mark{transform:rotate(180deg);color:var(--gold2);border-color:color-mix(in srgb,var(--gold) 45%,var(--border))}
+.schedule-detail{display:none;padding:0 9px 9px}.row.open .schedule-detail{display:block}.detail-line{padding:8px 0 7px;border-top:1px solid rgba(255,255,255,.05);font-size:9px;color:var(--muted);line-height:1.45}.detail-line b{color:var(--text);font-weight:700}.detail-actions{display:flex;align-items:center;gap:5px}.detail-actions .check{accent-color:var(--gold);width:15px;height:15px}.icon{width:27px;height:27px;padding:0;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.02);color:var(--text);font-size:12px}.icon:hover{border-color:var(--gold);color:var(--gold2)}.meta{font-size:8px;color:var(--muted)}
+.row.physics{border-left-color:var(--phys);background:linear-gradient(110deg,color-mix(in srgb,var(--phys) 4%,var(--card)),var(--card) 48%)}.row.chemistry{border-left-color:var(--chem);background:linear-gradient(110deg,color-mix(in srgb,var(--chem) 4%,var(--card)),var(--card) 48%)}.row.maths{border-left-color:var(--math);background:linear-gradient(110deg,color-mix(in srgb,var(--math) 4%,var(--card)),var(--card) 48%)}.row.other{border-left-color:var(--gold)}.row.done{opacity:.58}.row.done .taskname{text-decoration:line-through}
+.empty{padding:18px 8px;text-align:center;color:var(--muted);font-size:9px;border:1px dashed var(--border);border-radius:8px}
+.memory,.aiout{background:linear-gradient(165deg,color-mix(in srgb,var(--panel) 88%,transparent),color-mix(in srgb,var(--card) 96%,#000));border:1px solid var(--border);border-radius:9px;padding:10px;color:var(--muted);font-size:9px;line-height:1.55;box-shadow:inset 0 1px rgba(255,255,255,.04)}
+.aiout{font-family:var(--fontB);white-space:pre-wrap;min-height:90px}.file{font-size:9px;color:var(--muted)}
+.toast{background:var(--panel);border:1px solid var(--border);color:var(--text);border-radius:8px;box-shadow:0 10px 24px -15px #000}
+@media(max-width:760px){
+ body{padding:6px 7px 88px}.top{top:4px;padding:8px 9px;border-radius:9px}.actions .btn.ai{display:none}.brandmark{width:31px;height:31px;flex-basis:31px}h1{font-size:11px}.sub{font-size:7px}.hero{grid-template-columns:1fr}.hero>.card:last-child{grid-template-columns:repeat(4,1fr);gap:5px}.card{padding:11px}.title{font-size:18px}.metrics{grid-template-columns:repeat(4,1fr)}.metric{padding:7px 6px}.metric b{font-size:12px}.metric span{font-size:6px}.form{grid-template-columns:1fr 1fr;gap:7px}.wide{grid-column:span 2}.schedule-summary{grid-template-columns:53px minmax(0,1fr) 20px;min-height:50px;padding:7px 8px;gap:7px}.time{font-size:9px}.taskname{font-size:10px}.summary-meta{font-size:7px}.schedule-detail{padding:0 8px 8px}.detail-line{font-size:8px}.section-title{margin-bottom:7px}.grid2{grid-template-columns:1fr}.btn{font-size:8px;padding:7px 8px}
+}
+.mission-activity-row input,.mission-activity-row select{min-width:0;width:100%;box-sizing:border-box}@media(max-width:700px){.mission-activity-row{grid-template-columns:1fr 1fr!important}.mission-activity-row .ma-topic{grid-column:1/-1}.mission-activity-row .icon{min-height:38px}}
 
-/* ── NAV ── */
-.nav {
-  position: sticky; top: 8px; z-index: 40;
-  display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  padding: 11px 14px; margin-bottom: 14px;
-  background: linear-gradient(160deg, rgba(23,13,32,.97), rgba(8,5,13,.97));
-  border: 1px solid var(--border); border-radius: 14px;
-  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.055), 0 14px 34px -16px #000;
-  overflow: hidden;
-}
-.nav::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background:
-    radial-gradient(circle at 8% -20%, rgba(34,211,238,.13), transparent 42%),
-    radial-gradient(circle at 92% -20%, rgba(199,125,255,.13), transparent 42%);
-}
-.nav::after {
-  content: ''; position: absolute; left: 12px; right: 12px; bottom: 0; height: 1.5px;
-  background: linear-gradient(90deg, transparent, var(--phys), var(--math), transparent);
-  opacity: .4;
-}
-.nav-brand { position: relative; z-index: 1; display: flex; align-items: center; gap: 9px; }
-.nav-gem {
-  width: 34px; height: 34px; flex-shrink: 0;
-  border: 1px solid var(--gold); border-radius: 9px;
-  display: grid; place-items: center;
-  font-family: var(--fD); font-size: 13px; font-weight: 700;
-  color: var(--gold-b); background: rgba(255,106,0,.08);
-  box-shadow: 0 0 14px rgba(255,106,0,.12);
-}
-.nav-name { font-family: var(--fD); font-size: .78rem; font-weight: 700; letter-spacing: .07em; color: var(--gold-b); }
-.nav-tag { font-family: var(--fA); font-size: .62rem; color: var(--muted); letter-spacing: .09em; text-transform: uppercase; margin-top: 1px; }
-.nav-right { position: relative; z-index: 1; display: flex; gap: 6px; flex-wrap: wrap; }
-
-/* ── BUTTONS ── */
-.btn {
-  display: inline-flex; align-items: center; gap: 5px;
-  border: 1px solid var(--border2); background: rgba(18,10,26,.6);
-  color: var(--muted); padding: 6px 13px; border-radius: 999px;
-  font-family: var(--fA); font-weight: 700; font-size: .78rem; letter-spacing: .1px;
-  white-space: nowrap; cursor: pointer;
-  transition: border-color .15s, color .15s, background .15s, transform .12s, box-shadow .15s;
-}
-.btn:hover { border-color: var(--border); color: var(--text); background: rgba(18,10,26,.9); transform: translateY(-1px); }
-.btn:active { transform: translateY(0); }
-.btn.hi { background: linear-gradient(135deg, rgba(8,52,80,.85), rgba(18,30,68,.85)); border-color: #1a7aad; color: #c8f4ff; }
-.btn.hi:hover { border-color: var(--gold-b); box-shadow: 0 0 12px rgba(34,211,238,.28); }
-.btn.ai { background: linear-gradient(135deg, rgba(38,14,56,.85), rgba(60,14,36,.85)); border-color: #8a3ea8; color: #e8c8ff; }
-.btn.ai:hover { border-color: var(--math); box-shadow: 0 0 12px rgba(199,125,255,.25); }
-.btn.sm { padding: 4px 10px; font-size: .7rem; }
-.btn.del:hover { border-color: var(--danger); color: #ffaabb; }
-.row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-
-/* ── HERO ── */
-.hero {
-  display: grid; grid-template-columns: 1fr auto; gap: 10px;
-  margin-bottom: 10px;
-}
-.hero-card {
-  background: linear-gradient(160deg, var(--card), var(--card2));
-  border: 1px solid var(--border); border-radius: 13px; padding: 16px;
-  position: relative; overflow: hidden;
-}
-.hero-card::before {
-  content: ''; position: absolute; top: 0; left: 16px; right: 16px; height: 1px;
-  border-radius: 999px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
-  pointer-events: none;
-}
-.eyebrow { font-family: var(--fA); font-size: .63rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-b); margin-bottom: 5px; }
-.hero-h {
-  font-family: var(--fD); font-size: 1.35rem; font-weight: 900;
-  background: linear-gradient(90deg, #e0f7ff, var(--gold-b), #48a9f8, var(--math));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  margin: 0 0 6px; line-height: 1.1; letter-spacing: .01em;
-}
-.hero-p { font-size: .7rem; line-height: 1.65; color: var(--muted); }
-.hero-right { display: flex; flex-direction: column; gap: 5px; min-width: 132px; }
-
-/* ── METRICS ── */
-.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin-bottom: 10px; }
-.met {
-  padding: 10px 11px; border: 1px solid var(--border2); border-radius: 9px;
-  background: rgba(19,11,26,.65); position: relative;
-}
-.met::before {
-  content: ''; position: absolute; top: 0; left: 7px; right: 7px; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
-  border-radius: 999px;
-}
-.met b { display: block; font-family: var(--fD); font-weight: 900; font-size: 1.05rem; color: var(--gold-b); line-height: 1; margin-bottom: 3px; }
-.met span { font-size: .57rem; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
-
-/* ── COLLAPSIBLE SECTION ── */
-.sec {
-  background: linear-gradient(160deg, var(--card), var(--card2));
-  border: 1px solid var(--border2); border-radius: 13px;
-  margin-bottom: 7px; overflow: hidden;
-  transition: border-color .2s ease;
-}
-.sec:focus-within, .sec.open { border-color: var(--border); }
-.sec-hd {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 10px; padding: 13px 14px; cursor: pointer;
-  position: relative; user-select: none;
-}
-.sec-hd::before {
-  content: ''; position: absolute; top: 0; left: 14px; right: 14px; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
-  border-radius: 999px; pointer-events: none;
-}
-.sec-hd:hover .sec-title { color: var(--text); }
-.sec-left { display: flex; align-items: center; gap: 9px; }
-.sec-num { font-family: var(--fA); font-size: .6rem; font-weight: 700; color: var(--muted); letter-spacing: .1em; }
-.sec-title { font-family: var(--fD); font-size: .68rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--gold-b); transition: color .15s; }
-.sec-hint { font-size: .62rem; color: var(--muted); }
-.sec-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-.sec-arrow {
-  width: 22px; height: 22px; border: 1px solid var(--border2); border-radius: 6px;
-  display: grid; place-items: center; color: var(--muted); font-size: .55rem;
-  transition: transform .28s ease, border-color .15s, color .15s;
-  flex-shrink: 0;
-}
-.sec.open .sec-arrow { transform: rotate(180deg); border-color: var(--border); color: var(--text); }
-
-/* slide body */
-.sec-body {
-  display: grid; grid-template-rows: 0fr;
-  transition: grid-template-rows .28s ease;
-}
-.sec.open .sec-body { grid-template-rows: 1fr; }
-.sec-inner { overflow: hidden; }
-.sec-pad { padding: 0 14px 14px; }
-
-/* ── FORM ELEMENTS ── */
-.fg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
-.fg2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-.s2 { grid-column: span 2; }
-.sf { }
-.sf label { display: block; font-size: .57rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
-.sf input, .sf select, .sf textarea {
-  width: 100%; background: rgba(8,5,13,.8); color: var(--text);
-  border: 1px solid var(--border2); border-radius: 8px;
-  padding: 8px 10px; outline: none; font-size: .78rem;
-  transition: border-color .18s ease;
-}
-.sf input:focus, .sf select:focus, .sf textarea:focus { border-color: rgba(199,125,255,.5); }
-.sf textarea { min-height: 72px; resize: vertical; }
-.sf input::placeholder, .sf textarea::placeholder { color: #4a3860; }
-.tip {
-  padding: 9px 11px; border: 1px dashed rgba(96,64,118,.6); border-radius: 8px;
-  background: rgba(19,11,27,.5); font-size: .67rem; color: #b8a5cc; line-height: 1.6;
-  margin-bottom: 10px;
-}
-
-/* ── TIMELINE CARDS ── */
-.sc-list { display: flex; flex-direction: column; gap: 5px; }
-.empty { padding: 24px; text-align: center; color: var(--muted); border: 1px dashed var(--border2); border-radius: 10px; font-size: .7rem; }
-
-.sc {
-  border: 1px solid var(--border2);
-  border-left: 2.5px solid var(--math);
-  border-radius: 10px;
-  background: rgba(10,6,16,.85);
-  overflow: hidden;
-  transition: border-color .18s ease, box-shadow .18s ease;
-}
-.sc:hover { border-color: rgba(88,50,124,.7); }
-.sc.open { border-color: rgba(88,50,124,.8); box-shadow: 0 4px 20px rgba(0,0,0,.4); }
-.sc.physics { border-left-color: var(--phys); }
-.sc.chemistry { border-left-color: var(--chem); }
-.sc.maths { border-left-color: var(--math); }
-.sc.other { border-left-color: var(--gold); }
-.sc.done .sc-name { text-decoration: line-through; opacity: .4; }
-.sc.done .sc-time { opacity: .4; }
-
-.sc-hd {
-  display: grid;
-  grid-template-columns: 52px 1fr auto;
-  align-items: center; gap: 9px;
-  padding: 9px 11px; cursor: pointer; user-select: none;
-}
-.sc-time { font-family: var(--fA); font-size: .72rem; font-weight: 700; color: var(--gold-b); line-height: 1.2; }
-.sc-time small { display: block; font-size: .58rem; color: var(--muted); font-weight: 600; }
-.sc-name { font-size: .78rem; font-weight: 700; color: var(--text); line-height: 1.2; }
-.sc-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 3px; align-items: center; }
-.tag {
-  font-family: var(--fA); font-size: .58rem; font-weight: 700; letter-spacing: .04em;
-  padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border2); color: var(--muted);
-  text-transform: uppercase;
-}
-.tag.ai { border-color: rgba(143,72,200,.4); color: rgba(199,125,255,.8); }
-.sc-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-.done-ring {
-  width: 20px; height: 20px; border-radius: 50%;
-  border: 1.5px solid var(--border); background: transparent;
-  display: grid; place-items: center; cursor: pointer;
-  font-size: .6rem; color: transparent;
-  transition: border-color .15s, background .15s, color .15s;
-  flex-shrink: 0;
-}
-.done-ring:hover { border-color: var(--chem); }
-.done-ring.on { background: var(--chem); border-color: var(--chem); color: #041808; }
-.sc-arr { font-size: .55rem; color: var(--muted); transition: transform .22s ease; margin-left: 2px; }
-.sc.open .sc-arr { transform: rotate(180deg); }
-
-/* inline edit body */
-.sc-body {
-  display: grid; grid-template-rows: 0fr;
-  transition: grid-template-rows .22s ease;
-}
-.sc.open .sc-body { grid-template-rows: 1fr; }
-.sc-inner { overflow: hidden; }
-.sc-pad {
-  padding: 10px 11px 11px;
-  border-top: 1px solid rgba(58,36,82,.45);
-  background: rgba(6,4,10,.55);
-}
-.sc-form-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
-.sc-form-wide { margin-top: 6px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.sf2 label { display: block; font-size: .56rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 3px; }
-.sf2 input, .sf2 select {
-  width: 100%; background: rgba(6,4,10,.9); color: var(--text);
-  border: 1px solid var(--border2); border-radius: 7px;
-  padding: 7px 9px; outline: none; font-size: .74rem;
-  transition: border-color .15s;
-}
-.sf2 input:focus, .sf2 select:focus { border-color: rgba(199,125,255,.4); }
-.sc-btns { display: flex; gap: 5px; margin-top: 9px; align-items: center; }
-
-/* ── AI OUTPUT ── */
-.ai-out {
-  white-space: pre-wrap; min-height: 100px; padding: 12px;
-  border-radius: 9px; background: rgba(6,4,10,.7);
-  border: 1px solid rgba(75,38,93,.6);
-  font-size: .7rem; line-height: 1.65; color: var(--muted);
-  margin-top: 10px;
-}
-
-/* ── TOAST ── */
-.toast {
-  position: fixed; right: 12px; bottom: 14px; z-index: 100;
-  background: #0d0819; border: 1px solid var(--phys); border-radius: 8px;
-  padding: 9px 13px; font-size: .7rem; font-weight: 700;
-  color: var(--gold-b); box-shadow: 0 8px 28px rgba(0,0,0,.7);
-}
-.hidden { display: none !important; }
-.fi { display: none; }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 720px) {
-  body { padding: 10px 10px 88px; }
-  .nav { top: 4px; }
-  .hero { grid-template-columns: 1fr; }
-  .hero-right { flex-direction: row; flex-wrap: wrap; }
-  .hero-right .met { flex: 1 1 calc(50% - 3px); }
-  .metrics { grid-template-columns: repeat(2, 1fr); }
-  .fg { grid-template-columns: 1fr 1fr; }
-  .sc-form-row { grid-template-columns: 1fr 1fr; }
-  .sc-form-wide { grid-template-columns: 1fr; }
-}
-@media (max-width: 480px) {
-  .fg { grid-template-columns: 1fr; }
-  .s2 { grid-column: auto; }
-  .metrics { grid-template-columns: repeat(2, 1fr); }
-  .nav-right { max-width: 170px; }
-  .sc-form-row { grid-template-columns: 1fr 1fr; }
-}
+/* STEP 3 — transparent AI progress panel */
+.ai-progress-overlay{position:fixed;inset:0;background:rgba(5,3,9,.76);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;z-index:9999;padding:18px}.ai-progress-overlay.show{display:flex}
+.ai-progress-panel{width:min(620px,100%);background:var(--card-bg);border:1px solid rgba(255,106,0,.38);border-radius:14px;box-shadow:0 24px 80px rgba(0,0,0,.55),0 0 30px rgba(255,106,0,.08);padding:18px}
+.ai-progress-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}.ai-progress-kicker{font-family:Orbitron,sans-serif;font-size:.68rem;letter-spacing:.14em;color:var(--gold-bright)}.ai-progress-title{font-family:Orbitron,sans-serif;font-size:1rem;margin-top:4px}.ai-progress-pct{font-family:Orbitron,sans-serif;color:var(--gold-bright);font-size:1.15rem;white-space:nowrap}
+.ai-progress-track{height:9px;border-radius:99px;background:#24172b;overflow:hidden;border:1px solid rgba(255,255,255,.05)}.ai-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold-bright));transition:width .28s ease;box-shadow:0 0 15px rgba(255,106,0,.3)}
+.ai-progress-current{margin:12px 0 9px;padding:10px 11px;border-radius:9px;background:rgba(255,106,0,.07);border-left:3px solid var(--gold);font-size:.84rem}.ai-progress-current b{display:block;color:var(--gold-bright);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.ai-progress-steps{display:grid;gap:5px;max-height:250px;overflow:auto}.ai-progress-step{display:flex;align-items:center;gap:8px;font-size:.76rem;color:#8f8498;padding:5px 2px}.ai-progress-step.done{color:#c7f7d8}.ai-progress-step.active{color:#fff}.ai-progress-step .mark{width:18px;text-align:center;font-weight:700}.ai-progress-step.done .mark{color:var(--chem)}.ai-progress-step.active .mark{color:var(--gold-bright)}
+.ai-progress-note{margin-top:10px;color:#827688;font-size:.7rem;line-height:1.45}.ai-progress-close{display:none;margin-top:12px}
 </style>
 </head>
 <body>
 <div class="wrap">
-
-<!-- NAV -->
-<nav class="nav">
-  <div class="nav-brand">
-    <div>
-      <div class="nav-name">Mission Schedule</div>
-      <div class="nav-tag">Adaptive AI Planner · JEE 2026</div>
-    </div>
-  </div>
-  <div class="nav-right">
-    <button class="btn" onclick="location.href='index.html'">← Hub</button>
-    <button class="btn" onclick="location.href='test-analysis.html'">Diagnostics</button>
-    <button class="btn ai" onclick="toggle('s-ai')">✦ AI Planner</button>
-  </div>
-</nav>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-card">
-    <div class="eyebrow">Daily Operations</div>
-    <div class="hero-h">Adaptive Mission Schedule</div>
-    <p class="hero-p">Tap any section to expand. Click a timeline block to edit inline. Log what actually happened so the AI learns your real pace.</p>
-  </div>
-  <div class="hero-right">
-    <div class="met"><b id="todayLabel">—</b><span>Today</span></div>
-    <div class="met"><b id="blockCount">0</b><span>Blocks</span></div>
-    <div class="met"><b id="doneCount">0</b><span>Done</span></div>
-    <div class="met"><b id="logCount">0</b><span>Logs</span></div>
-  </div>
-</div>
-
-<!-- METRICS -->
-<div class="metrics">
-  <div class="met"><b id="plannedMin">0</b><span>Planned min</span></div>
-  <div class="met"><b id="doneMin">0</b><span>Done min</span></div>
-  <div class="met"><b id="staminaLabel">MEDIUM</b><span>Stamina</span></div>
-  <div class="met"><b id="aiState">OFFLINE</b><span>AI</span></div>
-</div>
-
-<!-- ── 01 TODAY'S TIMELINE (open by default) ── -->
-<div class="sec open" id="s-timeline">
-  <div class="sec-hd" onclick="toggle('s-timeline')">
-    <div class="sec-left">
-      <span class="sec-num">01</span>
-      <span class="sec-title">Today's Timeline</span>
-    </div>
-    <div class="sec-right">
-      <div class="row" onclick="event.stopPropagation()">
-        <button class="btn sm" onclick="addBlankBlock()">+ Add</button>
-        <button class="btn sm del" onclick="resetTodaySchedule()">Clear</button>
-        <button class="btn sm hi" onclick="generateDailySchedule()">✦ AI Generate</button>
-      </div>
-      <div class="sec-arrow">▾</div>
-    </div>
-  </div>
-  <div class="sec-body"><div class="sec-inner"><div class="sec-pad">
-    <div id="timeline" class="sc-list"></div>
-  </div></div></div>
-</div>
-
-<!-- ── 02 STAMINA ── -->
-<div class="sec" id="s-stamina">
-  <div class="sec-hd" onclick="toggle('s-stamina')">
-    <div class="sec-left">
-      <span class="sec-num">02</span>
-      <span class="sec-title">Stamina &amp; Day Capacity</span>
-    </div>
-    <div class="sec-right">
-      <span class="sec-hint">AI uses this</span>
-      <div class="sec-arrow">▾</div>
-    </div>
-  </div>
-  <div class="sec-body"><div class="sec-inner"><div class="sec-pad">
-    <div class="fg">
-      <div class="sf"><label>Stamina</label><select id="stamina"><option value="LOW">LOW — recovery</option><option value="MEDIUM" selected>MEDIUM — normal</option><option value="HIGH">HIGH — push</option></select></div>
-      <div class="sf"><label>Free Study Min</label><input id="freeMinutes" type="number" min="0" max="1000" step="15" value="240"></div>
-      <div class="sf"><label>Sleep hrs</label><input id="sleepHours" type="number" min="0" max="14" step="0.5" placeholder="e.g. 7"></div>
-      <div class="sf"><label>Energy Today</label><select id="energy"><option>Low</option><option selected>Medium</option><option>High</option></select></div>
-    </div>
-  </div></div></div>
-</div>
-
-<!-- ── 03 SYLLABUS ── -->
-<div class="sec" id="s-syllabus">
-  <div class="sec-hd" onclick="toggle('s-syllabus')">
-    <div class="sec-left">
-      <span class="sec-num">03</span>
-      <span class="sec-title">Syllabus / Mission Brief</span>
-    </div>
-    <div class="sec-right">
-      <button class="btn sm hi" onclick="event.stopPropagation();saveSyllabus()">Save</button>
-      <div class="sec-arrow">▾</div>
-    </div>
-  </div>
-  <div class="sec-body"><div class="sec-inner"><div class="sec-pad">
-    <div class="tip">Tell the AI what coaching is covering now, upcoming deadlines, and what you want to prioritize. Persisted and included in every future plan.</div>
-    <div class="fg">
-      <div class="sf s2"><label>Current chapters in progress</label><textarea id="syllabusNow" placeholder="Physics — Current Electricity; Chemistry — Electrochemistry; Maths — Definite Integration"></textarea></div>
-      <div class="sf"><label>Next exam / deadline</label><input id="syllabusDeadline" type="date"></div>
-      <div class="sf"><label>Priority chapters</label><textarea id="priorityChapters" placeholder="Must-cover chapters"></textarea></div>
-      <div class="sf s2"><label>Backlog / weak chapters</label><textarea id="backlogChapters" placeholder="Chapters falling behind"></textarea></div>
-      <div class="sf s2"><label>Constraints</label><textarea id="scheduleConstraints" placeholder="Coaching hours, commute, fixed classes, preferred study window..."></textarea></div>
-    </div>
-  </div></div></div>
-</div>
-
-<!-- ── 04 LOG TODAY ── -->
-<div class="sec" id="s-log">
-  <div class="sec-hd" onclick="toggle('s-log')">
-    <div class="sec-left">
-      <span class="sec-num">04</span>
-      <span class="sec-title">Log Today</span>
-    </div>
-    <div class="sec-right">
-      <span class="sec-hint">AI learning signal</span>
-      <div class="sec-arrow">▾</div>
-    </div>
-  </div>
-  <div class="sec-body"><div class="sec-inner"><div class="sec-pad">
-    <div class="fg">
-      <div class="sf s2"><label>What did you actually study?</label><textarea id="logStudy" placeholder="Subjects, chapters, PYQs, revision..."></textarea></div>
-      <div class="sf"><label>What got completed?</label><textarea id="logDone" placeholder="Finished targets"></textarea></div>
-      <div class="sf"><label>What went badly?</label><textarea id="logProblems" placeholder="Distractions, fatigue, time loss..."></textarea></div>
-      <div class="sf"><label>Accuracy / result</label><input id="logResult" placeholder="e.g. 38/50, 76%"></div>
-      <div class="sf"><label>Focus (1–5)</label><input id="logFocus" type="number" min="1" max="5" value="3"></div>
-      <div class="sf"><label>Actual study min</label><input id="logMinutes" type="number" min="0" max="1000" step="5" placeholder="e.g. 210"></div>
-    </div>
-    <div class="row" style="margin-top:10px">
-      <button class="btn hi" onclick="logToday()">✓ Log Today</button>
-      <button class="btn" onclick="showLearningHistory()">View Log History</button>
-    </div>
-  </div></div></div>
-</div>
-
-<!-- ── 05 AI LEARNING MEMORY ── -->
-<div class="sec" id="s-mem">
-  <div class="sec-hd" onclick="toggle('s-mem')">
-    <div class="sec-left">
-      <span class="sec-num">05</span>
-      <span class="sec-title">AI Learning Memory</span>
-    </div>
-    <div class="sec-right">
-      <span class="sec-hint">Grows from your logs</span>
-      <div class="sec-arrow">▾</div>
-    </div>
-  </div>
-  <div class="sec-body"><div class="sec-inner"><div class="sec-pad">
-    <div class="metrics" style="margin-bottom:9px">
-      <div class="met"><b id="avgFocus">—</b><span>Avg focus</span></div>
-      <div class="met"><b id="avgMinutes">—</b><span>Avg min/day</span></div>
-      <div class="met"><b id="completionRate">—</b><span>Completion</span></div>
-      <div class="met"><b id="logCount2">0</b><span>Total logs</span></div>
-    </div>
-    <div class="tip" id="memoryText">No logs yet. Start by logging today above.</div>
-  </div></div></div>
-</div>
-
-<!-- ── 06 AI SCHEDULE CORE ── -->
-<div class="sec" id="s-ai">
-  <div class="sec-hd" onclick="toggle('s-ai')">
-    <div class="sec-left">
-      <span class="sec-num">06</span>
-      <span class="sec-title">AI Schedule Core</span>
-    </div>
-    <div class="sec-right">
-      <span class="sec-hint">BYOK · Gemini / OpenAI</span>
-      <div class="sec-arrow">▾</div>
-    </div>
-  </div>
-  <div class="sec-body"><div class="sec-inner"><div class="sec-pad">
-    <div class="fg">
-      <div class="sf"><label>Provider</label><select id="aiProvider"><option value="gemini">Google Gemini</option><option value="openai">OpenAI</option></select></div>
-      <div class="sf s2"><label>API Key (device only)</label><input id="aiKey" type="password" autocomplete="off" placeholder="Paste API key"></div>
-      <div class="sf"><label>Model</label><select id="aiModel">
-        <option value="gemini-3.8-flash">Gemini 3.8 Flash</option>
-        <option value="gemini-3.7-flash">Gemini 3.7 Flash</option>
-        <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
-        <option value="gemini-3.5-flash-lite">Gemini Flash-Lite</option>
-        <option value="gpt-4.1-mini">GPT-4.1 mini</option>
-      </select></div>
-      <div class="sf"><label>Horizon</label><select id="horizon"><option value="1">Today</option><option value="3">3 days</option><option value="7">7 days</option></select></div>
-    </div>
-    <div class="row" style="margin-top:9px">
-      <button class="btn" onclick="saveAISettings()">Save Settings</button>
-      <button class="btn hi" onclick="generateDailySchedule()">✦ Create Schedule</button>
-      <button class="btn ai" onclick="learnFromHistory()">Learn from History</button>
-      <button class="btn del" onclick="clearAIKey()">Clear Key</button>
-    </div>
-    <div class="sf" style="margin-top:10px"><label>Ask the Scheduler</label><textarea id="aiQuestion" placeholder="e.g. I have coaching until 7pm, prioritise Organic Chemistry, leave 45 min for revision before bed."></textarea></div>
-    <div class="row" style="margin-top:7px"><button class="btn ai" onclick="askScheduler()">Ask AI</button></div>
-    <div id="aiOutput" class="ai-out">Configure an API key above to activate the adaptive planner.</div>
-  </div></div></div>
-</div>
-
-<!-- ── 07 DATA ── -->
-<div class="sec" id="s-data">
-  <div class="sec-hd" onclick="toggle('s-data')">
-    <div class="sec-left">
-      <span class="sec-num">07</span>
-      <span class="sec-title">Data Control</span>
-    </div>
-    <div class="sec-right">
-      <div class="row" onclick="event.stopPropagation()">
-        <button class="btn sm" onclick="exportData()">Export</button>
-        <label class="btn sm" for="importFile">Import</label>
-        <input id="importFile" class="fi" type="file" accept="application/json" onchange="importData(event)">
-        <button class="btn sm del" onclick="clearLearningData()">Clear AI Logs</button>
-      </div>
-      <div class="sec-arrow">▾</div>
-    </div>
-  </div>
-  <div class="sec-body"><div class="sec-inner"><div class="sec-pad">
-    <div class="tip">All pages share the same localStorage bus. Schedule changes broadcast to the main tracker via BroadcastChannel.</div>
-  </div></div></div>
-</div>
-
-</div><!-- /wrap -->
-<div id="toast" class="toast hidden"></div>
-
+<header class="top"><div class="brand"><div class="brandmark">J</div><div><h1>JEE BATTLE ROYALE</h1><div class="sub">AI SCHEDULE COMMAND // MAIN TRACKER LINKED</div></div></div><div class="actions"><button class="btn" onclick="location.href='index.html'">← MAIN TRACKER</button><button class="btn ai" onclick="document.getElementById('ai-section').scrollIntoView({behavior:'smooth'})">✦ AI PLANNER</button></div></header>
+<section class="hero"><div class="card"><div class="eyebrow">DAILY OPERATIONS</div><div class="title">Adaptive Mission Schedule</div><div class="muted">Every block is editable. Log what actually happened, tell the AI what syllabus is currently active, and let the planner learn your pace over time instead of rebuilding the same generic timetable every day.</div></div><div class="card"><div class="metric"><span>Today</span><b id="todayLabel">—</b></div><div class="metric"><span>Blocks</span><b id="blockCount">0</b></div><div class="metric"><span>Completed</span><b id="doneCount">0</b></div><div class="metric"><span>Learning Logs</span><b id="logCount">0</b></div></div></section>
+<section class="metrics section"><div class="metric"><b id="plannedMin">0</b><span>Planned minutes</span></div><div class="metric"><b id="doneMin">0</b><span>Completed minutes</span></div><div class="metric"><b id="staminaLabel">MEDIUM</b><span>Stamina mode</span></div><div class="metric"><b id="aiState">OFFLINE</b><span>AI state</span></div></section>
+<section class="card section"><div class="section-title"><h2>01 // STAMINA & DAY CAPACITY</h2><span class="muted">AI uses this when planning</span></div><div class="form"><div class="field"><label>Stamina</label><select id="stamina"><option value="LOW">LOW — recovery</option><option value="MEDIUM" selected>MEDIUM — normal</option><option value="HIGH">HIGH — push</option></select></div><div class="field"><label>Free study minutes</label><input id="freeMinutes" type="number" min="0" max="1000" step="15" value="240"></div><div class="field"><label>Sleep last night (hours)</label><input id="sleepHours" type="number" min="0" max="14" step="0.5" placeholder="e.g. 7"></div><div class="field"><label>Energy today</label><select id="energy"><option>Low</option><option selected>Medium</option><option>High</option></select></div></div></section>
+<section class="card section"><div class="section-title"><h2>02 // CURRENT SYLLABUS / MISSION BRIEF</h2><button class="btn" onclick="saveSyllabus()">SAVE BRIEF</button></div><div class="notice">Tell the AI what coaching/school is covering now, what is due soon, and what you want to prioritize. This stays in localStorage and is included in future planning prompts.</div><div class="form" style="margin-top:9px"><div class="field wide"><label>Current syllabus / chapters in progress</label><textarea id="syllabusNow" placeholder="Example: Physics — Current Electricity + Magnetism; Chemistry — Electrochemistry; Maths — Definite Integration. Keep this specific to what is actually going on."></textarea></div><div class="field"><label>Next exam / deadline</label><input id="syllabusDeadline" type="date"></div><div class="field"><label>Priority chapters</label><textarea id="priorityChapters" placeholder="Chapters that must receive extra time"></textarea></div><div class="field"><label>Backlog / weak chapters</label><textarea id="backlogChapters" placeholder="Only real backlog; leave blank if none"></textarea></div><div class="field"><label>Constraints</label><textarea id="scheduleConstraints" placeholder="Coaching, school, commute, family, fixed classes, preferred study hours..."></textarea></div></div></section>
+<section class="card section"><div class="section-title"><h2>03 // LOG TODAY</h2><span class="muted">This is the AI's long-term learning signal</span></div><div class="form"><div class="field"><label>What did you actually study?</label><textarea id="logStudy" class="wide" placeholder="Subjects, chapters, question practice, revision..." required></textarea></div>
+<div class="field wide"><label>Mission activity (syncs to Main Hub automatically)</label><div id="mission-activity-list"></div><div class="actions" style="margin-top:8px"><button type="button" class="btn" onclick="addMissionActivityRow()">+ ADD ACTIVITY</button></div><div class="muted" style="margin-top:6px">Example: Maths · PYQ · 20 questions; Chemistry · Amines · 40 questions. Add total study time below.</div></div><div class="field"><label>What got completed?</label><textarea id="logDone" placeholder="Tasks or targets actually finished"></textarea></div><div class="field"><label>What went badly?</label><textarea id="logProblems" placeholder="Distractions, fatigue, difficult topic, time loss..."></textarea></div><div class="field"><label>Accuracy / result</label><input id="logResult" placeholder="e.g. 38/50, 76%, 42 PYQs"></div><div class="field"><label>Focus rating (1–5)</label><input id="logFocus" type="number" min="1" max="5" value="3"></div><div class="field"><label>Actual study minutes</label><input id="logMinutes" type="number" min="0" max="1000" step="5" placeholder="e.g. 210"></div></div><div class="actions" style="margin-top:9px"><button class="btn primary" onclick="logToday()">✓ LOG TODAY</button><button class="btn" onclick="showLearningHistory()">VIEW LEARNING LOGS</button></div></section>
+<section class="card section"><div class="section-title"><h2>04 // TODAY'S TIMELINE</h2><div class="actions"><button class="btn" onclick="addBlankBlock()">+ ADD BLOCK</button><button class="btn" onclick="resetTodaySchedule()">CLEAR TODAY</button><button class="btn primary" onclick="generateDailySchedule()">✦ GENERATE WITH AI</button></div></div><div id="timeline" class="timeline"></div></section>
+<section class="card section"><div class="section-title"><h2>05 // ADD / EDIT ANY BLOCK</h2><span class="muted">No schedule block is locked</span></div><form class="form" onsubmit="saveBlock(event)"><input type="hidden" id="editId"><div class="field"><label>Start time</label><input id="bTime" type="time" required></div><div class="field"><label>End time</label><input id="bEnd" type="time"></div><div class="field wide"><label>Task</label><input id="bLabel" maxlength="120" required placeholder="e.g. Electrochemistry PYQ set"></div><div class="field"><label>Subject</label><select id="bSubject"><option>Physics</option><option>Chemistry</option><option>Maths</option><option>Other</option></select></div><div class="field"><label>Duration (min)</label><input id="bDuration" type="number" min="5" max="600" step="5" value="60"></div><div class="field"><label>Priority</label><select id="bPriority"><option>High</option><option selected>Medium</option><option>Low</option></select></div><div class="field"><label>Note / method</label><input id="bNote" placeholder="PYQs / revision / lecture / test..."></div><div class="actions"><button class="btn primary" type="submit" id="saveBlockBtn">SAVE BLOCK</button><button class="btn" type="button" onclick="cancelEdit()">RESET FORM</button></div></form></section>
+<section class="card section"><div class="section-title"><h2>06 // AI LEARNING MEMORY</h2><span class="muted">Built from your real logs + tracker data</span></div><div class="memory"><div class="metric"><b id="avgFocus">—</b><span>Average focus</span></div><div class="metric"><b id="avgMinutes">—</b><span>Average actual minutes</span></div><div class="metric"><b id="completionRate">—</b><span>Plan completion</span></div></div><div id="memoryText" class="notice" style="margin-top:9px">No learning logs yet. Log today to start the memory.</div></section>
+<section class="card section" id="ai-section"><div class="section-title"><h2>07 // AI SCHEDULE CORE</h2><span class="muted">Gemini 3.8 Flash default • BYOK</span></div><div class="form"><div class="field"><label>AI Provider</label><select id="aiProvider"><option value="gemini">Google Gemini</option><option value="openai">OpenAI</option></select></div><div class="field wide"><label>API key — stored only on this device</label><input id="aiKey" type="password" autocomplete="off" placeholder="Paste provider API key"></div><div class="field"><label>Model</label><select id="aiModel"><option value="gemini-3.8-flash">Gemini 3.8 Flash — latest</option><option value="gemini-3.7-flash">Gemini 3.7 Flash</option><option value="gemini-3.6-flash">Gemini 3.6 Flash</option><option value="gemini-3.5-flash">Gemini 3.5 Flash</option><option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite</option><option value="gpt-4.1-mini">OpenAI GPT-4.1 mini</option></select></div><div class="field"><label>Planning horizon</label><select id="horizon"><option value="1">Today</option><option value="3">Next 3 days</option><option value="7">Next 7 days</option></select></div></div><div class="actions" style="margin-top:9px"><button class="btn" onclick="saveAISettings()">SAVE AI</button><button class="btn primary" onclick="generateDailySchedule()">✦ CREATE DAILY SCHEDULE</button><button class="btn ai" onclick="learnFromHistory()">AI LEARN FROM HISTORY</button><button class="btn" onclick="clearAIKey()">CLEAR KEY</button></div><div class="field" style="margin-top:10px"><label>Ask the scheduler</label><textarea id="aiQuestion" placeholder="Tell it a new constraint: I have coaching until 6:30, I am weak in integration, and I want 60 minutes of revision before bed."></textarea></div><div class="actions" style="margin-top:7px"><button class="btn ai" onclick="askScheduler()">ASK AI</button></div><div id="aiOutput" class="aiout" style="margin-top:10px">Configure Gemini/OpenAI to let the planner use your logs, syllabus, test history, targets and schedule outcomes. AI-generated schedules are reviewable before they replace today's plan.</div></section>
+<section class="card section"><div class="section-title"><h2>08 // DATA CONTROL</h2><div class="actions"><button class="btn" onclick="exportData()">EXPORT</button><label class="btn" for="importFile">IMPORT</label><input id="importFile" class="file" type="file" accept="application/json" onchange="importData(event)"><button class="btn danger" onclick="clearLearningData()">CLEAR AI LOGS</button></div></div><div class="notice">All pages use the main tracker's localStorage keys. The schedule page also stores learning logs and syllabus context locally. The main tracker will receive schedule changes through the shared JEE sync channel.</div></section>
+</div><div id="toast" class="toast hidden"></div>
 <script>
-/* ── DATA ── */
+const AI_ACTIVITY_KEY='jee-ai-activity-log-v1';
 const K={schedule:'jee-daily-schedule',targets:'jee-daily-targets',targetProgress:'jee-target-progress',history:'jee-pdf-analysis-history',tests:'jee-test-analysis-history',stamina:'jee-schedule-stamina',logs:'jee-ai-daily-logs',syllabus:'jee-ai-syllabus-context',memory:'jee-ai-learning-profile'};
 const AIK={provider:'jee-ai-provider',key:'jee-ai-api-key',model:'jee-ai-model'};
-const BC='jee-tracker-sync-v1';
-const bc=('BroadcastChannel' in window)?new BroadcastChannel(BC):null;
-const read=(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch{return d}};
+// Shared Gemini settings are managed by the Main Hub. Refresh the existing AI controls when they change.
+(function(){const f=()=>{try{if(typeof loadAISettings==='function')loadAISettings();}catch(e){}};window.addEventListener('storage',e=>{if(/^jee-ai-/.test(e.key||''))f()});try{const c=('BroadcastChannel' in window)?new BroadcastChannel('jee-tracker-sync-v1'):null;c?.addEventListener('message',e=>{if(/^jee-ai-/.test(e.data?.key||''))f()});}catch(e){}})();
+// Gemini configuration is shared with the Main Hub through these canonical storage keys.
+(function(){
+  const refreshSharedAI=()=>{try{if(typeof loadAISettings==='function')loadAISettings();}catch(e){}};
+  window.addEventListener('storage',e=>{if(e.key==='jee-ai-api-key'||e.key==='jee-ai-model'||e.key==='jee-ai-provider')refreshSharedAI()});
+  try{const c=('BroadcastChannel' in window)?new BroadcastChannel('jee-tracker-sync-v1'):null;c?.addEventListener('message',e=>{if(['jee-ai-api-key','jee-ai-model','jee-ai-provider'].includes(e.data?.key))refreshSharedAI()});}catch(e){}
+})();
+const BC='jee-tracker-sync-v1'; const bc=('BroadcastChannel' in window)?new BroadcastChannel(BC):null;
+const read=(k,d)=>{try{const x=localStorage.getItem(k);return x===null?d:JSON.parse(x)}catch{return d}};
 const write=(k,v)=>{localStorage.setItem(k,JSON.stringify(v));try{bc?.postMessage({type:'set',key:k,at:Date.now()})}catch{}};
 const localDate=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-function toast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.remove('hidden');clearTimeout(window._tt);window._tt=setTimeout(()=>e.classList.add('hidden'),2500)}
-function todayBlocks(){return read(K.schedule,[]).filter(x=>x.date===localDate())}
-function allBlocks(){return read(K.schedule,[])}
-function ensureDates(){const s=read(K.schedule,[]),t=localDate();let ch=false;const out=s.map(x=>x.date?x:(ch=true,{...x,date:t}));if(ch)write(K.schedule,out)}
 
-/* ── SECTION TOGGLE ── */
-function toggle(id){
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.classList.toggle('open');
-}
+const AI_PROGRESS_STAGES={schedule:['Reading learning history','Reading today’s Daily Log','Checking targets','Reviewing recent test weaknesses','Prioritizing chapters','Generating tasks','Saving schedule'],learn:['Reading historical logs','Comparing completion and focus','Finding repeated patterns','Building learning profile','Saving AI memory'],ask:['Reading tracker context','Checking current schedule and targets','Preparing the relevant context','Waiting for AI response','Displaying answer']};
+let aiProgressState=null;
+function showAIProgress(title,kind){const stages=AI_PROGRESS_STAGES[kind]||AI_PROGRESS_STAGES.schedule;aiProgressState={stages,index:-1};document.getElementById('ai-progress-title').textContent=title;document.getElementById('ai-progress-close').style.display='none';document.getElementById('ai-progress-note').textContent='The percentage tracks completed workflow stages. During model processing, the UI explicitly waits for the AI instead of inventing a fake model percentage.';document.getElementById('ai-progress-overlay').classList.add('show');document.getElementById('ai-progress-overlay').setAttribute('aria-hidden','false');renderAIProgress();}
+function renderAIProgress(){if(!aiProgressState)return;const {stages,index}=aiProgressState;const pct=index<0?0:Math.round((index+1)/stages.length*100);document.getElementById('ai-progress-pct').textContent=pct+'%';document.getElementById('ai-progress-fill').style.width=pct+'%';document.getElementById('ai-progress-steps').innerHTML=stages.map((x,i)=>`<div class="ai-progress-step ${i<index?'done':''} ${i===index?'active':''}"><span class="mark">${i<index?'✓':i===index?'→':'○'}</span><span>${esc(x)}</span></div>`).join('');const current=index>=0?stages[index]:'Preparing workflow…';document.getElementById('ai-progress-current').innerHTML=`<b>Current operation</b>${esc(current)}`;}
+function advanceAIProgress(index){if(!aiProgressState)return;aiProgressState.index=Math.max(-1,Math.min(index,aiProgressState.stages.length-1));renderAIProgress();}
+function aiProgressWaiting(){if(!aiProgressState)return;document.getElementById('ai-progress-current').innerHTML='<b>Current operation</b>Waiting for AI response…';document.getElementById('ai-progress-note').textContent='The model is processing your real tracker context. No fabricated model-side percentage is shown.';}
+function finishAIProgress(message,ok=true){if(!aiProgressState)return;aiProgressState.index=aiProgressState.stages.length-1;renderAIProgress();document.getElementById('ai-progress-current').innerHTML=`<b>Result</b>${esc(message)}`;document.getElementById('ai-progress-note').textContent=ok?'Completed. The generated action has been written to the tracker and audit log.':'The operation stopped before completion; no success is claimed.';document.getElementById('ai-progress-close').style.display='inline-flex';}
+function closeAIProgress(){document.getElementById('ai-progress-overlay').classList.remove('show');document.getElementById('ai-progress-overlay').setAttribute('aria-hidden','true');aiProgressState=null;}
+function toast(s){const t=document.getElementById('toast');t.textContent=s;t.classList.remove('hidden');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.add('hidden'),2600)}
+function schedule(){return read(K.schedule,[]).filter(x=>x.date===localDate())}
+function allSchedule(){return read(K.schedule,[])}
+function ensureDates(){let s=read(K.schedule,[]);const today=localDate();let changed=false;s=s.map(x=>{if(!x.date){changed=true;return {...x,date:today}}return x});if(changed)write(K.schedule,s);return s}
+function subjectClass(s){return String(s||'Other').toLowerCase()}
+function toggleScheduleCard(id){const el=document.querySelector(`.row[data-id="${CSS.escape(id)}"]`);if(el)el.classList.toggle('open')}
+function render(){ensureDates();const s=schedule().sort((a,b)=>(a.time||'').localeCompare(b.time||''));document.getElementById('todayLabel').textContent=localDate();document.getElementById('blockCount').textContent=s.length;const done=s.filter(x=>x.completed);document.getElementById('doneCount').textContent=done.length;document.getElementById('logCount').textContent=read(K.logs,[]).length;const planned=s.reduce((n,x)=>n+Number(x.duration||0),0);const doneMin=done.reduce((n,x)=>n+Number(x.duration||0),0);document.getElementById('plannedMin').textContent=planned;document.getElementById('doneMin').textContent=doneMin;document.getElementById('staminaLabel').textContent=localStorage.getItem(K.stamina)||'MEDIUM';document.getElementById('aiState').textContent=localStorage.getItem(AIK.key)?'READY':'OFFLINE';document.getElementById('timeline').innerHTML=s.length?s.map(x=>`<div class="row ${subjectClass(x.subject)} ${x.completed?'done':''}" data-id="${esc(x.id)}" onclick="toggleScheduleCard('${esc(x.id)}')"><div class="schedule-summary"><div class="time">${esc(x.time||'—')}${x.end?' → '+esc(x.end):''}</div><div><div class="taskname">${esc(x.label)}</div><div class="summary-meta">${esc(x.subject||'Other')} · ${esc(x.duration||0)} min${x.generatedBy?' · AI':''}</div></div><div class="expand-mark">⌄</div></div><div class="schedule-detail"><div class="detail-line"><b>Priority:</b> ${esc(x.priority||'Medium')} ${x.note?` · <b>Note:</b> ${esc(x.note)}`:''}</div><div class="detail-actions" onclick="event.stopPropagation()"><input class="check" type="checkbox" ${x.completed?'checked':''} onchange="toggleComplete('${esc(x.id)}')"><button class="icon" onclick="editBlock('${esc(x.id)}')" title="Edit">✎</button><button class="icon" onclick="deleteBlock('${esc(x.id)}')" title="Delete">×</button><span class="meta" style="margin:0 0 0 3px">${x.completed?'Completed':'Tap checkbox when finished'}</span></div></div></div>`).join(''):'<div class="empty">No blocks scheduled for today. Add one manually or let the AI create the day from your real data.</div>';renderMemory()}
+function saveSyllabus(){const v={updatedAt:new Date().toISOString(),now:document.getElementById('syllabusNow').value.trim(),deadline:document.getElementById('syllabusDeadline').value,priority:document.getElementById('priorityChapters').value.trim(),backlog:document.getElementById('backlogChapters').value.trim(),constraints:document.getElementById('scheduleConstraints').value.trim()};write(K.syllabus,v);toast('Syllabus mission brief saved.')} 
+function loadSyllabus(){const v=read(K.syllabus,{});document.getElementById('syllabusNow').value=v.now||'';document.getElementById('syllabusDeadline').value=v.deadline||'';document.getElementById('priorityChapters').value=v.priority||'';document.getElementById('backlogChapters').value=v.backlog||'';document.getElementById('scheduleConstraints').value=v.constraints||''}
+function saveStamina(){localStorage.setItem(K.stamina,document.getElementById('stamina').value);localStorage.setItem('jee-schedule-free-minutes',document.getElementById('freeMinutes').value);bc?.postMessage({type:'set',key:K.stamina,at:Date.now()});render()}
+function missionActivityRows(){return [...document.querySelectorAll('.mission-activity-row')].map(r=>({subject:r.querySelector('.ma-subject')?.value||'Other',topic:r.querySelector('.ma-topic')?.value.trim()||'',type:r.querySelector('.ma-type')?.value||'Practice',count:Number(r.querySelector('.ma-count')?.value||0),minutes:Number(r.querySelector('.ma-minutes')?.value||0)})).filter(x=>x.topic||x.count||x.minutes)}
+function addMissionActivityRow(v={}){const host=document.getElementById('mission-activity-list');if(!host)return;const row=document.createElement('div');row.className='mission-activity-row';row.style.cssText='display:grid;grid-template-columns:1fr 1.3fr 1fr .7fr .7fr auto;gap:7px;margin-top:7px';row.innerHTML=`<select class="ma-subject"><option ${v.subject==='Maths'?'selected':''}>Maths</option><option ${v.subject==='Physics'?'selected':''}>Physics</option><option ${v.subject==='Chemistry'?'selected':''}>Chemistry</option><option ${!['Maths','Physics','Chemistry'].includes(v.subject)?'selected':''}>Other</option></select><input class="ma-topic" placeholder="Chapter / topic" value="${esc(v.topic||'')}"><select class="ma-type"><option ${v.type==='PYQ'?'selected':''}>PYQ</option><option ${v.type==='Practice'?'selected':''}>Practice</option><option ${v.type==='Revision'?'selected':''}>Revision</option><option ${v.type==='Test'?'selected':''}>Test</option></select><input class="ma-count" type="number" min="0" placeholder="Q" value="${v.count||''}"><input class="ma-minutes" type="number" min="0" placeholder="min" value="${v.minutes||''}"><button type="button" class="icon" onclick="this.parentElement.remove()">×</button>`;host.appendChild(row)}
+function syncMissionActivityToMainHub(date,activities,totalMinutes){const qKey='jee-daily-questions',hKey='jee-study-hours';const qs=read(qKey,[]);const hours=read(hKey,[]);for(const a of activities){if(a.count>0){qs.unshift({date,subject:a.subject,level:'Mission Centre',count:a.count,timeMin:a.minutes||'',exam:'JEE Main',note:`${a.type}${a.topic?' · '+a.topic:''} · Mission Centre`,revised:false,revisedDate:null,source:'mission-centre'})}}
+const bySubject={Physics:0,Chemistry:0,Maths:0};let hasSubjectMinutes=false;for(const a of activities){if(bySubject[a.subject]!==undefined&&a.minutes>0){bySubject[a.subject]+=a.minutes;hasSubjectMinutes=true}}
+if(hasSubjectMinutes){const idx=hours.findIndex(x=>x.date===date);const prior=idx>=0?hours[idx]:{date,physicsHours:0,chemistryHours:0,mathsHours:0};const next={date,physicsHours:Number(prior.physicsHours)||0,chemistryHours:Number(prior.chemistryHours)||0,mathsHours:Number(prior.mathsHours)||0};next.physicsHours=Math.round((next.physicsHours+bySubject.Physics/60)*100)/100;next.chemistryHours=Math.round((next.chemistryHours+bySubject.Chemistry/60)*100)/100;next.mathsHours=Math.round((next.mathsHours+bySubject.Maths/60)*100)/100;if(idx>=0)hours[idx]=next;else hours.push(next);write(hKey,hours.slice(-180))}
+if(activities.some(a=>a.count>0))write(qKey,qs.slice(0,500));return {questionsAdded:activities.filter(a=>a.count>0).length,totalMinutes:totalMinutes||0,subjectMinutes:bySubject,hasSubjectMinutes}}
 
-/* ── STATS ── */
-function renderStats(){
-  ensureDates();
-  const s=todayBlocks().sort((a,b)=>(a.time||'').localeCompare(b.time||''));
-  const done=s.filter(x=>x.completed);
-  const logs=read(K.logs,[]);
-  document.getElementById('todayLabel').textContent=localDate().slice(5);
-  document.getElementById('blockCount').textContent=s.length;
-  document.getElementById('doneCount').textContent=done.length;
-  document.getElementById('logCount').textContent=logs.length;
-  document.getElementById('logCount2').textContent=logs.length;
-  document.getElementById('plannedMin').textContent=s.reduce((n,x)=>n+Number(x.duration||0),0);
-  document.getElementById('doneMin').textContent=done.reduce((n,x)=>n+Number(x.duration||0),0);
-  document.getElementById('staminaLabel').textContent=localStorage.getItem(K.stamina)||'MEDIUM';
-  document.getElementById('aiState').textContent=localStorage.getItem(AIK.key)?'READY':'OFFLINE';
-}
-
-/* ── BUILD TIMELINE CARD ── */
-function buildCard(x){
-  const sc=String(x.subject||'Other').toLowerCase();
-  const sOpts=['Physics','Chemistry','Maths','Other'].map(s=>`<option${s===x.subject?' selected':''}>${s}</option>`).join('');
-  const pOpts=['High','Medium','Low'].map(p=>`<option${p===x.priority?' selected':''}>${p}</option>`).join('');
-  return `<div class="sc ${sc}${x.completed?' done':''}" id="sc-${esc(x.id)}" data-id="${esc(x.id)}">
-  <div class="sc-hd" onclick="toggleCard('${esc(x.id)}',event)">
-    <div class="sc-time">${esc(x.time||'—')}<small>${x.end?'→ '+esc(x.end):x.duration?x.duration+'m':''}</small></div>
-    <div>
-      <div class="sc-name">${esc(x.label||'Untitled')}</div>
-      <div class="sc-tags">
-        <span class="tag">${esc(x.subject||'Other')}</span>
-        ${x.duration?`<span class="tag">${x.duration}m</span>`:''}
-        ${x.priority&&x.priority!=='Medium'?`<span class="tag">${esc(x.priority)}</span>`:''}
-        ${x.generatedBy?'<span class="tag ai">AI</span>':''}
-        ${x.note?`<span style="font-size:.58rem;color:var(--muted)">${esc(x.note)}</span>`:''}
-      </div>
-    </div>
-    <div class="sc-controls">
-      <div class="done-ring${x.completed?' on':''}" onclick="event.stopPropagation();toggleDone('${esc(x.id)}')" title="${x.completed?'Undo':'Done'}">${x.completed?'✓':''}</div>
-      <span class="sc-arr">▾</span>
-    </div>
-  </div>
-  <div class="sc-body"><div class="sc-inner"><div class="sc-pad">
-    <div class="sc-form-row">
-      <div class="sf2"><label>Start</label><input id="fi-t-${esc(x.id)}" type="time" value="${esc(x.time||'')}"></div>
-      <div class="sf2"><label>End</label><input id="fi-e-${esc(x.id)}" type="time" value="${esc(x.end||'')}"></div>
-      <div class="sf2"><label>Subject</label><select id="fi-s-${esc(x.id)}">${sOpts}</select></div>
-      <div class="sf2"><label>Duration (min)</label><input id="fi-d-${esc(x.id)}" type="number" min="5" max="600" step="5" value="${x.duration||60}"></div>
-      <div class="sf2"><label>Priority</label><select id="fi-p-${esc(x.id)}">${pOpts}</select></div>
-    </div>
-    <div class="sc-form-wide">
-      <div class="sf2"><label>Task</label><input id="fi-l-${esc(x.id)}" type="text" value="${esc(x.label||'')}" maxlength="120" placeholder="Task name"></div>
-      <div class="sf2"><label>Note / method</label><input id="fi-n-${esc(x.id)}" type="text" value="${esc(x.note||'')}" placeholder="PYQs / revision / lecture..."></div>
-    </div>
-    <div class="sc-btns">
-      <button class="btn sm hi" onclick="saveCard('${esc(x.id)}')">Save</button>
-      <button class="btn sm del" onclick="delBlock('${esc(x.id)}')">Delete</button>
-    </div>
-  </div></div></div>
-</div>`;
-}
-
-/* ── RENDER TIMELINE ── */
-function renderTimeline(){
-  const s=todayBlocks().sort((a,b)=>(a.time||'').localeCompare(b.time||''));
-  const el=document.getElementById('timeline');
-  const open=new Set([...el.querySelectorAll('.sc.open')].map(c=>c.dataset.id));
-  el.innerHTML=s.length?s.map(buildCard).join(''):'<div class="empty">No blocks for today — add one or let the AI generate from your data.</div>';
-  open.forEach(id=>{const c=el.querySelector(`[data-id="${id}"]`);if(c)c.classList.add('open')});
-}
-
-function render(){renderStats();renderTimeline();renderMemory()}
-
-/* ── CARD ACCORDION ── */
-function toggleCard(id,e){
-  if(e?.target.closest('.sc-body,.done-ring'))return;
-  const card=document.getElementById('sc-'+id);
-  if(!card)return;
-  const was=card.classList.contains('open');
-  document.querySelectorAll('.sc.open').forEach(c=>c.classList.remove('open'));
-  if(!was)card.classList.add('open');
-}
-
-/* ── INLINE SAVE ── */
-function saveCard(id){
-  const g=k=>document.getElementById(`fi-${k}-${id}`)?.value;
-  const all=allBlocks(),idx=all.findIndex(x=>x.id===id);
-  if(idx<0)return;
-  all[idx]={...all[idx],time:g('t'),end:g('e'),label:(g('l')||'').trim(),subject:g('s'),duration:Number(g('d'))||all[idx].duration,priority:g('p'),note:(g('n')||'').trim()};
-  write(K.schedule,all);
-  toast('Saved ✓');
-  render();
-  setTimeout(()=>{const c=document.getElementById('sc-'+id);if(c)c.classList.add('open')},40);
-}
-
-/* ── ADD BLANK ── */
-function addBlankBlock(){
-  const id='sc_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
-  allBlocks().concat([{id,date:localDate(),time:'18:00',end:'19:00',label:'',subject:'Maths',duration:60,priority:'Medium',note:'',completed:false}]);
-  const all=allBlocks();all.push({id,date:localDate(),time:'18:00',end:'19:00',label:'',subject:'Maths',duration:60,priority:'Medium',note:'',completed:false});
-  write(K.schedule,all);
-  // open section if closed
-  document.getElementById('s-timeline').classList.add('open');
-  render();
-  setTimeout(()=>{const c=document.getElementById('sc-'+id);if(c){c.classList.add('open');c.scrollIntoView({behavior:'smooth',block:'center'});document.getElementById(`fi-l-${id}`)?.focus()}},50);
-}
-
-/* ── DONE TOGGLE ── */
-function toggleDone(id){
-  const all=allBlocks(),x=all.find(v=>v.id===id);if(!x)return;
-  x.completed=!x.completed;write(K.schedule,all);
-  const card=document.getElementById('sc-'+id);
-  if(card){
-    card.classList.toggle('done',x.completed);
-    const r=card.querySelector('.done-ring');
-    if(r){r.classList.toggle('on',x.completed);r.textContent=x.completed?'✓':'';r.title=x.completed?'Undo':'Done'}
-  }
-  toast(x.completed?'✓ Done':'Marked undone');
-  renderStats();renderMemory();
-}
-
-/* ── DELETE ── */
-function delBlock(id){
-  if(!confirm('Delete this block?'))return;
-  write(K.schedule,allBlocks().filter(x=>x.id!==id));toast('Deleted');render();
-}
-
-/* ── RESET TODAY ── */
-function resetTodaySchedule(){
-  if(!todayBlocks().length)return;
-  if(!confirm('Clear all blocks for today?'))return;
-  const t=localDate();write(K.schedule,allBlocks().filter(x=>x.date!==t));toast('Cleared');render();
-}
-
-/* ── SYLLABUS ── */
-function saveSyllabus(){
-  write(K.syllabus,{updatedAt:new Date().toISOString(),now:document.getElementById('syllabusNow').value.trim(),deadline:document.getElementById('syllabusDeadline').value,priority:document.getElementById('priorityChapters').value.trim(),backlog:document.getElementById('backlogChapters').value.trim(),constraints:document.getElementById('scheduleConstraints').value.trim()});
-  toast('Brief saved.');
-}
-function loadSyllabus(){
-  const v=read(K.syllabus,{});
-  document.getElementById('syllabusNow').value=v.now||'';
-  document.getElementById('syllabusDeadline').value=v.deadline||'';
-  document.getElementById('priorityChapters').value=v.priority||'';
-  document.getElementById('backlogChapters').value=v.backlog||'';
-  document.getElementById('scheduleConstraints').value=v.constraints||'';
-}
-
-/* ── STAMINA ── */
-function saveStamina(){localStorage.setItem(K.stamina,document.getElementById('stamina').value);localStorage.setItem('jee-schedule-free-minutes',document.getElementById('freeMinutes').value);renderStats()}
-
-/* ── LOG TODAY ── */
-function logToday(){
-  const study=document.getElementById('logStudy').value.trim();
-  if(!study){toast('Enter what you studied.');return}
-  const logs=read(K.logs,[]),today=localDate();
-  const entry={id:'log_'+Date.now().toString(36),date:today,createdAt:new Date().toISOString(),study,done:document.getElementById('logDone').value.trim(),problems:document.getElementById('logProblems').value.trim(),result:document.getElementById('logResult').value.trim(),focus:Number(document.getElementById('logFocus').value||3),actualMinutes:Number(document.getElementById('logMinutes').value||0),sleep:Number(document.getElementById('sleepHours').value||0),energy:document.getElementById('energy').value,freeMinutes:Number(document.getElementById('freeMinutes').value||0),plannedMinutes:todayBlocks().reduce((n,x)=>n+Number(x.duration||0),0),completedMinutes:todayBlocks().filter(x=>x.completed).reduce((n,x)=>n+Number(x.duration||0),0)};
-  const idx=logs.findIndex(x=>x.date===today);
-  if(idx>=0)logs[idx]=entry;else logs.push(entry);
-  write(K.logs,logs.slice(-90));
-  toast('Today logged ✓');renderMemory();renderStats();
-}
-
-/* ── MEMORY ── */
-function renderMemory(){
-  const logs=read(K.logs,[]);
-  if(!logs.length){document.getElementById('avgFocus').textContent='—';document.getElementById('avgMinutes').textContent='—';document.getElementById('completionRate').textContent='—';document.getElementById('memoryText').textContent='No logs yet. Start by logging today.';return}
-  const avgF=logs.reduce((n,x)=>n+Number(x.focus||0),0)/logs.length;
-  const avgM=logs.reduce((n,x)=>n+Number(x.actualMinutes||0),0)/logs.length;
-  const wp=logs.filter(x=>x.plannedMinutes>0);
-  const rate=wp.length?wp.reduce((n,x)=>n+Math.min(1,Number(x.completedMinutes||0)/Number(x.plannedMinutes||1)),0)/wp.length*100:null;
-  document.getElementById('avgFocus').textContent=avgF.toFixed(1)+'/5';
-  document.getElementById('avgMinutes').textContent=Math.round(avgM)+'m';
-  document.getElementById('completionRate').textContent=rate===null?'—':Math.round(rate)+'%';
-  const recent=logs.slice(-7);const en=recent.map(x=>x.energy).filter(Boolean);
-  const cnt=en.reduce((a,x)=>(a[x]=(a[x]||0)+1,a),{});
-  const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
-  document.getElementById('memoryText').textContent=`${logs.length} log(s) stored. Typical energy: ${top}. AI receives logs, completion ratios, syllabus and test weaknesses on each plan request.`;
-}
-
-/* ── AI ── */
-function aiCfg(){return{provider:localStorage.getItem(AIK.provider)||'gemini',key:localStorage.getItem(AIK.key)||'',model:localStorage.getItem(AIK.model)||'gemini-3.8-flash'}}
-function loadAISettings(){const a=aiCfg();document.getElementById('aiProvider').value=a.provider;document.getElementById('aiKey').value=a.key;document.getElementById('aiModel').value=a.model}
-function saveAISettings(){localStorage.setItem(AIK.provider,document.getElementById('aiProvider').value);localStorage.setItem(AIK.key,document.getElementById('aiKey').value.trim());localStorage.setItem(AIK.model,document.getElementById('aiModel').value);toast('AI settings saved');renderStats()}
-function clearAIKey(){localStorage.removeItem(AIK.key);document.getElementById('aiKey').value='';toast('Key cleared');renderStats()}
-async function callAI(prompt){
-  const a=aiCfg();if(!a.key)throw Error('Add an API key in section 06.');
-  const model=a.model||'gemini-3.8-flash';
-  if(a.provider==='gemini'){const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(a.key)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}]})});const j=await r.json();if(!r.ok)throw Error(j.error?.message||'Gemini error');return j.candidates?.[0]?.content?.parts?.map(x=>x.text||'').join('')||'No response.'}
-  const r=await fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+a.key},body:JSON.stringify({model,input:prompt})});const j=await r.json();if(!r.ok)throw Error(j.error?.message||'OpenAI error');return j.output_text||j.output?.flatMap(x=>x.content||[]).map(x=>x.text||'').join('')||'No response.';
-}
-function ctx(){return{today:localDate(),learningMemory:read(K.memory,{}),stamina:document.getElementById('stamina').value,freeMinutes:Number(document.getElementById('freeMinutes').value||0),sleep:Number(document.getElementById('sleepHours').value||0),energy:document.getElementById('energy').value,syllabus:read(K.syllabus,{}),learningLogs:read(K.logs,[]).slice(-30),recentTests:read(K.tests,[]).slice(-8),recentPDF:read(K.history,[]).slice(0,5),todaySchedule:todayBlocks(),targets:read(K.targets,[])}}
-function extractJSON(t){const c=t.replace(/```json|```/gi,'').trim();const s=c.indexOf('{'),e=c.lastIndexOf('}');if(s<0||e<0)throw Error('No JSON in response');return JSON.parse(c.slice(s,e+1))}
-async function generateDailySchedule(){
-  const out=document.getElementById('aiOutput');
-  document.getElementById('s-ai').classList.add('open');
-  try{
-    out.textContent='Generating from your real logs, syllabus and tracker data…';
-    const days=Number(document.getElementById('horizon').value||1);
-    const raw=await callAI(`You are the adaptive JEE study scheduler. Use ONLY real supplied data. Plan ${days} day(s). Return ONLY JSON: {"summary":"...","memoryUpdate":"...","days":[{"date":"YYYY-MM-DD","blocks":[{"time":"HH:MM","end":"HH:MM","label":"...","subject":"Physics|Chemistry|Maths|Other","duration":60,"priority":"High|Medium|Low","note":"..."}]}]}. Data:\n${JSON.stringify(ctx(),null,2)}`);
-    const obj=extractJSON(raw);
-    out.textContent=JSON.stringify(obj,null,2);
-    if(obj.memoryUpdate)write(K.memory,{updatedAt:new Date().toISOString(),summary:obj.memoryUpdate});
-    if(obj.days?.[0]?.blocks?.length){
-      const day=obj.days[0],date=day.date||localDate();
-      const blocks=(day.blocks||[]).map((x,i)=>({id:'ai_'+Date.now().toString(36)+'_'+i,date,time:x.time,end:x.end||'',label:x.label,subject:x.subject||'Other',duration:Number(x.duration||0),priority:x.priority||'Medium',note:x.note||'',completed:false,generatedBy:'ai'}));
-      write(K.schedule,[...allBlocks().filter(x=>x.date!==date),...blocks]);
-      document.getElementById('s-timeline').classList.add('open');
-      toast('Schedule generated ✓');render();
-    }else toast('AI returned no blocks');
-    renderMemory();
-  }catch(e){out.textContent='Error: '+e.message;toast(e.message)}
-}
-async function learnFromHistory(){
-  const out=document.getElementById('aiOutput');
-  document.getElementById('s-ai').classList.add('open');
-  try{
-    out.textContent='Building learning profile from your history…';
-    const raw=await callAI(`Analyse this JEE student's logs. Return ONLY JSON: {"patterns":[],"strengths":[],"risks":[],"bestStudyWindow":"","recommendedDailyCapacity":0,"memory":""}. Data:\n${JSON.stringify(ctx(),null,2)}`);
-    const p=extractJSON(raw);write(K.memory,{updatedAt:new Date().toISOString(),...p,logCount:read(K.logs,[]).length});
-    out.textContent=JSON.stringify(p,null,2);toast('Memory updated ✓');renderMemory();
-  }catch(e){out.textContent='Error: '+e.message;toast(e.message)}
-}
-async function askScheduler(){
-  const q=document.getElementById('aiQuestion').value.trim();
-  if(!q){toast('Enter a question first.');return}
-  const out=document.getElementById('aiOutput');
-  document.getElementById('s-ai').classList.add('open');
-  try{out.textContent='Thinking…';const raw=await callAI(`You are the JEE schedule coach. Answer using real context. Request: ${q}\nContext:\n${JSON.stringify(ctx(),null,2)}`);out.textContent=raw}
-  catch(e){out.textContent='Error: '+e.message;toast(e.message)}
-}
-function showLearningHistory(){
-  const logs=read(K.logs,[]);
-  document.getElementById('aiOutput').textContent=logs.length?logs.map(x=>`${x.date} | focus ${x.focus}/5 | ${x.actualMinutes}m | ${x.energy}\n${x.study}${x.problems?'\nProblems: '+x.problems:''}`).join('\n\n'):'No logs yet.';
-  document.getElementById('s-ai').classList.add('open');
-  document.getElementById('s-ai').scrollIntoView({behavior:'smooth'});
-}
-function clearLearningData(){if(!confirm('Clear AI logs, syllabus brief and memory? Schedule and test data stay.'))return;[K.logs,K.syllabus,K.memory].forEach(k=>localStorage.removeItem(k));toast('AI data cleared');loadSyllabus();render()}
-function exportData(){
-  const keys=[...Object.values(K),K.stamina,'jee-schedule-free-minutes',AIK.provider,AIK.model];
-  const data={};keys.forEach(k=>{const v=localStorage.getItem(k);if(v!==null){try{data[k]=JSON.parse(v)}catch{data[k]=v}}});
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({version:3,exportedAt:new Date().toISOString(),data},null,2)],{type:'application/json'}));a.download='jee-schedule-backup.json';a.click();URL.revokeObjectURL(a.href);toast('Exported');
-}
-function importData(e){const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);Object.entries(x.data||{}).forEach(([k,v])=>{if(Object.values(K).includes(k)||[K.stamina,'jee-schedule-free-minutes',AIK.provider,AIK.model].includes(k))write(k,v)});loadSyllabus();loadAISettings();toast('Imported');render()}catch(err){toast('Import failed: '+err.message)}};r.readAsText(f)}
-
-/* ── INIT ── */
-function init(){
-  loadSyllabus();loadAISettings();
-  document.getElementById('stamina').value=localStorage.getItem(K.stamina)||'MEDIUM';
-  document.getElementById('freeMinutes').value=localStorage.getItem('jee-schedule-free-minutes')||240;
-  document.getElementById('stamina').addEventListener('change',saveStamina);
-  document.getElementById('freeMinutes').addEventListener('change',saveStamina);
-  render();
-}
-window.addEventListener('storage',e=>{if(e.key?.startsWith('jee-'))render()});
-bc?.addEventListener('message',e=>{if(e.data?.key?.startsWith('jee-'))render()});
-init();
+function logToday(){const study=document.getElementById('logStudy').value.trim();if(!study){toast('Tell the AI what you studied today.');return}const logs=read(K.logs,[]);const today=localDate();const activities=missionActivityRows();const actualMinutes=Number(document.getElementById('logMinutes').value||0);const entry={id:'log_'+Date.now().toString(36),date:today,createdAt:new Date().toISOString(),study,done:document.getElementById('logDone').value.trim(),problems:document.getElementById('logProblems').value.trim(),result:document.getElementById('logResult').value.trim(),focus:Number(document.getElementById('logFocus').value||3),actualMinutes,sleep:Number(document.getElementById('sleepHours').value||0),energy:document.getElementById('energy').value,freeMinutes:Number(document.getElementById('freeMinutes').value||0),plannedMinutes:schedule().reduce((n,x)=>n+Number(x.duration||0),0),completedMinutes:schedule().filter(x=>x.completed).reduce((n,x)=>n+Number(x.duration||0),0),missionActivities:activities};const idx=logs.findIndex(x=>x.date===today);if(idx>=0)logs[idx]=entry;else logs.push(entry);write(K.logs,logs.slice(-90));const syncResult=syncMissionActivityToMainHub(today,activities,actualMinutes);document.getElementById('aiOutput').textContent=`Today logged. Main Hub received ${syncResult.questionsAdded} activity record(s) and ${actualMinutes} minutes.`;try{document.querySelectorAll('.mission-activity-row').forEach((r,i)=>{if(i>0)r.remove()})}catch(e){}toast('Today logged ✓ AI memory updated');renderMemory();render()}
+function renderMemory(){const logs=read(K.logs,[]);if(!logs.length){document.getElementById('avgFocus').textContent='—';document.getElementById('avgMinutes').textContent='—';document.getElementById('completionRate').textContent='—';document.getElementById('memoryText').textContent='No learning logs yet. Log today to start the memory.';return}const avgF=logs.reduce((n,x)=>n+Number(x.focus||0),0)/logs.length;const avgM=logs.reduce((n,x)=>n+Number(x.actualMinutes||0),0)/logs.length;const withPlan=logs.filter(x=>x.plannedMinutes>0);const rate=withPlan.length?withPlan.reduce((n,x)=>n+Math.min(1,Number(x.completedMinutes||0)/Number(x.plannedMinutes||1)),0)/withPlan.length*100:null;document.getElementById('avgFocus').textContent=avgF.toFixed(1)+'/5';document.getElementById('avgMinutes').textContent=Math.round(avgM)+'m';document.getElementById('completionRate').textContent=rate===null?'—':Math.round(rate)+'%';const recent=logs.slice(-7);const energy=recent.map(x=>x.energy).filter(Boolean);const counts=energy.reduce((a,x)=>(a[x]=(a[x]||0)+1,a),{});const common=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';document.getElementById('memoryText').textContent=`${logs.length} real daily log(s) stored. Recent typical energy: ${common}. The AI receives recent logs, completion ratios, focus, actual study time, syllabus, test analysis and targets so it can adapt rather than use a fixed template.`}
+function addBlankBlock(){document.getElementById('editId').value='';document.getElementById('bTime').value='18:00';document.getElementById('bEnd').value='19:00';document.getElementById('bLabel').value='';document.getElementById('bSubject').value='Maths';document.getElementById('bDuration').value=60;document.getElementById('bPriority').value='Medium';document.getElementById('bNote').value='';document.getElementById('bLabel').focus();document.getElementById('saveBlockBtn').textContent='SAVE BLOCK'}
+function saveBlock(e){e.preventDefault();const id=document.getElementById('editId').value||'sc_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);const entry={id,date:localDate(),time:document.getElementById('bTime').value,end:document.getElementById('bEnd').value,label:document.getElementById('bLabel').value.trim(),subject:document.getElementById('bSubject').value,duration:Number(document.getElementById('bDuration').value||0),priority:document.getElementById('bPriority').value,note:document.getElementById('bNote').value.trim(),completed:false};let s=allSchedule();const idx=s.findIndex(x=>x.id===id);if(idx>=0){entry.completed=!!s[idx].completed;s[idx]=entry}else s.push(entry);write(K.schedule,s);cancelEdit();toast(idx>=0?'Block updated ✓':'Block added ✓');render()}
+function editBlock(id){const x=allSchedule().find(v=>v.id===id);if(!x)return;document.getElementById('editId').value=x.id;document.getElementById('bTime').value=x.time||'';document.getElementById('bEnd').value=x.end||'';document.getElementById('bLabel').value=x.label||'';document.getElementById('bSubject').value=x.subject||'Other';document.getElementById('bDuration').value=x.duration||60;document.getElementById('bPriority').value=x.priority||'Medium';document.getElementById('bNote').value=x.note||'';document.getElementById('saveBlockBtn').textContent='UPDATE BLOCK';document.getElementById('bLabel').scrollIntoView({behavior:'smooth',block:'center'})}
+function cancelEdit(){document.getElementById('editId').value='';document.getElementById('bLabel').value='';document.getElementById('bTime').value='';document.getElementById('bEnd').value='';document.getElementById('bDuration').value=60;document.getElementById('bPriority').value='Medium';document.getElementById('bNote').value='';document.getElementById('saveBlockBtn').textContent='SAVE BLOCK'}
+function deleteBlock(id){if(!confirm('Delete this schedule block?'))return;write(K.schedule,allSchedule().filter(x=>x.id!==id));toast('Block deleted');render()}
+function toggleComplete(id){const s=allSchedule();const x=s.find(v=>v.id===id);if(!x)return;x.completed=!x.completed;write(K.schedule,s);toast(x.completed?'+ completion logged':'completion reversed');render()}
+function resetTodaySchedule(){if(!schedule().length)return;if(!confirm('Clear every block for today?'))return;const today=localDate();write(K.schedule,allSchedule().filter(x=>x.date!==today));toast('Today cleared');render()}
+function aiSettings(){return{provider:localStorage.getItem(AIK.provider)||'gemini',key:localStorage.getItem(AIK.key)||'',model:localStorage.getItem(AIK.model)||'gemini-3.8-flash'}}
+function loadAISettings(){const a=aiSettings();document.getElementById('aiProvider').value=a.provider;document.getElementById('aiKey').value=a.key;document.getElementById('aiModel').value=a.model||'gemini-3.8-flash'}
+function saveAISettings(){const p=document.getElementById('aiProvider').value;let m=document.getElementById('aiModel').value;if(p==='gemini'&&!m.startsWith('gemini-'))m='gemini-3.8-flash';localStorage.setItem(AIK.provider,p);localStorage.setItem(AIK.key,document.getElementById('aiKey').value.trim());localStorage.setItem(AIK.model,m);toast('AI settings saved locally');render()}
+function clearAIKey(){localStorage.removeItem(AIK.key);document.getElementById('aiKey').value='';toast('AI key cleared');render()}
+async function callAI(prompt){const a=aiSettings();if(!a.key)throw Error('Configure an AI API key first.');const model=a.model||'gemini-3.8-flash';if(a.provider==='gemini'){const url=`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(a.key)}`;const body={contents:[{role:'user',parts:[{text:prompt}]}]};const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json();if(!r.ok)throw Error(j.error?.message||'Gemini request failed');return j.candidates?.[0]?.content?.parts?.map(x=>x.text||'').join('')||'No AI response.'}const r=await fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+a.key},body:JSON.stringify({model,input:prompt})});const j=await r.json();if(!r.ok)throw Error(j.error?.message||'OpenAI request failed');return j.output_text||j.output?.flatMap(x=>x.content||[]).map(x=>x.text||'').join('')||'No AI response.'}
+function context(){const logs=read(K.logs,[]).slice(-30);const syllabus=read(K.syllabus,{});const tests=read(K.tests,[]).slice(-8);const pdf=read(K.history,[]).slice(0,5);const targets=read(K.targets,[]);const tp=read(K.targetProgress,{});const today=schedule();return{today:localDate(),learningMemory:read(K.memory,{}),stamina:document.getElementById('stamina').value,freeMinutes:Number(document.getElementById('freeMinutes').value||0),sleep:Number(document.getElementById('sleepHours').value||0),energy:document.getElementById('energy').value,syllabus,learningLogs:logs,recentTests:tests,recentPDFAnalysis:pdf,todaySchedule:today,targets,targetProgress:tp,rule:'Never invent syllabus or performance facts. If information is missing, make the smallest reasonable assumption and state it.'}}
+function extractJSON(text){const clean=text.replace(/```json|```/gi,'').trim();const start=clean.indexOf('{');const end=clean.lastIndexOf('}');if(start<0||end<0)throw Error('AI did not return usable schedule JSON.');return JSON.parse(clean.slice(start,end+1))}
+async function generateDailySchedule(){const out=document.getElementById('aiOutput');showAIProgress('Creating an adaptive study schedule','schedule');try{out.textContent='AI is learning from your recent logs, syllabus and tracker data…';const days=Number(document.getElementById('horizon').value||1);advanceAIProgress(0);const c=context();advanceAIProgress(1);advanceAIProgress(2);advanceAIProgress(3);const prompt=`You are the adaptive JEE study scheduler inside a personal tracker. Use the supplied REAL user data. The user wants a schedule for ${days} day(s). Learn patterns from historical logs: when focus is high/low, actual minutes versus planned minutes, recurring problems, and completion. Respect current syllabus, priority chapters, backlog, deadlines and constraints. Use recent test/PDF weaknesses when present. Do not fabricate chapters or scores. Do not schedule more total study time than the user's stated capacity without clearly explaining why. Prefer realistic blocks, revision, PYQs, tests and recovery. Return ONLY valid JSON with this schema: {"summary":"...","memoryUpdate":"...","days":[{"date":"YYYY-MM-DD","blocks":[{"time":"HH:MM","end":"HH:MM","label":"...","subject":"Physics|Chemistry|Maths|Other","duration":60,"priority":"High|Medium|Low","note":"..."}]}]}. Keep blocks practical and non-overlapping. Data follows:
+${JSON.stringify(c,null,2)}`;advanceAIProgress(4);aiProgressWaiting();const raw=await callAI(prompt);advanceAIProgress(5);const obj=extractJSON(raw);out.textContent=JSON.stringify(obj,null,2);if(obj.memoryUpdate)write(K.memory,{updatedAt:new Date().toISOString(),summary:obj.memoryUpdate,sourceLogs:read(K.logs,[]).length});if(obj.days?.[0]?.blocks?.length){applyGeneratedDay(obj.days[0]);advanceAIProgress(6);finishAIProgress(`Created ${obj.days[0].blocks.length} reviewable task(s) for ${obj.days[0].date||'the selected day'}.`);toast('AI created a reviewable schedule ✓')}else{finishAIProgress('AI returned no schedule blocks.',false);toast('AI returned no schedule blocks')}renderMemory()}catch(e){finishAIProgress('AI error: '+e.message,false);out.textContent='AI error: '+e.message;toast(e.message)}}
+function recordAIActivity(title,details){try{const logs=JSON.parse(localStorage.getItem(AI_ACTIVITY_KEY)||'[]');logs.push({id:'ai_action_'+Date.now().toString(36),createdAt:new Date().toISOString(),kind:'SCHEDULE',source:'Mission Centre / Schedule',title,details,date:localDate()});localStorage.setItem(AI_ACTIVITY_KEY,JSON.stringify(logs.slice(-300)));}catch(e){console.warn('AI activity audit failed',e)}}
+function applyGeneratedDay(day){const date=day.date||localDate();const old=allSchedule().filter(x=>x.date!==date);const blocks=(day.blocks||[]).map((x,i)=>({id:'ai_'+Date.now().toString(36)+'_'+i,date,time:x.time,end:x.end||'',label:x.label,subject:x.subject||'Other',duration:Number(x.duration||0),priority:x.priority||'Medium',note:x.note||'',completed:false,generatedBy:'adaptive-ai'}));write(K.schedule,[...old,...blocks]);recordAIActivity('AI generated today’s schedule',{blockCount:blocks.length,blocks:blocks.map(b=>({time:b.time,end:b.end,label:b.label,subject:b.subject,duration:b.duration,priority:b.priority,note:b.note}))});render()}
+async function learnFromHistory(){const out=document.getElementById('aiOutput');showAIProgress('Learning from your study history','learn');try{out.textContent='Building long-term learning profile…';advanceAIProgress(0);const c=context();advanceAIProgress(1);advanceAIProgress(2);advanceAIProgress(3);aiProgressWaiting();const raw=await callAI(`Analyze this student's historical JEE study logs and tracker signals. Do not invent facts. Return ONLY JSON: {"patterns":[],"strengths":[],"risks":[],"bestStudyWindow":"","recommendedDailyCapacity":0,"memory":""}. Focus on actual behavior: completion, focus, sleep, energy, actual minutes, repeated problems, current syllabus and test weaknesses. Data:
+${JSON.stringify(c,null,2)}`);const p=extractJSON(raw);advanceAIProgress(4);write(K.memory,{updatedAt:new Date().toISOString(),...p,logCount:read(K.logs,[]).length});out.textContent=JSON.stringify(p,null,2);finishAIProgress('Learning profile saved to AI memory.');toast('AI learning memory updated ✓');renderMemory()}catch(e){finishAIProgress('AI error: '+e.message,false);out.textContent='AI error: '+e.message;toast(e.message)}}
+async function askScheduler(){const q=document.getElementById('aiQuestion').value.trim();if(!q){toast('Write a scheduling question first');return}showAIProgress('Answering your scheduling request','ask');try{document.getElementById('aiOutput').textContent='Thinking…';advanceAIProgress(0);const c=context();advanceAIProgress(1);advanceAIProgress(2);aiProgressWaiting();const raw=await callAI(`You are the user's JEE schedule coach. Answer using the real tracker context below and the user's request. Be concrete and do not invent missing facts. If suggesting schedule changes, give exact time/duration/subject/task. User request: ${q}
+Context:
+${JSON.stringify(c,null,2)}`);advanceAIProgress(4);document.getElementById('aiOutput').textContent=raw;finishAIProgress('AI response displayed.');}catch(e){finishAIProgress('AI error: '+e.message,false);document.getElementById('aiOutput').textContent='AI error: '+e.message;toast(e.message)}}
+function showLearningHistory(){const logs=read(K.logs,[]);document.getElementById('aiOutput').textContent=logs.length?logs.map(x=>`${x.date} | focus ${x.focus}/5 | ${x.actualMinutes}m | ${x.energy}\n${x.study}${x.problems?'\nProblems: '+x.problems:''}`).join('\n\n'):'No logs yet.';document.getElementById('ai-section').scrollIntoView({behavior:'smooth'})}
+function clearLearningData(){if(!confirm('Clear AI learning logs, syllabus brief and AI memory? Your schedule and test data will stay.'))return;[K.logs,K.syllabus,K.memory].forEach(k=>localStorage.removeItem(k));toast('AI learning data cleared');loadSyllabus();render()}
+function exportData(){const keys=Object.values(K).concat([K.stamina,'jee-schedule-free-minutes',AIK.provider,AIK.model]);const data={};keys.forEach(k=>{const v=localStorage.getItem(k);if(v!==null){try{data[k]=JSON.parse(v)}catch{data[k]=v}}});const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({version:3,exportedAt:new Date().toISOString(),data},null,2)],{type:'application/json'}));a.download='jee-ai-schedule-backup.json';a.click();URL.revokeObjectURL(a.href);toast('Backup exported')}
+function importData(e){const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);Object.entries(x.data||{}).forEach(([k,v])=>{if(Object.values(K).includes(k)||[K.stamina,'jee-schedule-free-minutes',AIK.provider,AIK.model].includes(k))write(k,v)});loadSyllabus();loadAISettings();toast('Backup imported');render()}catch(err){toast('Import failed: '+err.message)}};r.readAsText(f)}
+function init(){loadSyllabus();loadAISettings();document.getElementById('stamina').value=localStorage.getItem(K.stamina)||'MEDIUM';document.getElementById('freeMinutes').value=localStorage.getItem('jee-schedule-free-minutes')||240;document.getElementById('todayLabel').textContent=localDate();document.getElementById('stamina').addEventListener('change',saveStamina);document.getElementById('freeMinutes').addEventListener('change',saveStamina);render()}
+window.addEventListener('storage',e=>{if(e.key?.startsWith('jee-'))render()});bc?.addEventListener('message',e=>{if(e.data?.key?.startsWith('jee-'))render()});init();
 </script>
-</body>
-</html>
+
+<script>
+(function syncMainTheme(){
+  const THEMES={
+    freefire:{default:{gold:'#ff6a00',gold2:'#ffcf3d',xp:'#ff3d7d',glow:'#2a0f3a',card:'#130b1a',panel:'#170d20',border:'#3a2452',bg:'#0a0710'},crimson:{gold:'#ff3b3b',gold2:'#ff8f6b',xp:'#b91c4c',glow:'#3a0f14'},emerald:{gold:'#22c55e',gold2:'#86efac',xp:'#0ea5a4',glow:'#0f3a22'},violet:{gold:'#7c3aed',gold2:'#c4b5fd',xp:'#38bdf8',glow:'#1a0f3a'},mono:{gold:'#e5e5e5',gold2:'#fff',xp:'#9a9a9a',glow:'#000',card:'#0d0d0d',panel:'#0d0d0d',border:'#333',bg:'#000'}},
+    fortnite:{default:{gold:'#f9d23c',gold2:'#fff6b0',xp:'#29c1ff',glow:'#1f2f7a',card:'#142257',panel:'#16295f',border:'#3a55b0',bg:'#0a1338'},pink:{gold:'#ff5cd6',gold2:'#ffc2f0',xp:'#ff2ea6',glow:'#3a1450'},lime:{gold:'#2be8a0',gold2:'#b6ffe0',xp:'#00c2a8',glow:'#0f3a2c'},rift:{gold:'#7c5cff',gold2:'#c9b8ff',xp:'#a855f7',glow:'#1f1050'},mono:{gold:'#e5e5e5',gold2:'#fff',xp:'#9a9a9a',glow:'#000',card:'#0d0d0d',panel:'#0d0d0d',border:'#333',bg:'#000'}},
+    cod:{default:{gold:'#ff9d1f',gold2:'#ffc65c',xp:'#8fd400',glow:'#2a2f1c',card:'#1b1d16',panel:'#202318',border:'#4a5236',bg:'#0c0d09'},crimson:{gold:'#ff2b2b',gold2:'#ff8a8a',xp:'#ff6a1f',glow:'#3a1414'},jungle:{gold:'#b7d400',gold2:'#e4ff8a',xp:'#4fd0e7',glow:'#1c2a14'},arctic:{gold:'#4fd0e7',gold2:'#b8f0ff',xp:'#ffc65c',glow:'#0f2a2f'},mono:{gold:'#e5e5e5',gold2:'#fff',xp:'#9a9a9a',glow:'#000',card:'#0d0d0d',panel:'#0d0d0d',border:'#333',bg:'#000'}},
+    shadowfight:{default:{gold:'#e8ab2e',gold2:'#ffe9a8',xp:'#ff3b30',glow:'#331a26',card:'#17111a',panel:'#1c1420',border:'#4a3540',bg:'#08050c'},crimson:{gold:'#ff1f3d',gold2:'#ff8fa0',xp:'#ff7a1f',glow:'#3a0f16'},mystic:{gold:'#b84dff',gold2:'#e0bfff',xp:'#5fd0ff',glow:'#1f1030'},frost:{gold:'#5fd0ff',gold2:'#c2ecff',xp:'#e8ab2e',glow:'#0f2530'},mono:{gold:'#e5e5e5',gold2:'#fff',xp:'#9a9a9a',glow:'#000',card:'#0d0d0d',panel:'#0d0d0d',border:'#333',bg:'#000'}}
+  };
+  const bases={freefire:{phys:'#22d3ee',chem:'#39ff88',math:'#c77dff',danger:'#ff1a5e'},fortnite:{phys:'#7c5cff',chem:'#2be8a0',math:'#ff5cd6',danger:'#ff4655'},cod:{phys:'#4fd0e7',chem:'#b7d400',math:'#ff6a1f',danger:'#ff2b2b'},shadowfight:{phys:'#5fd0ff',chem:'#b84dff',math:'#ff7a1f',danger:'#ff1f3d'}};
+  function apply(){
+    try{
+      const mode=JSON.parse(localStorage.getItem('jee-game-mode')||'"freefire"');
+      const themes=JSON.parse(localStorage.getItem('jee-theme')||'{}');
+      const m=THEMES[mode]||THEMES.freefire; const id=(themes&&typeof themes==='object'?themes[mode]:themes)||'default'; const t=m[id]||m.default;
+      document.body.classList.remove('mode-fortnite','mode-cod','mode-shadowfight'); if(mode!=='freefire')document.body.classList.add('mode-'+mode);
+      const r=document.documentElement; const base=bases[mode]||bases.freefire;
+      Object.entries({gold:t.gold,gold2:t.gold2,xp:t.xp,glow:t.glow,card:t.card||undefined,panel:t.panel||undefined,border:t.border||undefined,bg:t.bg||undefined,phys:base.phys,chem:base.chem,math:base.math,danger:base.danger}).forEach(([k,v])=>{if(v)r.style.setProperty('--'+k,v)});
+    }catch(e){}
+  }
+  apply();
+  window.addEventListener('storage',e=>{if(e.key==='jee-theme'||e.key==='jee-game-mode')apply()});
+  window.addEventListener('jee-tracker-theme-changed',apply);
+  try{const bc=new BroadcastChannel('jee-tracker-sync-v1');bc.addEventListener('message',e=>{if(e.data?.key==='jee-theme'||e.data?.key==='jee-game-mode')apply()})}catch(e){}
+})();
+</script>
+<div id="ai-progress-overlay" class="ai-progress-overlay" aria-hidden="true"><div class="ai-progress-panel" role="status" aria-live="polite"><div class="ai-progress-head"><div><div class="ai-progress-kicker">AI ADAPTIVE ENGINE</div><div id="ai-progress-title" class="ai-progress-title">Working…</div></div><div id="ai-progress-pct" class="ai-progress-pct">0%</div></div><div class="ai-progress-track"><div id="ai-progress-fill" class="ai-progress-fill"></div></div><div id="ai-progress-current" class="ai-progress-current"><b>Current operation</b>Preparing…</div><div id="ai-progress-steps" class="ai-progress-steps"></div><div id="ai-progress-note" class="ai-progress-note">The percentage tracks completed workflow stages. During model processing, the UI explicitly waits for the AI instead of inventing a fake model percentage.</div><button id="ai-progress-close" class="btn ai ai-progress-close" onclick="closeAIProgress()">CLOSE</button></div></div></body></html>
