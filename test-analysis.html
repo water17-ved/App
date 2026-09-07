@@ -4897,7 +4897,7 @@ function renderAttemptAnalysis(data){
   const rev=(data.revisionTargets||[]).map(x=>'<div class="chapter-card-lite"><b>'+esc(x.subject)+' — '+esc(x.chapter)+'</b><div class="test-meta">'+esc(x.reason||'Revision target')+' · '+esc(x.priority||'')+'</div></div>').join('');
   const insights=(data.insights||[]).map(x=>'<div style="margin:5px 0">• '+esc(x)+'</div>').join('');
   const actions=(data.actionItems||[]).map(x=>'<div style="margin:5px 0">• '+esc(x)+'</div>').join('');
-  el.innerHTML=subjectGraph+'<div class="analysis-card"><h3>Overall Performance</h3><div class="metric-row">'+metrics.map(x=>renderMetric(x[0],x[1])).join('')+'</div></div><div class="analysis-card" style="margin-top:12px"><h3>Subject Performance</h3>'+(subjects||'<div class="empty">No subject-level metrics found.</div>')+'</div><div class="analysis-card" style="margin-top:12px"><h3>Chapter-wise Performance</h3>'+(chapters||'<div class="empty">No chapter rows found.</div>')+'</div>'+(mistakes?'<div class="analysis-card" style="margin-top:12px"><h3>Mistake Analysis</h3>'+mistakes+'</div>':'')+(scoreLoss?'<div class="analysis-card" style="margin-top:12px"><h3>Score Loss Analysis</h3>'+scoreLoss+'</div>':'')+(insights?'<div class="analysis-card" style="margin-top:12px"><h3>Performance Insights</h3>'+insights+'</div>':'')+(rev?'<div class="analysis-card" style="margin-top:12px"><h3>Revision Targets</h3>'+rev+'</div>':'')+(actions?'<div class="analysis-card" style="margin-top:12px"><h3>Action Plan</h3>'+actions+'</div>':'')+renderRevisionPlan(data)+'<div class="toolbar"><button class="add-btn" onclick="addToBattleLog(\''+esc(data.id)+'\')">'+'<div style="margin-top:10px; font-size:0.74rem; color:var(--chem); opacity:0.8;">✓ Synced to tracker automatically</div>';
+  el.innerHTML=taRenderGraphs(data)+subjectGraph+'<div class="analysis-card"><h3>Overall Performance</h3><div class="metric-row">'+metrics.map(x=>renderMetric(x[0],x[1])).join('')+'</div></div><div class="analysis-card" style="margin-top:12px"><h3>Subject Performance</h3>'+(subjects||'<div class="empty">No subject-level metrics found.</div>')+'</div><div class="analysis-card" style="margin-top:12px"><h3>Chapter-wise Performance</h3>'+(chapters||'<div class="empty">No chapter rows found.</div>')+'</div>'+(mistakes?'<div class="analysis-card" style="margin-top:12px"><h3>Mistake Analysis</h3>'+mistakes+'</div>':'')+(scoreLoss?'<div class="analysis-card" style="margin-top:12px"><h3>Score Loss Analysis</h3>'+scoreLoss+'</div>':'')+(insights?'<div class="analysis-card" style="margin-top:12px"><h3>Performance Insights</h3>'+insights+'</div>':'')+(rev?'<div class="analysis-card" style="margin-top:12px"><h3>Revision Targets</h3>'+rev+'</div>':'')+(actions?'<div class="analysis-card" style="margin-top:12px"><h3>Action Plan</h3>'+actions+'</div>':'')+renderRevisionPlan(data)+'<div class="toolbar"><button class="add-btn" onclick="addToBattleLog(\''+esc(data.id)+'\')">'+'<div style="margin-top:10px; font-size:0.74rem; color:var(--chem); opacity:0.8;">✓ Synced to tracker automatically</div>';
 }
 function taParseQuestionPaper(lines){
   const rows=[];let blocks=[];let current=null;
@@ -5241,6 +5241,77 @@ confirmPDFMetaAndAnalyse=async function(){
   await uploadPreparedPDFBatch();
 };
 
+/* ===== DEEP TEST + QUESTION PAPER AI ANALYSIS =============================
+   Gemini is used as an enrichment layer over the locally extracted report.
+   It never invents unavailable values: missing evidence stays null/unknown.
+*/
+async function taDeepGeminiAnalysis(record, sourceText){
+  try{
+    if(!window.JEEGemini?.getSettings||!window.JEEGemini?.ask)return record;
+    const cfg=window.JEEGemini.getSettings();
+    if(cfg.provider!=='gemini'||!cfg.key)return record;
+    const existingQuestions=getQuestionRows(record);
+    const evidence=String(sourceText||'').slice(0,90000);
+    const prompt=`You are the primary JEE test-analysis engine. Analyse the supplied uploaded test-report/question-paper text and the existing locally extracted data. Return ONLY valid JSON. Do not invent information. If a value is not explicitly supported by the source, use null, [] or "UNKNOWN". Preserve question numbers and exact answer choices when present.
+
+Required JSON shape:
+{
+  "overall": {"accuracy":number|null,"attemptRate":number|null,"attempted":number|null,"correct":number|null,"wrong":number|null,"skipped":number|null,"negativeMarks":number|null},
+  "subjects":[{"subject":string,"myScore":number|null,"maxScore":number|null,"accuracy":number|null,"attempted":number|null,"correct":number|null,"wrong":number|null,"skipped":number|null,"scoreLoss":number|null}],
+  "chapters":[{"subject":string,"name":string,"accuracy":number|null,"attempted":number|null,"correct":number|null,"wrong":number|null,"skipped":number|null,"status":"STRONG|OK|WEAK|PRIORITY|UNKNOWN","priority":"HIGH|MEDIUM|LOW|UNKNOWN","evidence":[string]}],
+  "questionPaper":{"questions":[{"question":"Q1","subject":string|null,"chapter":string|null,"topic":string|null,"difficulty":"Easy|Moderate|Hard|Very Hard|UNKNOWN","officialAnswer":string|null,"myAnswer":string|null,"status":"CORRECT|WRONG|UNATTEMPTED|SKIPPED|UNKNOWN","marks":string|null,"mistakeType":string|null,"explanation":string|null,"evidence":string|null}]},
+  "mistakeAnalysis":[{"type":string,"count":number|null,"questions":string,"impact":string}],
+  "scoreLoss":[{"component":string,"questions":string,"impact":string}],
+  "insights":[string],
+  "revisionTargets":[{"subject":string,"chapter":string,"reason":string,"priority":"HIGH|MEDIUM|LOW"}],
+  "actionItems":[string],
+  "testStrategy":{"attemptStrategy":"string","timeManagement":"string","selectionStrategy":"string","confidence":"string"}
+}
+
+Existing extracted data (use it as evidence, but correct obvious parsing errors only when the source text proves the correction):
+${JSON.stringify({overall:record.overall,totalScore:record.totalScore,subjects:record.subjects,chapters:record.chapters,questionPaper:{questions:existingQuestions.slice(0,200)}})}
+
+SOURCE TEXT:
+${evidence}`;
+    const raw=await window.JEEGemini.ask(prompt);
+    const cleaned=String(raw||'').replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'').trim();
+    const ai=JSON.parse(cleaned);
+    const merged={...record};
+    if(ai.overall)merged.overall={...(record.overall||{}),...ai.overall};
+    if(Array.isArray(ai.subjects)&&ai.subjects.length)merged.subjects=ai.subjects;
+    if(Array.isArray(ai.chapters)&&ai.chapters.length)merged.chapters=ai.chapters;
+    if(Array.isArray(ai.questionPaper?.questions)&&ai.questionPaper.questions.length){
+      const qmap=new Map(getQuestionRows(record).map(q=>[String(q.question),q]));
+      ai.questionPaper.questions.forEach(q=>{const k=String(q.question||'');if(!k)return;qmap.set(k,{...(qmap.get(k)||{}),...q})});
+      merged.questionPaper={...(record.questionPaper||{}),questions:[...qmap.values()].sort((a,b)=>Number(String(a.question).replace(/\D/g,''))-Number(String(b.question).replace(/\D/g,'')))};
+    }
+    if(Array.isArray(ai.mistakeAnalysis)&&ai.mistakeAnalysis.length)merged.mistakeAnalysis=ai.mistakeAnalysis;
+    if(Array.isArray(ai.scoreLoss)&&ai.scoreLoss.length)merged.scoreLoss=ai.scoreLoss;
+    if(Array.isArray(ai.insights)&&ai.insights.length)merged.insights=ai.insights;
+    if(Array.isArray(ai.revisionTargets)&&ai.revisionTargets.length)merged.revisionTargets=ai.revisionTargets;
+    if(Array.isArray(ai.actionItems)&&ai.actionItems.length)merged.actionItems=ai.actionItems;
+    if(ai.testStrategy)merged.testStrategy=ai.testStrategy;
+    merged._questionRows=merged.questionPaper?.questions||[];
+    merged.aiDeepAnalysis={provider:'gemini',model:cfg.model,generatedAt:new Date().toISOString(),version:2};
+    return merged;
+  }catch(e){console.warn('Deep Gemini analysis skipped:',e);return record}
+}
+
+function taGraphCard(title,html,subtitle){return '<div class="analysis-card" style="margin-bottom:12px"><h3>'+labEsc(title)+'</h3>'+(subtitle?'<div class="test-meta" style="margin-bottom:10px">'+labEsc(subtitle)+'</div>':'')+html+'</div>'}
+function taBars(rows,labelKey,valueKey,fmt){
+  return rows.map(r=>{const v=Math.max(0,Math.min(100,Number(r[valueKey])||0));return '<div style="display:grid;grid-template-columns:minmax(82px,125px) 1fr 48px;gap:8px;align-items:center;margin:10px 0"><b style="font-size:.76rem">'+labEsc(r[labelKey])+'</b><div style="height:10px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)"><div style="height:100%;width:'+v+'%;background:linear-gradient(90deg,var(--xp),var(--gold));border-radius:99px"></div></div><span style="font-size:.72rem;text-align:right">'+fmt(v)+'</span></div>'}).join('')
+}
+function taRenderGraphs(data){
+  const subjects=(data.subjects||[]).filter(s=>Number.isFinite(Number(s.accuracy))).map(s=>({label:s.subject,value:Number(s.accuracy)}));
+  const chapters=(data.chapters||[]).filter(c=>Number.isFinite(Number(c.accuracy))).sort((a,b)=>Number(a.accuracy)-Number(b.accuracy)).slice(0,10).map(c=>({label:(c.subject||'')+' — '+(c.name||'Unknown'),value:Number(c.accuracy)}));
+  const qs=getQuestionRows(data),attempt=[['Correct',qs.filter(q=>/CORRECT/i.test(q.status)).length],['Wrong',qs.filter(q=>/WRONG/i.test(q.status)).length],['Skipped',qs.filter(q=>/UNATTEMPTED|SKIPPED/i.test(q.status)).length]].filter(x=>x[1]>0);
+  let h='';
+  if(subjects.length)h+=taGraphCard('Subject Accuracy','<div>'+taBars(subjects,'label','value',v=>Math.round(v*10)/10+'%')+'</div>','Accuracy across subjects');
+  if(chapters.length)h+=taGraphCard('Weakest Chapter Accuracy','<div>'+taBars(chapters,'label','value',v=>Math.round(v*10)/10+'%')+'</div>','Lowest-performing chapters first');
+  if(attempt.length){const total=attempt.reduce((a,x)=>a+x[1],0)||1;h+=taGraphCard('Attempt Outcome Distribution','<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">'+attempt.map(x=>'<div style="padding:12px 8px;text-align:center;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.025)"><b style="font-size:1.15rem">'+x[1]+'</b><div class="test-meta">'+labEsc(x[0])+'</div><div style="font-size:.7rem;margin-top:4px">'+Math.round(x[1]/total*100)+'%</div></div>').join('')+'</div>','Based on question-level rows actually detected');}
+  return h;
+}
+
 async function uploadPreparedPDFBatch(){
   const batch=pdfPreparedBatch;
   if(!batch?.length){await preparePDFAnalysis();return;}
@@ -5266,6 +5337,15 @@ async function uploadPreparedPDFBatch(){
       records.push(combined);
       const row=document.querySelectorAll('#selected-files .jee-file-status')[i];if(row){row.className='jee-file-status done';row.querySelector('.state').textContent='✓ Uploaded & analysed';}
       if(status)status.innerHTML='<div class="sync-note">⏳ Analysed '+(i+1)+'/'+batch.length+': <b>'+labEsc(item.file.name)+'</b></div>';
+    }
+    if(combined){
+      const sourceText=batch.map(x=>String(x.raw?.text||x.raw?._rawPages?.map(p=>p.text||'').join('\n')||'')).join('\n\n===== NEXT FILE =====\n\n');
+      if(status)status.innerHTML='<div class="sync-note">🧠 Running deep test + question-paper analysis with Gemini…</div>';
+      const enriched=await taDeepGeminiAnalysis(combined,sourceText);
+      if(enriched&&enriched!==combined){
+        const h=labHistory(),idx=h.findIndex(x=>x.id===combined.id);
+        if(idx>=0){h[idx]=enriched;saveLabHistory(h);combined=enriched;}
+      }
     }
     latestAnalysis=combined;
     pdfPendingMeta=null;pdfPreparedBatch=null;
