@@ -4781,6 +4781,34 @@
     </div>
 
     <div class="settings-group">
+      <div class="settings-group-label">✦ AI / Gemini</div>
+      <div class="settings-group-box">
+        <div class="settings-card" onclick="toggleSettingsCard(this)">
+          <div class="settings-card-header">
+            <span class="settings-card-title">Gemini API <span id="gemini-shared-badge" class="settings-badge">Not set</span></span>
+            <span class="settings-card-chevron">▼</span>
+          </div>
+          <div class="settings-card-body">
+            <p>Configure Gemini once here. Schedule and Test Analysis use the same key and model automatically on this device.</p>
+            <div class="util-bar" onclick="event.stopPropagation()" style="flex-wrap:wrap;">
+              <input id="main-gemini-key" type="password" autocomplete="off" placeholder="Paste Gemini API key" style="min-width:220px;flex:1;background:var(--card-bg);border:1px solid var(--border);color:var(--text-main);border-radius:6px;padding:7px 10px;font-family:var(--font-body);font-size:.9rem;">
+              <select id="main-gemini-model" style="background:var(--card-bg);border:1px solid var(--border);color:var(--text-main);border-radius:6px;padding:7px 10px;font-family:var(--font-body);">
+                <option value="gemini-3.8-flash">Gemini 3.8 Flash — latest</option>
+                <option value="gemini-3.7-flash">Gemini 3.7 Flash</option>
+                <option value="gemini-3.6-flash">Gemini 3.6 Flash</option>
+                <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
+                <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite</option>
+              </select>
+              <button class="util-btn util-btn-cyan" onclick="event.stopPropagation(); saveMainGeminiSettings()">Save Gemini</button>
+              <button class="util-btn" onclick="event.stopPropagation(); clearMainGeminiSettings()">Clear</button>
+            </div>
+            <p id="main-gemini-status" style="font-size:.78rem;color:var(--text-muted);margin-top:8px;">Not configured</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
       <div class="settings-group-label">🎨 Customization</div>
       <div class="settings-group-box">
 
@@ -5634,6 +5662,31 @@ Storage.prototype.removeItem = function(key) {
     try { jeeSyncChannel?.postMessage({type:'remove', key:String(key), at:Date.now()}); } catch(e) {}
   }
 };
+
+// ── Shared Gemini configuration ───────────────────────────────────────────
+const JEE_GEMINI_KEY = 'jee-ai-api-key';
+const JEE_GEMINI_MODEL = 'jee-ai-model';
+function loadMainGeminiSettings(){
+  try{
+    const key=localStorage.getItem(JEE_GEMINI_KEY)||'';
+    const model=localStorage.getItem(JEE_GEMINI_MODEL)||'gemini-3.8-flash';
+    const k=document.getElementById('main-gemini-key'),m=document.getElementById('main-gemini-model'),b=document.getElementById('gemini-shared-badge'),st=document.getElementById('main-gemini-status');
+    if(k) k.value=key; if(m) m.value=model;
+    if(b){b.textContent=key?'Enabled':'Not set';b.classList.toggle('badge-set',!!key);}
+    if(st) st.textContent=key?'Gemini is configured for this device • shared with Schedule + Test Analysis':'Not configured • local AI features can still work without Gemini where supported';
+  }catch(e){}
+}
+function saveMainGeminiSettings(){
+  const key=(document.getElementById('main-gemini-key')?.value||'').trim();
+  const model=document.getElementById('main-gemini-model')?.value||'gemini-3.8-flash';
+  if(key) localStorage.setItem(JEE_GEMINI_KEY,key); else localStorage.removeItem(JEE_GEMINI_KEY);
+  localStorage.setItem(JEE_GEMINI_MODEL,model);
+  loadMainGeminiSettings();
+}
+function clearMainGeminiSettings(){localStorage.removeItem(JEE_GEMINI_KEY);loadMainGeminiSettings();}
+window.addEventListener('storage',e=>{if(e.key===JEE_GEMINI_KEY||e.key===JEE_GEMINI_MODEL)loadMainGeminiSettings()});
+try{const _jeeGeminiBC=('BroadcastChannel' in window)?new BroadcastChannel('jee-tracker-sync-v1'):null;_jeeGeminiBC?.addEventListener('message',e=>{if(e.data?.key===JEE_GEMINI_KEY||e.data?.key===JEE_GEMINI_MODEL)loadMainGeminiSettings()});}catch(e){}
+document.addEventListener('DOMContentLoaded',loadMainGeminiSettings);
 
 const localDB = {
   async get(key, shared) {
